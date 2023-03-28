@@ -1,0 +1,22 @@
+.ui-col-w-cta {
+  @apply flex flex-col text-gray-400;
+
+  h3 {
+    @apply mb-4 text-blue-100;
+  }
+
+  &--row {
+    @apply flex justify-between mb-2;
+
+    &--left {
+      @apply flex gap-4;
+
+      :global(.user-star-icon) {
+        @apply w-4 h-4;
+        path {
+          @apply fill-blue-100;
+        }
+      }
+    }
+  }
+}

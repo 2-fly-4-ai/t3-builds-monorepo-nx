@@ -1,0 +1,8 @@
+.ui-df-logo {
+  &__wrapper {
+    @apply w-[150px] flex items-center;
+    :global(.icon) {
+      @apply mr-2;
+    }
+  }
+}

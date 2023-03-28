@@ -1,0 +1,26 @@
+.ui-header {
+  &__wrapper {
+    @apply w-full;
+
+    &--right {
+      @apply flex gap-4 items-center;
+
+      :global(.search-icon) {
+        @apply w-5 h-5;
+        path {
+          fill: white;
+        }
+      }
+    }
+  }
+}
+
+.ui-df-header {
+  &__wrapper {
+    @apply flex items-center justify-between bg-dark-primary text-white h-[90px] px-4;
+    
+    &--menu {
+      @apply flex gap-4;
+    }    
+  }
+}
