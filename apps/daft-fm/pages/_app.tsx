@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import createHeader from '../components/fc/createHeader';
 import './../styles/globals.scss';
 
 function CustomApp({ Component, pageProps }: AppProps) {
@@ -9,7 +10,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to daft-fm!</title>
       </Head>
 
-      <Component {...pageProps} />
+      <Component {...pageProps} header={() => createHeader()} />
     </>
   );
 }

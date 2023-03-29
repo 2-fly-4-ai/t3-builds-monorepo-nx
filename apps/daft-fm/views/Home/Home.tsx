@@ -1,38 +1,18 @@
 import styles from './home.module.scss';
-import { Header, ThreeColCommunity } from '@front-end-nx/shared/ui';
+import { ThreeColCommunity } from '@front-end-nx/shared/ui';
+import { ReactNode } from 'react';
 
-const Home = () => {
+const Home = (props: Props) => {
   return (
     <div className={styles['ui-home']}>
-      <Header
-        wrapperStyle={"ui-df-header__wrapper"}
-        logo={{
-          wrapperStyle: "ui-df-logo__wrapper",
-          label: "Daft.FM",
-          logoInfo: {
-            src: "/daft-fm-blue.png",
-            width: 100,
-            height: 100,
-            alt: "Daft.FM",
-            href: "/",
-          },
-        }}
-        menuStyle={"ui-df-header__wrapper--menu"}
-        menuItems={[
-          {
-            label: "Start Here",
-            link: "/",
-          },
-          {
-            label: "Explore",
-            link: "/",
-          },
-        ]}
-        showSearch
-      />
+      {props.header()}
       <ThreeColCommunity />
     </div>
   );
 };
+
+type Props = {
+  header: () => ReactNode
+}
 
 export default Home;
