@@ -1,12 +1,10 @@
-// import Header from "@/common/Header/Header"
-// import ThreeColCommunity from "@/common/Layouts/ThreeColCommunity/ThreeColCommunity"
 import styles from './home.module.scss';
-import { ThreeColCommunity } from '@front-end-nx/shared/ui';
+import { Header, ThreeColCommunity } from '@front-end-nx/shared/ui';
 
 const Home = () => {
   return (
     <div className={styles['ui-home']}>
-      {/* <Header
+      <Header
         wrapperStyle={"ui-df-header__wrapper"}
         logo={{
           wrapperStyle: "ui-df-logo__wrapper",
@@ -31,7 +29,7 @@ const Home = () => {
           },
         ]}
         showSearch
-      /> */}
+      />
       <ThreeColCommunity />
     </div>
   );

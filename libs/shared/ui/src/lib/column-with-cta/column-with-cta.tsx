@@ -1,6 +1,5 @@
-// import UserStarIcon from "@/icons/UserStarIcon"
+import UserStarIcon from "../../icons/UserStarIcon"
 import styles from "./column-with-cta.module.scss"
-
 
 const ColumnWithCTA = ({ title }: Props) => {
   const mockList = [
@@ -40,7 +39,7 @@ const ColumnWithCTA = ({ title }: Props) => {
             className={styles["ui-col-w-cta--row"]}
           >
             <div className={styles["ui-col-w-cta--row--left"]}>
-              {/* <UserStarIcon className="user-star-icon" /> */}
+              <UserStarIcon className="user-star-icon" />
               <span className="title">{item.title}</span>
             </div>
 

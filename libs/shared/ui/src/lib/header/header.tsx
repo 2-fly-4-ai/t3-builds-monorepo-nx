@@ -1,7 +1,6 @@
-import SearchIcon from "@/icons/SearchIcon"
 import cx from "classnames"
 import Link from "next/link"
-import Logo, { LogoType } from "../Logo/Logo"
+import HeaderLogo, { LogoType } from './../header-logo/header-logo'
 import styles from "./header.module.scss"
 
 const Header = ({ wrapperStyle, menuStyle, logo, menuItems, showSearch }: Props) => {
@@ -21,9 +20,11 @@ const Header = ({ wrapperStyle, menuStyle, logo, menuItems, showSearch }: Props)
           )
         })}
       </div>
-      <Logo {...logo} />
+      <HeaderLogo {...logo} />
       <div className={cx(styles["ui-header__wrapper--right"])}>
-        {showSearch ? <Link href='/'><SearchIcon className='search-icon'/></Link> : null}
+        {showSearch ? <Link href='/'>
+          {/* <SearchIcon className='search-icon'/> */}
+          </Link> : null}
         Pic here
         </div>
     </div>
