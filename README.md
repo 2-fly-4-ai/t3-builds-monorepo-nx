@@ -7,3 +7,7 @@ Notes
 ## Serving an app
 
 - `npx nx run daft-fm:serve`
+
+## Creating a React component
+
+- `npx nx g @nrwl/react:component column-with-dates --project=shared-ui`

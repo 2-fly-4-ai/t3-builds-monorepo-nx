@@ -1,8 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
-import styles from "./logo.module.scss"
+import styles from "./header-logo.module.scss"
 
-const Logo = ({ label, logoInfo, wrapperStyle }: LogoType) => {
+const HeaderLogo = ({ label, logoInfo, wrapperStyle }: LogoType) => {
   return (
     <div className={styles[wrapperStyle]}>
       <span className="icon">
@@ -34,4 +34,4 @@ type LogoInfo = {
   href: string
 }
 
-export default Logo
+export default HeaderLogo

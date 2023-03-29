@@ -1,7 +1,6 @@
-// import UserStarIcon from "@/icons/UserStarIcon"
 import Link from "next/link"
+import UserStarIcon from "../../icons/UserStarIcon"
 import styles from "./column-compact.module.scss"
-
 
 const ColumnCompact = () => {
   const mockData = [
@@ -78,7 +77,7 @@ const ColumnCompact = () => {
             key={`col-compact-${i}`}
             className={styles["ui-col-compact--row"]}
           >
-            {/* <UserStarIcon className='user-star-icon' /> */}
+            <UserStarIcon className='user-star-icon' />
             <div>{item.count}</div>
             <div className={styles["ui-col-compact--row--content"]}>
               <span className="title">{item.title}</span>
