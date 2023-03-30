@@ -1,15 +1,15 @@
-import ColumnCompact from '../../lib/column-compact/column-compact';
-import ColumnWithDates from '../../lib/column-with-dates/column-with-dates';
+import ColumnFilter from '../../lib/column-filter/column-filter';
+import ProductCards from '../../lib/product-cards/product-cards';
 import styles from './product-page-w-filter.module.scss';
 
 export function ProductPageWFilter(props: ProductPageWFilterProps) {
   return (
     <div className={styles['ui-product-w-filter__wrapper']}>
       <div className={styles['ui-product-w-filter__left']}>
-        <ColumnWithDates />
+        <ColumnFilter />
       </div>
       <div className={styles['ui-product-w-filter__right']}>
-        <ColumnCompact />
+        <ProductCards />
       </div>
     </div>
   );
