@@ -1,5 +1,5 @@
-import ColumnCompact from '../../lib/column-compact/column-compact';
 import ColumnFilter from '../../lib/column-filter/column-filter';
+import ProductCards from '../../lib/product-cards/product-cards';
 import styles from './product-page-w-filter.module.scss';
 
 export function ProductPageWFilter(props: ProductPageWFilterProps) {
@@ -9,7 +9,7 @@ export function ProductPageWFilter(props: ProductPageWFilterProps) {
         <ColumnFilter />
       </div>
       <div className={styles['ui-product-w-filter__right']}>
-        <ColumnCompact />
+        <ProductCards />
       </div>
     </div>
   );
