@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import ProductCards from './product-cards';
+import ProductCards from './category-cards';
 
 describe('ProductCards', () => {
   it('should render successfully', () => {

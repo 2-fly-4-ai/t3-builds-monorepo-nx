@@ -1,6 +1,6 @@
-import styles from './product-cards.module.scss';
+import styles from './category-cards.module.scss';
 
-export function ProductCards(props: ProductCardsProps) {
+export function CategoryCards(props: CategoryCardsProps) {
   const mockList = [{
     title: 'FormWise',
     desc: 'Build AI tools using your favorite GPT prompts.',
@@ -28,10 +28,10 @@ export function ProductCards(props: ProductCardsProps) {
   },
 ]
   return (
-    <div className={styles['ui-product-cards']}>
+    <div className={styles['ui-cat-cards']}>
       {
         mockList?.map((item, i) => {
-          return <div key={`product-card-${i}`} className={styles['ui-product-cards__card']}>
+          return <div key={`cat-card-${i}`} className={styles['ui-cat-cards__card']}>
             <div>{item.title}</div>
             <div>{item.desc}</div>
             <div>{item.price}</div>
@@ -43,6 +43,6 @@ export function ProductCards(props: ProductCardsProps) {
 }
 
 /* eslint-disable-next-line */
-export interface ProductCardsProps {}
+export interface CategoryCardsProps {}
 
-export default ProductCards;
+export default CategoryCards;

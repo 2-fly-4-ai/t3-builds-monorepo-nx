@@ -19,7 +19,7 @@ const createHeader = () => {
       menuItems={[
         {
           label: 'Start Here',
-          link: '/products',
+          link: '/categories',
         },
         {
           label: 'Explore',
