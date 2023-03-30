@@ -1,3 +1,5 @@
+export * from './lib/productCard/productCard';
+export * from './lib/topic-button/topic-button';
 export { default as ProductCards } from './lib/category-cards/category-cards';
 export { default as ColumnFilter } from './lib/column-filter/column-filter';
 export { default as CategoryPageWFilter } from './layouts/categories-page-w-filter/categories-page-w-filter';
