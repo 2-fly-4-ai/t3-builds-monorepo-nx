@@ -1,3 +1,4 @@
+export { default as ColumnFilter } from './lib/column-filter/column-filter';
 export { default as ProductPageWFilter } from './layouts/product-page-w-filter/product-page-w-filter';
 export { default as HeaderLogo } from './lib/header-logo/header-logo';
 export { default as Header } from './lib/header/header';
