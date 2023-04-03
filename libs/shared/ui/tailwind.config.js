@@ -1,5 +1,6 @@
 const { join } = require('path');
 const { createGlobPatternsForDependencies } = require('@nrwl/react/tailwind');
+const { createThemes } = require('tw-colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -20,5 +21,24 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+    createThemes({
+      light: {
+        primary: 'steelblue',
+        secondary: 'darkblue',
+        brand: '#F3F3F3',
+      },
+      dark: {
+        primary: 'turquoise',
+        secondary: 'tomato',
+        brand: '#4A4A4A',
+      },
+      forest: {
+        primary: '#2A9D8F',
+        secondary: '#E9C46A',
+        brand: '#264653',
+      },
+    }),
+  ],
 };

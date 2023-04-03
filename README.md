@@ -14,3 +14,8 @@ Notes
 - `npx nx g @nrwl/react:component column-with-dates --project=shared-ui`
 - `column-with-dates` being the new name of the folder and will be inserted within /libs/shared/ui/src/lib
 - add `--directory` to use a different directory than `lib`
+
+## Notes
+
+- Dont forget to remove the nested git repo if you ticked the git repo option.
+-

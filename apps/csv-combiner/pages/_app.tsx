@@ -8,7 +8,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to csv-combiner!</title>
       </Head>
-      <main className="app">
+      <main className="app theme-forest">
         <Component {...pageProps} />
       </main>
     </>

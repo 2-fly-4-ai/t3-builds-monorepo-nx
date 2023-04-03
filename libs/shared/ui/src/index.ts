@@ -1,3 +1,7 @@
+export * from './lib/post-card/post-card';
+export * from './lib/loading-spinner/loading-spinner';
+export * from './lib/like-post/like-post';
+export * from './lib/blog-page-prose/blog-page-prose';
 export * from './lib/productCard/productCard';
 export * from './lib/topic-button/topic-button';
 export { default as ProductCards } from './lib/category-cards/category-cards';

@@ -1,9 +1,0 @@
-.ui-cat-cards {
-  @apply flex flex-wrap text-white gap-4;
-
-  &__card {
-    @apply bg-dark-primary h-[200px] p-4;
-    // 3 col with 16px gap in between
-    width: calc(100%/3 - 16px);
-  }
-}

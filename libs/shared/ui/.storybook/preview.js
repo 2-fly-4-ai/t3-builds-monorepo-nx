@@ -1,4 +1,4 @@
-import './styles.scss';
+import './styles.css';
 
 import * as nextImage from 'next/image';
 
@@ -9,4 +9,10 @@ Object.defineProperty(nextImage, 'default', {
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
+};
+
+export const globalTypes = {
+  themes: {
+    defaultValue: ['light', 'dark', 'forest'],
+  },
 };

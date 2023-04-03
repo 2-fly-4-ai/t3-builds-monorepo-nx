@@ -3,10 +3,17 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "allowJs": false,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "types": ["vitest"]
+    "types": ["vitest"],
+    "baseUrl": ".",
+    "lib": ["ES2021.String"],
+    "paths": {
+      "@mylibrary/*": ["src/*"],
+      "@mylibrary/icons": ["libs/icons/src/index.ts"],
+      "interweave": ["node_modules/interweave/esm/index.js"]
+    }
   },
   "files": [],
   "include": [],

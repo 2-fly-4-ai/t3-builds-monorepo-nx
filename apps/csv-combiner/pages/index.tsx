@@ -1,19 +1,18 @@
-import styles from './index.module.scss';
+import ProductCard from 'libs/shared/ui/src/lib/productCard/productCard';
 
 export function Index() {
   /*
    * Replace the elements below with your own.
-   *
    * Note: The corresponding styles are in the ./index.scss file.
    */
   return (
-    <div className={styles.page}>
+    <div className="bg-primary">
       <div className="wrapper">
         <div className="container">
           <div id="welcome">
             <h1>
               <span> Hello there, </span>
-              Welcome csv-combiner 👋
+              <ProductCard title="fuck" />
             </h1>
           </div>
 
