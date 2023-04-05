@@ -1,3 +1,4 @@
+export * from './lib/nav-menu/nav-menu';
 export * from './lib/post-card/post-card';
 export * from './lib/loading-spinner/loading-spinner';
 export * from './lib/like-post/like-post';

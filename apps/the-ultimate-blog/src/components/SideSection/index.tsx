@@ -9,19 +9,19 @@ export default function SideSection() {
         <div className="flex flex-col space-y-2">
           {Array.from({ length: 4 }).map((_, i) => (
             <Link href="" key={i}>
-              <div className="flex w-full flex-row items-center space-x-4 p-2 py-3 hover:bg-gray-100">
-                <div className="h-10 w-10 flex-none rounded-full bg-gray-500"></div>
+              <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100">
+                <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                 <div>
                   <div className="text-sm font-bold text-gray-500">
                     lorem ipsum
                   </div>
-                  <div className="text-xs">
+                  <div className="text-sm">
                     lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
                     lorem ipsum lorem ipsum lorem ipsum
                   </div>
                 </div>
                 <div>
-                  <button className="flex items-center space-x-3 rounded border-2  border-gray-300 bg-white p-2 px-4 py-2 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-gray-700 hover:border-black hover:text-gray-900 hover:shadow-black">
+                  <button className="flex items-center space-x-3 rounded border-2  border-gray-300 bg-white p-2 text-sm px-4 py-2 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition  hover:border-black hover:text-gray-900 hover:shadow-black">
                     Follow
                   </button>
                 </div>
@@ -32,16 +32,16 @@ export default function SideSection() {
       </div>
       <div>
         <h3 className="my-6 font-medium">Your reading list:</h3>
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col ">
           {Array.from({ length: 4 }).map((_, i) => (
             <Link href="/" key={i}>
-              <div className="group flex items-center space-x-5 p-2 hover:bg-gray-100">
-                <div className="aspect-square  w-2/5 rounded-xl border bg-gray-300"></div>
+              <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100">
+                <div className="aspect-square  w-36 rounded-xl border bg-gray-300"></div>
                 <div className="flex w-3/5 flex-col space-y-2">
                   <div className=" font-semibold decoration-indigo-400 decoration-2 group-hover:underline">
                     Lorem ipsum dolar site amet{' '}
                   </div>
-                  <div className="text-xs">
+                  <div className="text-sm">
                     Lorem ipsum dolar site amet consectuturLorem ipsum dolar
                     site amet consectutur Lorem ipsum dolar site amet
                     consectutur

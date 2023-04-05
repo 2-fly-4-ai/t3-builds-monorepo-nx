@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 .ck-editor__editable {
-  min-height: 200px;
+  height: 100%;
 }
+
+/* .ck-editor__editable {
+  border-color: red;
+} */

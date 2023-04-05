@@ -4,9 +4,6 @@ import slugify from 'slugify';
 import { z } from 'zod';
 
 export const postRouter = router({
-  //   getSession: publicProcedure.query(({ ctx }) => {
-  //     return ctx.session;
-  //   }),
   createPost: protectedProcedure
     .input(WriteFormSchema)
     .mutation(
@@ -14,8 +11,6 @@ export const postRouter = router({
         ctx: { prisma, session },
         input: { title, description, text, html },
       }) => {
-        //create a function that checks whether the post with this tile exists
-
         await prisma.post.create({
           data: {
             title,
@@ -33,18 +28,31 @@ export const postRouter = router({
       }
     ),
 
-  getPosts: publicProcedure.query(async ({ ctx: { prisma } }) => {
+  getPosts: publicProcedure.query(async ({ ctx: { prisma, session } }) => {
     const posts = await prisma.post.findMany({
       orderBy: {
         createdAt: 'desc',
       },
-      include: {
+
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        description: true,
+        createdAt: true,
         author: {
           select: {
             name: true,
             image: true,
           },
         },
+        bookmarks: session?.user?.id
+          ? {
+              where: {
+                userId: session?.user?.id,
+              },
+            }
+          : false,
       },
     });
     return posts;
@@ -104,6 +112,39 @@ export const postRouter = router({
     )
     .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
       await prisma.like.delete({
+        where: {
+          userId_postId: {
+            postId: postId,
+            userId: session.user.id,
+          },
+        },
+      });
+    }),
+
+  bookmarkPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+
+    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+      await prisma.bookMark.create({
+        data: {
+          userId: session.user.id,
+          postId,
+        },
+      });
+    }),
+
+  removeBookmark: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+      await prisma.bookMark.delete({
         where: {
           userId_postId: {
             postId: postId,

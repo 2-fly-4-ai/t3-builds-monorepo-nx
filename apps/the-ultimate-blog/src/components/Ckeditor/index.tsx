@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
+import React, { useEffect, useRef } from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import InlineEditor from '@ckeditor/ckeditor5-build-inline'; // import InlineEditor
 
 interface CKeditorProps {
   onChange: (data: string) => void;
@@ -16,12 +16,12 @@ export default function CKeditor({
 }: CKeditorProps) {
   const editorRef = useRef<{
     CKEditor: typeof CKEditor;
-    BalloonEditor: typeof BalloonEditor;
+    InlineEditor: typeof InlineEditor; // use InlineEditor
   }>();
   useEffect(() => {
     editorRef.current = {
-      CKEditor: require("@ckeditor/ckeditor5-react").CKEditor,
-      BalloonEditor: require("@ckeditor/ckeditor5-build-balloon"),
+      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
+      InlineEditor: require('@ckeditor/ckeditor5-build-inline'), // use InlineEditor
     };
   }, []);
 
@@ -29,37 +29,35 @@ export default function CKeditor({
     <>
       {editorLoaded ? (
         <CKEditor
-          editor={BalloonEditor}
-          data={value} // pass the initial data as a prop
+          editor={InlineEditor} // use InlineEditor
+          value={value} // pass the initial data as a value prop
           onChange={(event: any, editor: any) => {
             const data = editor.getData();
             onChange(data);
           }}
           config={{
             toolbar: [
-              "undo",
-              "redo",
-              "bold",
-              "italic",
-              "blockQuote",
-              "ckfinder",
-              "imageTextAlternative",
-              "imageUpload",
-              "heading",
+              'undo',
+              'redo',
+              'bold',
+              'italic',
+              'blockQuote',
+              'ckfinder',
+              'imageTextAlternative',
+              'imageUpload',
+              'heading',
               // "imageStyle:full",
-              "imageStyle:side",
-              "link",
-              "numberedList",
-              "bulletedList",
-              "mediaEmbed",
-              "insertTable",
-              "tableColumn",
-              "tableRow",
-              "mergeTableCells",
+              'imageStyle:side',
+              'link',
+              'numberedList',
+              'bulletedList',
+              'mediaEmbed',
+              'insertTable',
+              'tableColumn',
+              'tableRow',
+              'mergeTableCells',
             ],
-            balloon: {
-              visibleByDefault: true,
-            },
+            // no need for balloon option
           }}
         />
       ) : (

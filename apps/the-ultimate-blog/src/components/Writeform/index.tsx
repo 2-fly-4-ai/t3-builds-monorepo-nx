@@ -67,7 +67,7 @@ export default function WriteFormModal() {
     <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex flex-col space-y-4"
+        className="relative flex flex-col space-y-5 pt-4"
       >
         {createPost.isLoading && (
           <div className="absolute bottom-2 flex items-center justify-center space-x-4">
@@ -100,7 +100,7 @@ export default function WriteFormModal() {
           render={({ field }) => {
             console.log('FUCKCUNT', field); // add this line to log the value of field
             return (
-              <div className="border prose-li:list-style prose prose-lg w-full max-w-none marker:text-black prose-a:font-bold prose-li:text-black prose-table:table-auto prose-table:border-2  prose-tr:border-r prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2  prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)]  prose-img:shadow-black">
+              <div className="border prose-li:list-style prose prose-lg w-full max-w-none marker:text-black prose-a:font-bold prose-li:text-black prose-table:table-auto prose-table:border-2  prose-tr:border-r prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2  prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)]  prose-img:shadow-black h-72 focus-within:border-black">
                 {typeof document !== 'undefined' && (
                   <Editor
                     {...field}
