@@ -2,6 +2,7 @@ import { router, protectedProcedure, publicProcedure } from '../trpc';
 import { WriteFormSchema } from '../../../components/Writeform';
 import slugify from 'slugify';
 import { z } from 'zod';
+import { commentFormSchema } from 'apps/the-ultimate-blog/src/components/CommentSidebar';
 
 export const postRouter = router({
   createPost: protectedProcedure
@@ -33,7 +34,6 @@ export const postRouter = router({
       orderBy: {
         createdAt: 'desc',
       },
-
       select: {
         id: true,
         slug: true,
@@ -53,6 +53,7 @@ export const postRouter = router({
               },
             }
           : false,
+        likes: true, // include likes count
       },
     });
     return posts;
@@ -94,7 +95,6 @@ export const postRouter = router({
         postId: z.string(),
       })
     )
-
     .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
       await prisma.like.create({
         data: {
@@ -120,6 +120,46 @@ export const postRouter = router({
         },
       });
     }),
+
+  likeComment: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(), // Add postId as a required field
+        commentId: z.string(),
+      })
+    )
+    .mutation(
+      async ({ ctx: { prisma, session }, input: { postId, commentId } }) => {
+        await prisma.like.create({
+          data: {
+            userId: session.user.id,
+            postId, // Use postId instead of commentId
+            commentId,
+          },
+        });
+      }
+    ),
+
+  dislikeComment: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+        commentId: z.string(),
+      })
+    )
+    .mutation(
+      async ({ ctx: { prisma, session }, input: { postId, commentId } }) => {
+        await prisma.like.delete({
+          where: {
+            userId_postId: {
+              postId,
+              userId: session.user.id,
+            },
+          },
+        });
+        9;
+      }
+    ),
 
   bookmarkPost: protectedProcedure
     .input(
@@ -153,4 +193,130 @@ export const postRouter = router({
         },
       });
     }),
+
+  submitComment: protectedProcedure
+    .input(
+      z.object({
+        text: z.string().min(3),
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { text, postId } }) => {
+      await prisma.comment.create({
+        data: {
+          text,
+          user: {
+            connect: {
+              id: session.user.id,
+            },
+          },
+          post: {
+            connect: {
+              id: postId,
+            },
+          },
+        },
+      });
+    }),
+
+  removeComment: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx: { prisma, session }, input: { id } }) => {
+      const comment = await prisma.comment.findUnique({
+        where: { id },
+        select: { userId: true },
+      });
+      if (!comment) {
+        throw new Error('Comment not found');
+      }
+      if (comment.userId !== session.user.id) {
+        throw new Error('Not authorized to delete comment');
+      }
+      await prisma.comment.delete({ where: { id } });
+    }),
+
+  getComments: publicProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .query(async ({ ctx: { prisma }, input: { postId } }) => {
+      const comments = await prisma.comment.findMany({
+        where: {
+          postId,
+        },
+        select: {
+          text: true,
+          userId: true,
+          postId: true,
+          post: true,
+          id: true,
+
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+          createdAt: true,
+        },
+      });
+
+      return comments;
+    }),
+
+  // dislikeComment: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       commentId: z.string(),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx: { prisma, session }, input: { commentId } }) => {
+  //     await prisma.like.delete({
+  //       where: {
+  //         userId_commentId: {
+  //           commentId,
+  //           userId: session.user.id,
+  //         },
+  //       },
+  //     });
+  //   }),
+
+  getReadingList: protectedProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      const allBookmarks = await prisma.bookmark.findMany({
+        where: {
+          userId: session.user.id,
+        },
+        take: 4,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          post: {
+            select: {
+              title: true,
+              description: true,
+              author: {
+                select: {
+                  name: true,
+                  image: true,
+                },
+              },
+              createdAt: true,
+              slug: true,
+            },
+          },
+        },
+      });
+
+      return allBookmarks;
+    }
+  ),
 });

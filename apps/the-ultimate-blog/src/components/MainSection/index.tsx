@@ -10,7 +10,9 @@ import { useState } from 'react';
 
 export default function MainSection() {
   const getPosts = trpc.post.getPosts.useQuery();
-  console.warn(getPosts.data);
+  console.warn('TESTER', getPosts.data);
+
+  // console.warn('TestMainPage', getPost.data.likes);
   const bookmarkPost = trpc.post.bookmarkPost.useMutation();
   const removeBookmark = trpc.post.removeBookmark.useMutation();
 
@@ -63,16 +65,18 @@ export default function MainSection() {
       <div className="mx-12 space-y-4">
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
-          getPosts.data.map((post) => (
-            <div key={post.id}>
-              <PostCard
-                key={post.id}
-                post={post}
-                bookmarkPost={bookmarkPost}
-                removeBookmark={removeBookmark}
-              />
-            </div>
-          ))}
+          getPosts.data.map((post) => {
+            console.warn('TESTXXX', post);
+            return (
+              <div key={post.id}>
+                <PostCard
+                  post={post}
+                  bookmarkPost={bookmarkPost}
+                  removeBookmark={removeBookmark}
+                />
+              </div>
+            );
+          })}
       </div>
     </main>
   );

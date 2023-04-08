@@ -3,8 +3,11 @@ import Link from 'next/link';
 import BiBookmarkPlus from '../../icons/BiBookMark';
 import BiBookmarkMinus from '../../icons/BiBookmarkMinus';
 import { useCallback, useState } from 'react';
+import { useSession } from 'next-auth/react';
+
 /* eslint-disable-next-line */
 export interface PostCardProps {
+  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -22,8 +25,9 @@ export interface PostCardProps {
 }
 
 export function PostCard(props: PostCardProps) {
+  const { data: sessionData, status } = useSession();
   const [isBookmarked, setIsBookmarked] = useState(
-    Boolean(props.post.bookmarks.length > 0)
+    Boolean(props?.post?.bookmarks?.length > 0)
   );
 
   const dayjs = require('dayjs');
@@ -91,31 +95,34 @@ export function PostCard(props: PostCardProps) {
             </div>
           ))}
         </div>
-        <div className="text-gray-400 hover:text-black">
-          {isBookmarked ? (
-            <BiBookmarkMinus
-              onClick={() => {
-                props.removeBookmark.mutate({
-                  postId: props.post.id,
-                });
-                // create a new state object with the opposite value of isBookmarked
-                setIsBookmarked((prevState) => !prevState);
-              }}
-              className="cursor-pointer"
-            />
-          ) : (
-            <BiBookmarkPlus
-              onClick={() => {
-                props.bookmarkPost.mutate({
-                  postId: props.post.id,
-                });
-                // create a new state object with the opposite value of isBookmarked
-                setIsBookmarked((prevState) => !prevState);
-              }}
-              className="cursor-pointer"
-            />
-          )}
-        </div>
+        {sessionData ? (
+          <div className="text-gray-400 hover:text-black">
+            {isBookmarked ? (
+              <BiBookmarkMinus
+                onClick={() => {
+                  props.removeBookmark.mutate({
+                    postId: props.post.id,
+                  });
+                  // create a new state object with the opposite value of isBookmarked
+                  setIsBookmarked((prevState) => !prevState);
+                }}
+                className="cursor-pointer"
+              />
+            ) : (
+              <BiBookmarkPlus
+                // countLikes={props.countlikes?.length()}
+                onClick={() => {
+                  props.bookmarkPost.mutate({
+                    postId: props.post.id,
+                  });
+                  // create a new state object with the opposite value of isBookmarked
+                  setIsBookmarked((prevState) => !prevState);
+                }}
+                className="cursor-pointer"
+              />
+            )}
+          </div>
+        ) : null}
       </div>
 
       {/* add the rest of the code here */}

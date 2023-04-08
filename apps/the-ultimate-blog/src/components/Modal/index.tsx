@@ -54,7 +54,7 @@ export default function Modal({
                       className="hover:text-red-500"
                       stroke="currentColor"
                       fill="currentColor"
-                      stroke-width="0"
+                      strokeWidth="0"
                       viewBox="0 0 512 512"
                       height="1.5em"
                       width="1.5em"

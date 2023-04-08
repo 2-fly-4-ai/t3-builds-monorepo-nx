@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { toast } from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -37,6 +39,7 @@ const CommentSidebar = ({
     resolver: zodResolver(commentFormSchema),
   });
 
+  const { data: sessionData, status } = useSession();
   const postRoute = trpc.useContext().post;
 
   const submitComment = trpc.post.submitComment.useMutation({
@@ -52,9 +55,65 @@ const CommentSidebar = ({
     },
   });
 
+  const removeCommentMutation = trpc.post.removeComment.useMutation({
+    onSuccess: () => {
+      toast.success('Comment deleted successfully');
+      getComments.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleRemoveComment = async (id: string) => {
+    try {
+      await removeCommentMutation.mutate({ id });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const getComments = trpc.post.getComments.useQuery({
     postId,
   });
+
+  // /////////////////////////////////////////////
+
+  const [likedComments, setLikedComments] = useState<string[]>([]);
+
+  const isCommentLiked = (commentId: string) =>
+    likedComments.includes(commentId);
+
+  const likeComment = trpc.post.likeComment.useMutation();
+  const dislikeComment = trpc.post.dislikeComment.useMutation();
+
+  const handleLikeComment = async (commentId: string) => {
+    try {
+      await likeComment.mutate({
+        postId,
+        commentId,
+      });
+      setLikedComments([...likedComments, commentId]);
+      toast.success('Comment liked successfully');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDislikeComment = async (commentId: string) => {
+    try {
+      await dislikeComment.mutate({
+        postId,
+        commentId,
+      });
+      setLikedComments(likedComments.filter((id) => id !== commentId));
+      toast.success('Comment disliked successfully');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  ///////////////////////////////////////////////
 
   return (
     <Transition.Root show={showCommentSidebar} as={Fragment}>
@@ -74,11 +133,10 @@ const CommentSidebar = ({
           >
             <Dialog.Panel className="relative h-screen w-[200px] bg-white shadow-md sm:w-[400px]">
               <div className=" flex h-full w-full flex-col overflow-y-scroll px-6 z-10">
-                <div className="mt-10 mb-5 flex items-center justify-between  text-xl">
+                <div className="mt-24 mb-5 flex items-center justify-between  text-xl">
                   <h2 className=" font-medium">Responses (4)</h2>
                   <div>
                     <HiXMark
-                      id="close"
                       className="cursor-pointer"
                       onClick={() => setShowCommentSidebar(false)}
                     />
@@ -118,6 +176,34 @@ const CommentSidebar = ({
                         className="flex w-full flex-col space-y-2 border-b border-b-gray-300 pb-4 last:border-none"
                         key={comment.id}
                       >
+                        {sessionData &&
+                          sessionData.user.id === comment.userId && (
+                            <button
+                              className="bg-red-500 p-2"
+                              onClick={() => handleRemoveComment(comment.id)}
+                            >
+                              REMOVE COMMENT
+                            </button>
+                          )}
+
+                        <div className="flex items-center">
+                          {!isCommentLiked(comment.id) ? (
+                            <button
+                              className="bg-black p-4 text-white mr-2"
+                              onClick={() => handleLikeComment(comment.id)}
+                            >
+                              Like
+                            </button>
+                          ) : (
+                            <button
+                              className="bg-red-500 p-4 text-white"
+                              onClick={() => handleDislikeComment(comment.id)}
+                            >
+                              Dislike
+                            </button>
+                          )}
+                        </div>
+
                         <div className="flex w-full items-center space-x-2 text-xs">
                           <div className="relative h-8 w-8 rounded-full bg-gray-400"></div>
                           <div>

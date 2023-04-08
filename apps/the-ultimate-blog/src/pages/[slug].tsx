@@ -22,7 +22,6 @@ export default function PostPage() {
       enabled: Boolean(router.query.slug),
     }
   );
-  // const [isLiked, setIsLiked] = useState(getPost.data?.likes?.length > 0);
 
   const invalidateCurrentPostPage = useCallback(() => {
     postRoute.getPost.invalidate({ slug: router.query.slug as string });
@@ -57,12 +56,10 @@ export default function PostPage() {
         </Transition.Root>
       )}
 
-      {/* Add comment Funcitonality */}
-
       {getPost.isSuccess && (
         <LikePost
           id={getPost.data.id}
-          countLikes={getPost.data.likes}
+          countLikes={getPost.data.likes.length}
           onLike={(postId) => likePost.mutate({ postId })}
           onDislike={(postId) => dislikePost.mutate({ postId })}
           onComment={(postId) => console.log('comment on post', postId)}
@@ -85,7 +82,7 @@ export default function PostPage() {
         featuredImage="https://images.unsplash.com/photo-1679678691005-3815eb29bc61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80"
       />
 
-      <>
+      {/* <>
         <section className="bg-white dark:bg-gray-900 py-8 lg:py-16">
           <div className="max-w-3xl mx-auto ">
             <div className="flex justify-between items-center mb-6">
@@ -296,7 +293,7 @@ export default function PostPage() {
             </article>
           </div>
         </section>
-      </>
+      </> */}
     </MainLayout>
   );
 }
