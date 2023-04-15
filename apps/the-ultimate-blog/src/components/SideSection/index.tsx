@@ -1,14 +1,34 @@
 import React from 'react';
 import Link from 'next/link';
+import { trpc } from '../../utils/trpc';
+import dayjs from 'dayjs';
+import Image from 'next/image';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
-export default function SideSection() {
+export default function SideSection({ showSidebar, toggleSidebar }) {
+  const readingList = trpc.post.getReadingList.useQuery();
+  const [mainClass, setMainClass] = useState('');
+
+  useEffect(() => {
+    setMainClass(showSidebar ? 'slide-right ' : 'slide-left translate-x-1/2');
+  }, [showSidebar]);
+
+  if (!showSidebar) {
+    return null;
+  }
+
   return (
-    <aside className="space-between  col-span-4 flex h-[90vh] w-full flex-col space-y-4 p-6">
+    <aside
+      className={`${mainClass} ${
+        showSidebar ? 'col-span-3 ' : '   grid-cols-none'
+      } space-between flex h-[90vh] w-full flex-col space-y-4  p-6 transition-transform duration-500 ease-out relative `}
+    >
       <div className="">
         <h3 className="mb-6 font-medium">People you might be interested in:</h3>
         <div className="flex flex-col space-y-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Link href="" key={i}>
+            <Link href="/" key={i}>
               <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100">
                 <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                 <div>
@@ -31,34 +51,45 @@ export default function SideSection() {
         </div>
       </div>
       <div>
+        <button
+          className="bg-gray-600 hover:animate-pulse font-bold border-gray-400 border-2 absolute w-10 h-10 rounded-full  -left-5 mr-2 top-96 hover:scale-105 text-white  transition-transform duration-500 ease-out"
+          onClick={toggleSidebar}
+        >
+          -
+        </button>
         <h3 className="my-6 font-medium">Your reading list:</h3>
         <div className="flex flex-col ">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Link href="/" key={i}>
-              <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100">
-                <div className="aspect-square  w-36 rounded-xl border bg-gray-300"></div>
-                <div className="flex w-3/5 flex-col space-y-2">
-                  <div className=" font-semibold decoration-indigo-400 decoration-2 group-hover:underline">
-                    Lorem ipsum dolar site amet{' '}
+          {readingList.data &&
+            readingList.data.map((bookmark, i) => (
+              <Link href="/" key={i}>
+                <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100">
+                  <div className="aspect-square  w-36 rounded-xl border bg-gray-300">
+                    {bookmark?.post?.featuredImage ? (
+                      <Image src={bookmark?.post?.featuredImage ?? null} fill />
+                    ) : null}
                   </div>
-                  <div className="text-sm">
-                    Lorem ipsum dolar site amet consectuturLorem ipsum dolar
-                    site amet consectutur Lorem ipsum dolar site amet
-                    consectutur
-                  </div>
-                  <div>
-                    <div className="flex w-full items-center space-x-1">
-                      <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
-                      <div className="text-sm font-bold text-gray-900">
-                        Brian Farley
+                  <div className="flex w-3/5 flex-col space-y-2">
+                    <div className=" font-semibold decoration-indigo-400 decoration-2 group-hover:underline ">
+                      {bookmark.post.title}
+                    </div>
+                    <div className="text-sm line-clamp-2">
+                      {bookmark.post.description}
+                    </div>
+                    <div>
+                      <div className="flex w-full items-center space-x-1">
+                        <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
+                        <div className="text-sm font-bold text-gray-900">
+                          {bookmark.post.author.name}
+                        </div>
+                        <div className="text-xs">
+                          {dayjs(bookmark.post.createdAt).format('DD/MM/YYYY')}
+                        </div>
                       </div>
-                      <div className="text-xs">Dec 22,2022</div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
         </div>
       </div>
     </aside>

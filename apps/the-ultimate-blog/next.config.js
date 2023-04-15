@@ -9,7 +9,11 @@ const { withNx } = require('@nrwl/next/plugins/with-nx');
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['avatars.githubusercontent.com', 'images.unsplash.com'],
+    domains: [
+      'avatars.githubusercontent.com',
+      'images.unsplash.com',
+      'lh3.googleusercontent.com',
+    ],
   },
   nx: {
     // Set this to true if you would like to use SVGR

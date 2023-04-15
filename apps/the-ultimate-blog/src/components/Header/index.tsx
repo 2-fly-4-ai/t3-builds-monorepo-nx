@@ -34,7 +34,7 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="grid h-20 w-full grid-cols-12 flex-row items-center border-b py-4 px-8 sticky top-0 bg-white z-10"
+      className="grid  w-full grid-cols-12 flex-row items-center border-b py-1.5 px-8 sticky top-0 bg-white z-10"
     >
       {/* This is the header */}
       <div className="flex justify-center items-center col-span-3">
@@ -49,7 +49,7 @@ export default function Header() {
         <NavigationMenuDemo />
       </div>
 
-      <aside
+      {/* <aside
         className={`${
           !openSidebar ? 'hidden' : 'flex'
         } fixed top-20 left-0 w-64 h-full`}
@@ -416,7 +416,7 @@ export default function Header() {
             </a>
           </div>
         </div>
-      </aside>
+      </aside> */}
 
       {status === 'authenticated' ? (
         <div className="flex items-center justify-end gap-4  col-span-8">

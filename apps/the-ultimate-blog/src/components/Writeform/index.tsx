@@ -59,9 +59,9 @@ export default function WriteFormModal() {
   const Editor = dynamic(() => import('../Ckeditor'), { ssr: false });
   const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
 
-  useEffect(() => {
-    setEditorLoaded(true);
-  }, []);
+  // useEffect(() => {
+  //   setEditorLoaded(true);
+  // }, []);
 
   return (
     <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
@@ -94,25 +94,23 @@ export default function WriteFormModal() {
         />
 
         <p>{errors.description?.message}</p>
-        <Controller
-          name="html"
-          control={control}
-          render={({ field }) => {
-            console.log('FUCKCUNT', field); // add this line to log the value of field
-            return (
-              <div className="border prose-li:list-style prose prose-lg w-full max-w-none marker:text-black prose-a:font-bold prose-li:text-black prose-table:table-auto prose-table:border-2  prose-tr:border-r prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2  prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)]  prose-img:shadow-black h-72 focus-within:border-black">
-                {typeof document !== 'undefined' && (
-                  <Editor
-                    {...field}
-                    onChange={(data: string) => field && field.onChange(data)}
-                    editorLoaded={editorLoaded}
-                    // value={field.value}
-                  />
-                )}
+
+        <div className="modal-container">
+          <Controller
+            name="html"
+            control={control}
+            render={({ field }) => (
+              <div className=" border prose-li:list-style prose prose-lg w-full max-w-none marker:text-black prose-a:font-bold prose-li:text-black prose-table:table-auto prose-table:border-2  prose-tr:border-r prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2  prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)]  prose-img:shadow-black h-full focus-within:border-black h-50vh shadow-2xl ">
+                <Editor
+                  {...field}
+                  onChange={(data: string) => field && field.onChange(data)}
+                  value={field.value}
+                  // editorLoaded={editorLoaded}
+                />
               </div>
-            );
-          }}
-        />
+            )}
+          />
+        </div>
 
         <p>{errors.text?.message}</p>
         <div className="flex w-full justify-end">

@@ -6,7 +6,7 @@ import { FaRegCommentDots } from './../../icons/FaRegCommentDots';
 export interface LikePostProps {
   showSidebar: boolean;
   id: string; // the id of the post
-  countLikes: number;
+  countLikes: any;
   // isLiked: boolean; // whether the post is liked or not
   onLike: (id: string) => void; // the callback function to handle liking the post
   onDislike: (id: string) => void; // the callback function to handle disliking the post
@@ -24,8 +24,6 @@ export function LikePost(props: LikePostProps) {
     showSidebar,
     setShowSidebar,
   } = props;
-
-  console.warn(countLikes);
   return (
     <div
       className={`${
@@ -38,9 +36,7 @@ export function LikePost(props: LikePostProps) {
             <BiLikeFilled onClick={() => onDislike(id)} />
           </>
         ) : (
-          <>
-            <BiLike onClick={() => onLike(id)} />
-          </>
+          <BiLike onClick={() => onLike(id)} />
         )}
         | <FaRegCommentDots onClick={() => setShowSidebar(!showSidebar)} />
       </div>

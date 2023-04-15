@@ -44,6 +44,7 @@ export const postRouter = router({
           select: {
             name: true,
             image: true,
+            username: true,
           },
         },
         bookmarks: session?.user?.id
@@ -270,26 +271,9 @@ export const postRouter = router({
       return comments;
     }),
 
-  // dislikeComment: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       commentId: z.string(),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx: { prisma, session }, input: { commentId } }) => {
-  //     await prisma.like.delete({
-  //       where: {
-  //         userId_commentId: {
-  //           commentId,
-  //           userId: session.user.id,
-  //         },
-  //       },
-  //     });
-  //   }),
-
   getReadingList: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {
-      const allBookmarks = await prisma.bookmark.findMany({
+      const allBookmarks = await prisma.bookMark.findMany({
         where: {
           userId: session.user.id,
         },
@@ -302,6 +286,7 @@ export const postRouter = router({
           post: {
             select: {
               title: true,
+              featuredImage: true,
               description: true,
               author: {
                 select: {

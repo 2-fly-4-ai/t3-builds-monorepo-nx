@@ -27,7 +27,7 @@ export interface PostCardProps {
   };
 }
 
-export function PostCard(props: PostCardProps) {
+export function PostCardList(props: PostCardProps) {
   const postRoute = trpc.useContext().post;
 
   const bookmarkPost = trpc.post.bookmarkPost.useMutation({
@@ -51,26 +51,14 @@ export function PostCard(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid gap-3 grid-cols-10 gap-x-8  border-b-2 p-4 py-4 hover:bg-gray-100">
-      <div className="rounded-none bg-gray-200 col-span-10">
-        <Image
-          src={
-            'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
-            props.post.author.image
-          }
-          width={300}
-          height={300}
-          className=""
-          alt={'' ?? ''}
-        />
-      </div>
-      <div className="col-span-full items-center gap-3  py-1 ">
+    <div className="group  grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 border-b-2 p-6 py-4 hover:bg-gray-100">
+      <div className="col-span-full flex items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
-            className=" flex gap-2 items-center p-1 hover:bg-gray-200 hover:border-gray-400 cursor-pointer rounded-lg shadow-sm border-2 border-gray-200
+            className=" flex gap-2 items-center p-2 hover:bg-gray-200 hover:border-gray-400 cursor-pointer rounded-lg shadow-sm border-2 border-gray-200
         "
           >
-            <div className="h-7 w-7 rounded-full bg-gray-300 ">
+            <div className="h-10 w-10 rounded-full bg-gray-300 ">
               {props.post.author.image && props.post.author.image ? (
                 <Image
                   src={props.post.author.image ?? ''}
@@ -87,32 +75,43 @@ export function PostCard(props: PostCardProps) {
                   {props.post.author.name}
                 </div>
                 |{' '}
-                <div className="text-sm font-medium">
+                <div className="text-sm">
                   {dayjs(props.post.createdAt).format('DD/MM/YY')}
                 </div>
               </div>
-              {/* <div className="text-sm underline">Teacher & Developer</div> */}
+              <div className="text-sm underline">Teacher & Developer</div>
             </div>
           </div>
         </Link>
       </div>
 
-      <div className="col-span-10  border  h-40">
+      <div className="col-span-8  space-y-2 border border-transparent">
         <Link href={`/${props.post.slug}`}>
-          <div className="col-span-4 "></div>
-          <h3 className="cursor-pointer text-2xl  line-clamp-3 font-bold decoration-indigo-400 decoration-2 group-hover:underline">
+          <h3 className="cursor-pointer text-2xl font-bold decoration-indigo-400 decoration-2 group-hover:underline">
             {props.post.title}
           </h3>
         </Link>
-        <div className="break-words line-clamp-2  text-md line text-gray-500">
+        <div className="break-words text-md  text-gray-500 line-clamp-4">
           {props.post.description}
         </div>
       </div>
-
-      <div className="flex items-center col-span-10">
+      <div className="col-span-4 ">
+        <div className="rounded-none bg-gray-200">
+          <Image
+            src={
+              'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
+              props.post.author.image
+            }
+            width={300}
+            height={300}
+            alt={props.post.author.name ?? ''}
+          />
+        </div>
+      </div>
+      <div className="flex items-center col-span-12">
         <div className="flex mr-auto space-x-3 ">
           {/* post.tags */}
-          {Array.from({ length: 0 }).map((tag) => (
+          {Array.from({ length: 4 }).map((tag) => (
             <div
               // key={tag.id}
               onClick={() => {
@@ -125,9 +124,6 @@ export function PostCard(props: PostCardProps) {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="border flex w-full">
         <div className="flex border-2 px-2 font-medium bg-gray-200 border-gray-400 mx-1">
           <BiUpvote /> {props.post.likes.length}
         </div>
@@ -160,9 +156,10 @@ export function PostCard(props: PostCardProps) {
           </div>
         ) : null}
       </div>
+
       {/* add the rest of the code here */}
     </div>
   );
 }
 
-export default PostCard;
+export default PostCardList;

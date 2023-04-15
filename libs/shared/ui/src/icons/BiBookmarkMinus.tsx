@@ -6,8 +6,8 @@ function BiBookmarkMinus(props) {
       fill="currentColor"
       strokeWidth={0}
       viewBox="0 0 24 24"
-      height="1.5em"
-      width="1.5em"
+      height="1.7em"
+      width="1.7em"
       {...props}
     >
       <path d="M8 9H16V11H8z" />

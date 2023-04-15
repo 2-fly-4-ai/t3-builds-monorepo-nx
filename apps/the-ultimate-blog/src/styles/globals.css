@@ -3,9 +3,26 @@
 @tailwind utilities;
 
 .ck-editor__editable {
-  height: 100%;
+  min-height: 28vh;
+  position: relative;
 }
 
-/* .ck-editor__editable {
-  border-color: red;
+.ck-editor {
+  visibility: hidden;
+}
+
+.ck-editor__editable {
+  visibility: visible;
+}
+
+/* .ck.ck-editor__editable_inline {
+  visibility: hidden;
+  opacity: 0;
+} */
+/* .ck-content {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.ck-toolbar {
+  display: none;
 } */
