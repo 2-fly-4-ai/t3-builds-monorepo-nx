@@ -52,7 +52,7 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 /* eslint-disable-next-line */
 export interface NavMenuProps {}
-export default function NavigationMenuDemo() {
+export function NavigationMenuDemo() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -142,3 +142,5 @@ const ListItem = React.forwardRef<
   );
 });
 ListItem.displayName = 'ListItem';
+
+export default NavigationMenuDemo;

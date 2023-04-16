@@ -12,6 +12,7 @@
     "paths": {
       "@mylibrary/*": ["src/*"],
       "@mylibrary/icons": ["libs/icons/src/index.ts"],
+      "@shadnui/icons": ["libs/icons/src/index.ts"],
       "interweave": ["node_modules/interweave/esm/index.js"]
     }
   },

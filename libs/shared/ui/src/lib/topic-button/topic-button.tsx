@@ -1,4 +1,5 @@
 // libs/shared/ui/src/lib/topic-button/topic-button.tsx
+'use client';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -7,7 +8,7 @@ export interface TopicButtonProps {
   onClick?: (topicName: string) => void;
 }
 
-export function TopicButton(props: TopicButtonProps) {
+export default function TopicButton(props: TopicButtonProps) {
   const [icon, setIcon] = useState('');
 
   useEffect(() => {
@@ -43,5 +44,3 @@ export function TopicButton(props: TopicButtonProps) {
     </div>
   );
 }
-
-export default TopicButton;

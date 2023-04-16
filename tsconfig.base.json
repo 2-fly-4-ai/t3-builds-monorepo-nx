@@ -16,6 +16,7 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
+      "@front-end-nx/shared/next13-ui": ["libs/shared/next13-ui/src/index.ts"],
       "@front-end-nx/shared/ui": ["libs/shared/ui/src/index.ts"]
     }
   },
