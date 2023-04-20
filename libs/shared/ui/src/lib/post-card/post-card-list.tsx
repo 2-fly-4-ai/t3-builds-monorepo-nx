@@ -51,7 +51,7 @@ export function PostCardList(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group  grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 border-b-2 p-6 py-4 hover:bg-gray-100">
+    <div className="group  grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 border-b-2 p-6 py-4 transition duration-500 hover:shadow-[0px_0px_5px_10px_rgb(231,229,228)] shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]">
       <div className="col-span-full flex items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
@@ -85,30 +85,47 @@ export function PostCardList(props: PostCardProps) {
         </Link>
       </div>
 
-      <div className="col-span-8  space-y-2 border border-transparent">
+      <div className="col-span-8  space-y-4 border border-transparent">
         <Link href={`/${props.post.slug}`}>
-          <h3 className="cursor-pointer text-2xl font-bold decoration-indigo-400 decoration-2 group-hover:underline">
+          <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 hover:underline transition duration-500">
             {props.post.title}
           </h3>
         </Link>
-        <div className="break-words text-md  text-gray-500 line-clamp-4">
+        <div className="break-words text-md  text-gray-500 line-clamp-8">
           {props.post.description}
         </div>
+        <button className="text-xl font-medium border px-4 py-1 flex items-center gap-2 rounded-lg bg-gray-100">
+          <p className="pb-1">Read More</p>
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 1024 1024"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M869 487.8L491.2 159.9c-2.9-2.5-6.6-3.9-10.5-3.9h-88.5c-7.4 0-10.8 9.2-5.2 14l350.2 304H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h585.1L386.9 854c-5.6 4.9-2.2 14 5.2 14h91.5c1.9 0 3.8-.7 5.2-2L869 536.2a32.07 32.07 0 0 0 0-48.4z"></path>
+          </svg>
+        </button>
       </div>
       <div className="col-span-4 ">
-        <div className="rounded-none bg-gray-200">
-          <Image
-            src={
-              'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
-              props.post.author.image
-            }
-            width={300}
-            height={300}
-            alt={props.post.author.name ?? ''}
-          />
-        </div>
+        <Link href={props.post.slug}>
+          <div className="rounded-none bg-gray-200 hover:scale-105 duration 500 transition">
+            <Image
+              src={
+                'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
+                props.post.author.image
+              }
+              width={400}
+              height={400}
+              className=""
+              alt={props.post.author.name ?? ''}
+            />
+          </div>
+        </Link>
       </div>
-      <div className="flex items-center col-span-12">
+      <div className="flex items-center col-span-12 my-2">
         <div className="flex mr-auto space-x-3 ">
           {/* post.tags */}
           {Array.from({ length: 4 }).map((tag) => (

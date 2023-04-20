@@ -10,19 +10,19 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
   const readingList = trpc.post.getReadingList.useQuery();
   const [mainClass, setMainClass] = useState('');
 
-  useEffect(() => {
-    setMainClass(showSidebar ? 'slide-right ' : 'slide-left translate-x-1/2');
-  }, [showSidebar]);
+  // useEffect(() => {
+  //   setMainClass(showSidebar ? 'slide-right ' : 'slide-left translate-x-1/2');
+  // }, [showSidebar]);
 
-  if (!showSidebar) {
-    return null;
-  }
+  // if (!showSidebar) {
+  //   return null;
+  // }
 
   return (
     <aside
       className={`${mainClass} ${
-        showSidebar ? 'col-span-3 ' : '   grid-cols-none'
-      } space-between flex h-[90vh] w-full flex-col space-y-4  p-6 transition-transform duration-500 ease-out relative `}
+        showSidebar ? 'col-span-3 ' : '   hidden'
+      } space-between flex h-full w-full flex-col space-y-4  p-6 transition-transform duration-500 ease-out relative `}
     >
       <div className="">
         <h3 className="mb-6 font-medium">People you might be interested in:</h3>
@@ -52,7 +52,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
       </div>
       <div>
         <button
-          className="bg-gray-600 hover:animate-pulse font-bold border-gray-400 border-2 absolute w-10 h-10 rounded-full  -left-5 mr-2 top-96 hover:scale-105 text-white  transition-transform duration-500 ease-out"
+          className="bg-gray-100 hover:animate-pulse font-bold border-gray-400 border-2 absolute w-10 h-10 rounded-full  -left-5 mr-2 top-96 hover:scale-105 text-gray-500  transition-transform duration-500 ease-out"
           onClick={toggleSidebar}
         >
           -
@@ -69,7 +69,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                     ) : null}
                   </div>
                   <div className="flex w-3/5 flex-col space-y-2">
-                    <div className=" font-semibold decoration-indigo-400 decoration-2 group-hover:underline ">
+                    <div className=" font-semibold decoration-gray-300 decoration-4 group-hover:underline ">
                       {bookmark.post.title}
                     </div>
                     <div className="text-sm line-clamp-2">

@@ -51,23 +51,25 @@ export function PostCard(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid gap-3 grid-cols-10 gap-x-8  border-b-2 p-4 py-4 hover:bg-gray-100">
+    <div className="transition duration-500  hover:shadow-[0px_0px_5px_10px_rgb(231,229,228)] grid gap-3 grid-cols-10 gap-x-8  p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]">
       <div className="rounded-none bg-gray-200 col-span-10">
-        <Image
-          src={
-            'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
-            props.post.author.image
-          }
-          width={300}
-          height={300}
-          className=""
-          alt={'' ?? ''}
-        />
+        <Link href={props.post.slug}>
+          <Image
+            src={
+              'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
+              props.post.author.image
+            }
+            width={300}
+            height={300}
+            className="hover:"
+            alt={'' ?? ''}
+          />
+        </Link>
       </div>
       <div className="col-span-full items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
-            className=" flex gap-2 items-center p-1 hover:bg-gray-200 hover:border-gray-400 cursor-pointer rounded-lg shadow-sm border-2 border-gray-200
+            className=" flex gap-2 items-center p-1  hover:border-gray-400 cursor-pointer  shadow-sm border-2 border-gray-200
         "
           >
             <div className="h-7 w-7 rounded-full bg-gray-300 ">
@@ -97,14 +99,14 @@ export function PostCard(props: PostCardProps) {
         </Link>
       </div>
 
-      <div className="col-span-10  border  h-40">
+      <div className="col-span-10   h-40">
         <Link href={`/${props.post.slug}`}>
           <div className="col-span-4 "></div>
-          <h3 className="cursor-pointer text-2xl  line-clamp-3 font-bold decoration-indigo-400 decoration-2 group-hover:underline">
+          <h3 className="cursor-pointer hover:underline text-2xl  line-clamp-3 font-bold decoration-gray-300 decoration-4  hover:underline ">
             {props.post.title}
           </h3>
         </Link>
-        <div className="break-words line-clamp-2  text-md line text-gray-500">
+        <div className="break-words line-clamp-3  text-md line text-gray-500">
           {props.post.description}
         </div>
       </div>

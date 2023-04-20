@@ -1,5 +1,5 @@
 // @ts-check
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Specify your server-side environment variables schema here.
@@ -7,9 +7,9 @@ import { z } from "zod";
  */
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
-  NODE_ENV: z.enum(["development", "test", "production"]),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXTAUTH_SECRET:
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === 'production'
       ? z.string().min(1)
       : z.string().min(1).optional(),
   NEXTAUTH_URL: z.preprocess(
@@ -23,6 +23,8 @@ export const serverSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  // SUPABASE_PUBLIC_URL: z.string(),
+  // SUPABASE_SECRET_KEY: z.string(),
 });
 
 /**
@@ -31,7 +33,8 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string(),
+  NEXT_PUBLIC_SUPABASE_PUBLIC_URL: z.string(),
+  NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: z.string(),
 });
 
 /**
@@ -41,5 +44,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  NEXT_PUBLIC_SUPABASE_PUBLIC_URL: process.env.NX_SUPABASE_PUBLIC_URL,
+  NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: process.env.NX_PUBLIC_SUPABASE_PUBLIC_KEY,
 };

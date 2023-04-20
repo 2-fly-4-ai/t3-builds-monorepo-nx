@@ -19,10 +19,6 @@ export function LoadingSpinner(props: LoadingSpinnerProps) {
       <div>
         <ImSpinner8 className="animate-spin" />
         {/* A button that calls the handleClick function on click */}
-        <button onClick={handleClick}>
-          {/* A conditional rendering that shows the testvar1 state */}
-          {testvar1 ? 'True' : 'False'}
-        </button>
       </div>
       <div>Loading...</div>
     </div>

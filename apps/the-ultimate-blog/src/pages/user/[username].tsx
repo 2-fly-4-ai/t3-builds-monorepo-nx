@@ -6,11 +6,20 @@ import { trpc } from '../../utils/trpc';
 import { BiEdit } from 'react-icons/bi';
 import { SlShareAlt } from 'react-icons/sl';
 import { toast } from 'react-hot-toast';
-import PostCard from 'libs/shared/ui/src/lib/post-card/post-card';
+import PostCardListUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-list-userprofile';
+import PostCardUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-userprofile';
 import { useSession } from 'next-auth/react';
 import Modal from '../../components/Modal';
+import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NX_SUPABASE_PUBLIC_URL,
+  process.env.NX_PUBLIC_SUPABASE_PUBLIC_KEY
+);
 
 const UserProfilePage = () => {
+  const [showListView, setListView] = useState(false);
   const router = useRouter();
   console.warn(router?.query?.username);
 
@@ -36,7 +45,7 @@ const UserProfilePage = () => {
   );
 
   const [objectImage, setObjectImage] = useState('');
-  //   const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const userRoute = trpc.useContext().user;
 
@@ -53,7 +62,7 @@ const UserProfilePage = () => {
 
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && userProfile.data?.username) {
-      const file = e.target.files[0];
+      const file = e.target.files[0]; //select only one image
 
       if (file.size > 1.5 * 1000000) {
         return toast.error('images size should not be greater than 1MB');
@@ -266,50 +275,98 @@ const UserProfilePage = () => {
                   Followings
                 </button>
               </div>
-              <div className="flex w-full items-center space-x-4">
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success('URL copied to clipboard 🥳');
-                  }}
-                  className="mt-2 flex transform items-center space-x-3 rounded border border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
-                >
-                  <div>Share</div>
-                  <div>
-                    <SlShareAlt />
-                  </div>
-                </button>
-                {userProfile.isSuccess && userProfile.data?.followedBy && (
+              <div className="flex w-full justify-between items-center pr-4 space-x-4">
+                <div className="flex gap-2 ">
                   <button
                     onClick={() => {
-                      if (userProfile.data?.id) {
-                        userProfile.data.followedBy.length > 0
-                          ? unfollowUser.mutate({
-                              followingUserId: userProfile.data?.id,
-                            })
-                          : followUser.mutate({
-                              followingUserId: userProfile.data?.id,
-                            });
-                      }
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success('URL copied to clipboard 🥳');
                     }}
-                    className="mt-2 flex items-center space-x-3 rounded border border-gray-400/50 bg-white px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
+                    className=" flex transform items-center space-x-3 rounded border border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
                   >
-                    {userProfile.data?.followedBy.length > 0
-                      ? 'Unfollow'
-                      : 'Follow'}
+                    <div>Share</div>
+                    <div>
+                      <SlShareAlt />
+                    </div>
                   </button>
-                )}
+                  {userProfile.isSuccess && userProfile.data?.followedBy && (
+                    <button
+                      onClick={() => {
+                        if (userProfile.data?.id) {
+                          userProfile.data.followedBy.length > 0
+                            ? unfollowUser.mutate({
+                                followingUserId: userProfile.data?.id,
+                              })
+                            : followUser.mutate({
+                                followingUserId: userProfile.data?.id,
+                              });
+                        }
+                      }}
+                      className="flex items-center space-x-3 rounded border border-gray-400/50 bg-white px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
+                    >
+                      {userProfile.data?.followedBy.length > 0
+                        ? 'Unfollow'
+                        : 'Follow'}
+                    </button>
+                  )}
+                </div>
+                <div className="ml-auto  flex">
+                  {!showListView ? (
+                    <button onClick={() => setListView(true)}>
+                      {/* I need this button to set List view true when clicked */}
+                      <svg
+                        stroke="currentColor"
+                        fill="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 20 20"
+                        height="2em"
+                        width="2em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  ) : (
+                    <button onClick={() => setListView(false)}>
+                      {/* I need this button to set List view false when clicked */}
+                      <svg
+                        stroke="currentColor"
+                        fill="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 20 20"
+                        height="2em"
+                        width="2em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className=" my-8">
-            <h2 className="text-4xl mr-auto border px-2">My Posts:</h2>
+          <div className=" my-8 w-full">
+            <h2 className="text-4xl mr-auto  px-2">My Posts:</h2>
+            {userPosts.isLoading && <LoadingSpinner />}
 
-            <div className="my-10 grid-cols-3 gap-4 grid w-full">
+            <div
+              className={`${
+                showListView ? 'grid-cols-1' : 'grid-cols-3'
+              } my-10  gap-8 grid w-full place-items-center`}
+            >
               {userPosts.isSuccess &&
                 userPosts.data?.posts.map((post) => (
-                  <div className="border rounded-lg h-full">
-                    <PostCard post={post} key={post.id} />
+                  <div className=" h-full">
+                    {showListView ? (
+                      <PostCardListUserProfile post={post} />
+                    ) : (
+                      <PostCardUserProfile post={post} />
+                    )}
                   </div>
                 ))}
             </div>

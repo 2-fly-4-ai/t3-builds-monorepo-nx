@@ -23,7 +23,7 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
     <main
       className={`${
         showSidebar ? 'col-span-9' : 'col-span-12'
-      } border-gray  xl:px-8 2xl:px-8 h-full   w-full border-r  border-gray-200 transition-all duration-500 ease-in-out `}
+      } border-gray  xl:px-8 2xl:px-8 h-full   w-full border-r  border-gray-200  transition-all duration-500 ease-in-out `}
     >
       <div className=" mb-4 flex flex-col items-center border-b-2 py-4">
         <div className="flex w-full items-center justify-between space-x-4  py-2 ">
@@ -59,6 +59,12 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
         <div className="flex w-full items-center justify-between py-2">
           <div className="text-lg font-medium">Articles</div>
           <div className="flex gap-2">
+            <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 bg-white p-2 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  hover:border-black hover:shadow-black">
+              <div className="text-sm font-semibold ">Following</div>
+              <div>
+                <BsChevronDown />
+              </div>
+            </button>
             <div className="bg-gray-200 flex justify-center px-1 gap-2">
               {!showListView ? (
                 <button onClick={() => setListView(true)}>
@@ -96,19 +102,21 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
                 </button>
               )}
             </div>
-
-            <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 bg-white p-2 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  hover:border-black hover:shadow-black">
-              <div className="text-sm font-semibold ">Following</div>
-              <div>
-                <BsChevronDown />
-              </div>
-            </button>
-            <button
-              className="bg-gray-600 border-gray-400 border-2 w-10 h-10 rounded-full text-lg font-bold right-72 mr-2 hover:animate-pulse text-white top-60"
-              onClick={toggleSidebar}
-            >
-              {showSidebar ? '-' : '+'}
-            </button>
+            {!showSidebar ? (
+              <button
+                className="bg-gray-100 border-gray-400 border-2 w-10 h-10  text-lg font-bold right-72 mr-2 hover:animate-pulse text-black top-60"
+                onClick={toggleSidebar}
+              >
+                {showSidebar ? '-' : '+'}
+              </button>
+            ) : (
+              <button
+                className="bg-gray-100 border-gray-400 border-2 w-10 h-10  text-lg font-bold right-72 mr-2 hover:animate-pulse text-black top-60"
+                onClick={toggleSidebar}
+              >
+                {showSidebar ? '-' : '+'}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -127,20 +135,20 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
       </div> */}
 
       <div
-        className={`${
-          showSidebar
-            ? 'grid-cols-2 2xl:grid-cols-4 '
-            : 'grid-cols-3 2xl:grid-cols-5 '
-        } my-8 grid  ${
-          showListView ? '2xl:grid-cols-1 grid-cols-1' : '2xl:grid-cols-4 '
-        } 2xl:grid-cols-4  gap-6 justify-center transition-all duration-500 ease-in-out `}
+        className={`
+  my-8 grid gap-8
+  ${
+    showListView ? 'grid-cols-1' : showSidebar ? '' : 'grid-cols-5'
+  } gap-6 justify-center
+  ${showSidebar && !showListView ? '2xl:grid-cols-4' : ''} 
+`}
       >
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
             console.warn('TESTXXX', post);
             return (
-              <div key={post.id} className="border rounded-lg h-full">
+              <div key={post.id} className=" h-full">
                 {showListView ? (
                   <PostCardList post={post} />
                 ) : (

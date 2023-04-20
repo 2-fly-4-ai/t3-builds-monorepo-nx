@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import SharedNext13Ui from './shared-next13-ui';
+import PostCard from './post-card';
 
-describe('SharedNext13Ui', () => {
+describe('PostCard', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<SharedNext13Ui />);
+    const { baseElement } = render(<PostCard />);
     expect(baseElement).toBeTruthy();
   });
 });
