@@ -6,26 +6,29 @@ import { trpc } from '../../utils/trpc';
 import { BiEdit } from 'react-icons/bi';
 import { SlShareAlt } from 'react-icons/sl';
 import { toast } from 'react-hot-toast';
-import PostCardListUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-list-userprofile';
+import PostCard from 'libs/shared/ui/src/lib/post-card/post-card';
+import PostCardList from 'libs/shared/ui/src/lib/post-card/post-card-list';
+import PostCardListUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-userprofile-list';
 import PostCardUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-userprofile';
 import { useSession } from 'next-auth/react';
 import Modal from '../../components/Modal';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NX_SUPABASE_PUBLIC_URL,
-  process.env.NX_PUBLIC_SUPABASE_PUBLIC_KEY
-);
+import Link from 'next/link';
+import dayjs from 'dayjs';
+import { useCallback } from 'react';
+import { useBookmarkStore } from 'libs/shared/ui/src/zustand/store';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from 'libs/shared/ui/src/shadnui/ui/tabs';
 
 const UserProfilePage = () => {
+  const readingList = trpc.post.getReadingList.useQuery();
   const [showListView, setListView] = useState(false);
   const router = useRouter();
-  console.warn(router?.query?.username);
-
   const currentUser = useSession();
-  console.warn(router.query.username);
-
   const userProfile = trpc.user.getUserProfile.useQuery(
     {
       username: router.query.username as string,
@@ -34,7 +37,6 @@ const UserProfilePage = () => {
       enabled: !!router.query.username,
     }
   );
-
   const userPosts = trpc.user.getUserPosts.useQuery(
     {
       username: router.query.username as string,
@@ -43,12 +45,9 @@ const UserProfilePage = () => {
       enabled: !!router.query.username,
     }
   );
-
   const [objectImage, setObjectImage] = useState('');
   const [file, setFile] = useState<File | null>(null);
-
   const userRoute = trpc.useContext().user;
-
   const uploadAvatar = trpc.user.uploadAvatar.useMutation({
     onSuccess: () => {
       if (userProfile.data?.username) {
@@ -59,7 +58,6 @@ const UserProfilePage = () => {
       }
     },
   });
-
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && userProfile.data?.username) {
       const file = e.target.files[0]; //select only one image
@@ -84,12 +82,10 @@ const UserProfilePage = () => {
       };
     }
   };
-
   const [isFollowModalOpen, setIsFollowModalOpen] = useState({
     isOpen: false,
     modalType: 'followers',
   });
-
   const followers = trpc.user.getAllFollowers.useQuery(
     {
       userId: userProfile?.data?.id as string,
@@ -98,7 +94,6 @@ const UserProfilePage = () => {
       enabled: Boolean(userProfile?.data?.id),
     }
   );
-
   const following = trpc.user.getAllFollowing.useQuery(
     {
       userId: userProfile?.data?.id as string,
@@ -107,7 +102,6 @@ const UserProfilePage = () => {
       enabled: Boolean(userProfile?.data?.id),
     }
   );
-
   const followUser = trpc.user.followUser.useMutation({
     onSuccess: () => {
       // we have to update out UI
@@ -120,7 +114,6 @@ const UserProfilePage = () => {
       toast.error(err.message);
     },
   });
-
   const unfollowUser = trpc.user.unfollowUser.useMutation({
     onSuccess: () => {
       userRoute.getAllFollowers.invalidate();
@@ -129,6 +122,22 @@ const UserProfilePage = () => {
       toast.success('user unfollowed');
     },
   });
+  const postRoute = trpc.useContext().post;
+
+  const removeBookmark = trpc.post.removeBookmark.useMutation({
+    onSuccess: () => {
+      toast.success('Bookmark Removed');
+      postRoute.getReadingList.invalidate();
+    },
+  });
+
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
+  const handleBookmarkToggle = useCallback(
+    (postId: string) => {
+      toggleBookmark(postId);
+    },
+    [toggleBookmark]
+  );
 
   return (
     <MainLayout>
@@ -198,8 +207,9 @@ const UserProfilePage = () => {
       )}
       <div className="flex h-full w-full items-center justify-center">
         <div className="my-10 flex h-full w-full flex-col items-center justify-center lg:max-w-screen-md xl:max-w-screen-lg">
-          <div className="flex w-full flex-col rounded-md bg-white shadow-md">
-            <div className="relative h-44 w-full rounded-md bg-gradient-to-r from-rose-100 to-teal-100">
+          {/* Top section hero */}
+          <div className="flex w-full flex-col rounded-md dark:bg-black dark:bg-opacity-60 shadow-md">
+            <div className="relative h-44 w-full rounded-md bg-gradient-to-r from-rose-100 to-teal-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-600 dark:bg-gradient-to-r">
               <div className="absolute -bottom-10 left-12">
                 <div className="group relative h-28 w-28 rounded-full border-2 border-white bg-gray-100">
                   {currentUser.data?.user?.id === userProfile.data?.id && (
@@ -237,14 +247,12 @@ const UserProfilePage = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-10 ml-12 flex flex-col space-y-0.5 rounded-b-3xl py-4">
-              <div className="text-2xl font-semibold text-gray-800">
+            <div className="mt-10 ml-12 flex flex-col space-y-0.5 rounded-b-3xl py-4 gap-2">
+              <div className="text-2xl font-semibold ">
                 {userProfile.data?.name}
               </div>
-              <div className="text-gray-600">@{userProfile.data?.username}</div>
-              <div className="text-gray-600">
-                {userProfile.data?._count.posts} Posts
-              </div>
+              <div className="">@{userProfile.data?.username}</div>
+              <div className="0">{userProfile.data?._count.posts} Posts</div>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() =>
@@ -253,9 +261,9 @@ const UserProfilePage = () => {
                       modalType: 'followers',
                     })
                   }
-                  className="text-gray-700 hover:text-gray-900"
+                  className=""
                 >
-                  <span className="text-gray-900">
+                  <span className="">
                     {userProfile.data?._count.followedBy}
                   </span>{' '}
                   Followers
@@ -267,9 +275,9 @@ const UserProfilePage = () => {
                       modalType: 'following',
                     })
                   }
-                  className="text-gray-700 hover:text-gray-900"
+                  className=""
                 >
-                  <span className="text-gray-900">
+                  <span className="">
                     {userProfile.data?._count.followings}
                   </span>{' '}
                   Followings
@@ -282,7 +290,7 @@ const UserProfilePage = () => {
                       navigator.clipboard.writeText(window.location.href);
                       toast.success('URL copied to clipboard 🥳');
                     }}
-                    className=" flex transform items-center space-x-3 rounded border border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
+                    className=" flex transform items-center space-x-3 rounded border border-2 rounded-lg border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
                   >
                     <div>Share</div>
                     <div>
@@ -302,7 +310,7 @@ const UserProfilePage = () => {
                               });
                         }
                       }}
-                      className="flex items-center space-x-3 rounded border border-gray-400/50 bg-white px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
+                      className="flex items-center space-x-3  border-gray-400/50 bg-white dark:bg-black border-2 rounded-lg dark:border-white px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
                     >
                       {userProfile.data?.followedBy.length > 0
                         ? 'Unfollow'
@@ -350,25 +358,122 @@ const UserProfilePage = () => {
               </div>
             </div>
           </div>
-          <div className=" my-8 w-full">
-            <h2 className="text-4xl mr-auto  px-2">My Posts:</h2>
-            {userPosts.isLoading && <LoadingSpinner />}
 
-            <div
-              className={`${
-                showListView ? 'grid-cols-1' : 'grid-cols-3'
-              } my-10  gap-8 grid w-full place-items-center`}
-            >
-              {userPosts.isSuccess &&
-                userPosts.data?.posts.map((post) => (
-                  <div className=" h-full">
-                    {showListView ? (
-                      <PostCardListUserProfile post={post} />
-                    ) : (
-                      <PostCardUserProfile post={post} />
-                    )}
-                  </div>
-                ))}
+          <div className=" my-8 w-full">
+            <div className="flex justify-start gap-4">
+              {!userPosts.isLoading ? (
+                <Tabs defaultValue="account" className="w-full">
+                  <TabsList>
+                    <TabsTrigger value="account">My Posts</TabsTrigger>
+                    <TabsTrigger value="password">Bookmarks</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="account">
+                    <div
+                      className={`${
+                        showListView ? 'grid-cols-1' : 'grid-cols-3'
+                      } my-10  gap-6 grid w-full place-items-center`}
+                    >
+                      {userPosts.isSuccess &&
+                        userPosts.data?.posts.map((post) => (
+                          <div className=" h-full">
+                            {showListView ? (
+                              <PostCardListUserProfile post={post} />
+                            ) : (
+                              <PostCardUserProfile post={post} />
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="password">
+                    <div>
+                      <h3 className="my-6  text-2xl ">Your reading list:</h3>
+                      <div className="flex flex-col ">
+                        {readingList.data &&
+                          readingList.data.map((bookmark, i) => (
+                            <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                              <div className="   border bg-gray-300">
+                                <Link href={`/${bookmark.post.slug}`}>
+                                  {bookmark?.post?.featuredImage ? (
+                                    <Image
+                                      src={
+                                        bookmark?.post?.featuredImage ?? null
+                                      }
+                                      width={350}
+                                      height={350}
+                                    />
+                                  ) : (
+                                    <Image
+                                      src={`https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg`}
+                                      width={350}
+                                      height={350}
+                                    />
+                                  )}
+                                </Link>
+                              </div>
+                              <div className="flex w-3/5 flex-col space-y-2">
+                                <Link href={`/${bookmark.post.slug}`}>
+                                  <h3 className=" font-semibold decoration-gray-300 decoration-4 line-clamp-3 group-hover:underline ">
+                                    {bookmark.post.title}
+                                  </h3>
+                                </Link>
+                                <div className="text-sm line-clamp-3 font-sans">
+                                  {bookmark.post.description}
+                                </div>
+                                <div>
+                                  <div className="flex w-full items-center space-x-1">
+                                    <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
+                                    <Link
+                                      href={`/user/${bookmark.post.author.name}`}
+                                    >
+                                      <div className="text-sm font-bold text-gray-900 dark:text-orange-400">
+                                        {bookmark.post.author.name}
+                                      </div>
+                                    </Link>
+                                    <div className="text-xs">
+                                      {dayjs(bookmark.post.createdAt).format(
+                                        'DD/MM/YYYY'
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-center flex flex-col gap-3 w-48">
+                                <Link href={`/${bookmark.post.slug}`}>
+                                  <button className=" border-2 dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white border-gray-300 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300   hover:border-black hover:text-gray-900 hover:shadow-black  px-2 duration-500 transition bg-whites  text-black  font-bold  py-2 w-full   rounded-lg items-center justify-center">
+                                    {' '}
+                                    Read Post
+                                  </button>
+                                </Link>
+                                <button
+                                  onClick={() => {
+                                    removeBookmark.mutate({
+                                      postId: bookmark.post.id,
+                                    });
+                                    // use the toggleBookmark function from the store and pass the post id
+                                    handleBookmarkToggle(bookmark.post.id);
+                                  }}
+                                  className=" px-2 duration-200 transition  hover:text-white font-bold py-2 dark:bg-gray-400 dark:hover:bg-red-400 bg-gray-200 rounded-lg items-center justify-center"
+                                >
+                                  {' '}
+                                  Remove Bookmark
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              ) : null}
+
+              {/* <button className="text-4xl  bg-gray-200 px-4 py-2 pb-3 rounded-lg active:border-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:border-transparent">
+                My Posts
+              </button>
+              <button className="text-4xl  bg-gray-200 px-4 py-2 pb-3 rounded-lg active:border-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:border-transparent">
+                Bookmarks
+              </button> */}
+              {userPosts.isLoading && <LoadingSpinner />}
             </div>
           </div>
         </div>

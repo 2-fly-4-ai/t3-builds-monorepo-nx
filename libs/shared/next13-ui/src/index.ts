@@ -10,6 +10,7 @@ export * from './shadnui/components/site-footer/site-footer';
 export * from './shadnui/components/analytics/analytics';
 export * from './shadnui/components/tailwind-indicator/tailwind-indicator';
 export * from './shadnui/ui/toaster';
+export * from './shadnui/components/site-header/site-header';
 
 export { default as SearchIcon } from './icons/SearchIcon';
 export { default as UserStarIcon } from './icons/UserStarIcon';

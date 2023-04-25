@@ -108,7 +108,7 @@ model Comment {
 
 model Tag {
   id           String @id  @default(cuid())
-  name         String
+  name         String @unique
   description  String?
   slug         String
   posts        Post[]
@@ -122,7 +122,8 @@ model Like {
   user      User       @relation(fields: [userId], references: [id])
   post      Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
   comment   Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  @@unique([userId, postId])
+  @@unique([userId, postId]) // unique constraint on post likes
+  @@unique([userId, commentId]) // unique constraint on comment likes
   @@index([postId])
 }
 

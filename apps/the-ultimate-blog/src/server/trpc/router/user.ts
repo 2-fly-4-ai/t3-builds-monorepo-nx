@@ -6,10 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '../../../env/server.mjs';
 import { TRPCError } from '@trpc/server';
 
-const supabase = createClient(
-  env.NEXT_PUBLIC_SUPABASE_PUBLIC_URL,
-  env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY
-);
+const supabase = createClient(env.SUPABASE_PUBLIC_URL, env.SUPABASE_SECRET_KEY);
 
 export const userRouter = router({
   getUserProfile: publicProcedure
@@ -130,7 +127,7 @@ export const userRouter = router({
       const {
         data: { publicUrl },
       } = supabase.storage.from('public').getPublicUrl(data?.path);
-
+      console.warn(publicUrl);
       await prisma.user.update({
         where: {
           id: session.user.id,

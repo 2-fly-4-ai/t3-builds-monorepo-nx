@@ -14,7 +14,7 @@ function HomePage() {
 
   return (
     <MainLayout>
-      <section className="grid h-full w-full grid-cols-12  bg-white">
+      <section className="grid h-full w-full grid-cols-12  ">
         {/* This is the main section */}
         <MainSection showSidebar={showSidebar} toggleSidebar={toggleSidebar} />
         {/* This is the sidebar */}

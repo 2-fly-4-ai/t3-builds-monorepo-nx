@@ -7,6 +7,8 @@ import { useCallback, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
 import toast, { Toaster } from 'react-hot-toast';
+//lets use our zustand import here
+import { useBookmarkStore } from '../../zustand/store';
 
 /* eslint-disable-next-line */
 export interface PostCardProps {
@@ -26,7 +28,6 @@ export interface PostCardProps {
     likes: string;
   };
 }
-
 export function PostCard(props: PostCardProps) {
   const postRoute = trpc.useContext().post;
 
@@ -43,33 +44,59 @@ export function PostCard(props: PostCardProps) {
       postRoute.getReadingList.invalidate();
     },
   });
+
   const { data: sessionData, status } = useSession();
-  const [isBookmarked, setIsBookmarked] = useState(
-    Boolean(props?.post?.bookmarks?.length > 0)
-  );
+  //use the zustand store and get the bookmark status for the current post
+  // Use Zustand to manage the state of the bookmark button
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
+  const isBookmarked = bookmarks.includes(props.post.id);
+
+  const handleBookmarkToggle = useCallback(() => {
+    toggleBookmark(props.post.id);
+  }, [props.post.id, isBookmarked, toggleBookmark]);
 
   const dayjs = require('dayjs');
 
   return (
-    <div className="transition duration-500  hover:shadow-[0px_0px_5px_10px_rgb(231,229,228)] grid gap-3 grid-cols-10 gap-x-8  p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]">
-      <div className="rounded-none bg-gray-200 col-span-10">
-        <Link href={props.post.slug}>
-          <Image
-            src={
-              'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s' ??
-              props.post.author.image
-            }
-            width={300}
-            height={300}
-            className="hover:"
-            alt={'' ?? ''}
-          />
+    <div className="group transition duration-500  hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] grid gap-2 grid-cols-10 gap-x-8  p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] rounded-xl bg-white bg-opacity-10 border-2 dark:border-gray-300">
+      <div className="relative rounded-none  col-span-full ">
+        <div className="group absolute flex h-full w-full group-hover:bg-black group-hover:bg-opacity-20 transition duration-500">
+          <Link href={`/${props.post.slug}`} className="my-auto mt-4 mx-auto">
+            <button className="mx-auto font-bold text-base antialiased  border-4  group-hover:bg-opacity-80 dark:group-hover:bg-opacity-50  backdrop-blur duration-500 transition py-1 px-2 hidden rounded-lg group-hover:bg-white dark:group-hover:bg-black group-hover:flex  justify-center items-center gap-2">
+              VIEW ARTICLE
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="0"
+                viewBox="0 0 512 512"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"></path>
+              </svg>
+            </button>
+          </Link>
+        </div>
+        <Link href={`/${props.post.slug}`} className="">
+          <div className="h-56">
+            <Image
+              src={
+                props.post.featuredImage ??
+                'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s'
+              }
+              width={400}
+              height={400}
+              className="f-full object-cover h-56"
+              alt={'' ?? ''}
+            />
+          </div>
         </Link>
       </div>
-      <div className="col-span-full items-center gap-3  py-1 ">
+      <div className="hover:bg-gray-200 transition-all duration-500 group col-span-full items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
-            className=" flex gap-2 items-center p-1  hover:border-gray-400 cursor-pointer  shadow-sm border-2 border-gray-200
+            className=" flex gap-2 items-center p-1   cursor-pointer  shadow-sm border-b-2 border-gray-200
         "
           >
             <div className="h-7 w-7 rounded-full bg-gray-300 ">
@@ -85,7 +112,7 @@ export function PostCard(props: PostCardProps) {
             </div>
             <div className="">
               <div className="flex items-center gap-2 ">
-                <div className="text-lg font-medium capitalize">
+                <div className="text-lg font-bold capitalize underline dark:text-orange-400">
                   {props.post.author.name}
                 </div>
                 |{' '}
@@ -99,19 +126,19 @@ export function PostCard(props: PostCardProps) {
         </Link>
       </div>
 
-      <div className="col-span-10   h-40">
+      <div className="col-span-full   h-28">
         <Link href={`/${props.post.slug}`}>
           <div className="col-span-4 "></div>
-          <h3 className="cursor-pointer hover:underline text-2xl  line-clamp-3 font-bold decoration-gray-300 decoration-4  hover:underline ">
+          <h3 className=" cursor-pointer  text-xl  line-clamp-4 font-bold decoration-gray-300 ">
             {props.post.title}
           </h3>
         </Link>
-        <div className="break-words line-clamp-3  text-md line text-gray-500">
+        {/* <div className="break-words line-clamp-3  text-md line text-gray-500">
           {props.post.description}
-        </div>
+        </div> */}
       </div>
 
-      <div className="flex items-center col-span-10">
+      <div className="flex items-center col-span-full">
         <div className="flex mr-auto space-x-3 ">
           {/* post.tags */}
           {Array.from({ length: 0 }).map((tag) => (
@@ -129,20 +156,20 @@ export function PostCard(props: PostCardProps) {
         </div>
       </div>
 
-      <div className="border flex w-full">
-        <div className="flex border-2 px-2 font-medium bg-gray-200 border-gray-400 mx-1">
+      <div className=" flex w-full col-span-full">
+        <div className="flex items-center px-2 font-medium dark:bg-white dark:bg-opacity-10  bg-slate-100 border-gray-400 mx-1">
           <BiUpvote /> {props.post.likes.length}
         </div>
         {sessionData ? (
-          <div className="text-gray-400 hover:text-black">
+          <div className="text-gray-400 hover:text-black dark:hover:text-white">
             {isBookmarked ? (
               <BiBookmarkMinus
                 onClick={() => {
                   removeBookmark.mutate({
                     postId: props.post.id,
                   });
-                  // create a new state object with the opposite value of isBookmarked
-                  setIsBookmarked((prevState) => !prevState);
+                  // use the toggleBookmark function from the store and pass the post id
+                  handleBookmarkToggle();
                 }}
                 className="cursor-pointer"
               />
@@ -153,8 +180,8 @@ export function PostCard(props: PostCardProps) {
                   bookmarkPost.mutate({
                     postId: props.post.id,
                   });
-                  // create a new state object with the opposite value of isBookmarked
-                  setIsBookmarked((prevState) => !prevState);
+                  // use the toggleBookmark function from the store and pass the post id
+                  handleBookmarkToggle();
                 }}
                 className="cursor-pointer"
               />

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import InlineEditor from '@ckeditor/ckeditor5-build-inline';
-import { useState } from 'react';
+import DecoupledEditor from 'ckeditor5-custom-build/build/ckeditor';
+import { useEffect, useState } from 'react';
 
 interface CKeditorProps {
   onChange: (data: string) => void;
@@ -10,65 +10,65 @@ interface CKeditorProps {
   value: string;
 }
 
-export default function CKeditor({ onChange, name, value }: CKeditorProps) {
-  const editorRef = useRef<{
-    CKEditor: typeof CKEditor;
-    InlineEditor: typeof InlineEditor;
-  }>();
+const Editor = ({ onChange, value }: CKeditorProps) => {
+  // const [showEditor, setShowEditor] = useState<boolean>(false);
 
-  const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
+  if (typeof window !== 'undefined') {
+    const balloonPanel = document.querySelector('.ck-balloon-panel');
+    console.warn('TESTBALLOON', balloonPanel);
+    {
+      balloonPanel &&
+        setTimeout(() => {
+          balloonPanel.style.visibility = 'visible';
+        }, 100);
+    }
+  }
 
-  useEffect(() => {
-    setEditorLoaded(true),
-      (editorRef.current = {
-        CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
-        InlineEditor: require('@ckeditor/ckeditor5-build-inline'),
-      });
-  }, []);
+  // useEffect(() => {
+  //   setShowEditor(true);
+  // }, []);
+  const showEditor = true;
+  // const showEditor = true;
 
-  return editorLoaded ? (
+  return showEditor ? (
     <CKEditor
-      editor={InlineEditor}
+      editor={DecoupledEditor}
       data={value}
+      config={{
+        placeholder: 'Type here to get started',
+        codeBlock: {
+          languages: [
+            // { language: 'plaintext', label: 'Plain text' },
+            // { language: 'c', label: 'C' },
+            // { language: 'cs', label: 'C#' },
+            // { language: 'cpp', label: 'C++' },
+            // { language: 'css', label: 'CSS' },
+            // { language: 'diff', label: 'Diff' },
+            // { language: 'html', label: 'HTML' },
+            // { language: 'java', label: 'Java' },
+            { language: 'javascript', label: 'JavaScript' },
+            // { language: 'php', label: 'PHP' },
+            { language: 'python', label: 'Python' },
+            // { language: 'ruby', label: 'Ruby' },
+            { language: 'typescript', label: 'TypeScript' },
+            // { language: 'xml', label: 'XML' },
+          ],
+        },
+      }}
       onChange={(event: any, editor: any) => {
         const data = editor.getData();
         onChange(data);
       }}
-      config={{
-        toolbar: [
-          'undo',
-          'redo',
-          '|',
-          'bold',
-          'italic',
-          'blockQuote',
-          '|',
-          'heading',
-          'link',
-          'bulletedList',
-          'numberedList',
-          '|',
-          'insertTable',
-          'tableColumn',
-          'tableRow',
-          'mergeTableCells',
-        ],
-        placeholder: 'Type your text here',
-        // This is the line that disables the "flash" behavior
-        startupFocus: false,
-        simpleUpload: {
-          // The URL that the images will be uploaded to.
-          uploadUrl: 'your-image-upload-endpoint',
-
-          // Headers sent along with the XMLHttpRequest to the upload server.
-          headers: {
-            'X-CSRF-TOKEN': 'CSRF-Token',
-            Authorization: 'Bearer <JSON Web Token>',
-          },
-        },
+      onBlur={(event, editor) => {
+        console.log('Blur.', editor);
+      }}
+      onFocus={(event, editor) => {
+        console.log('Focus.', editor);
       }}
     />
   ) : (
-    <div></div>
+    <div>Loading...</div>
   );
-}
+};
+
+export default Editor;

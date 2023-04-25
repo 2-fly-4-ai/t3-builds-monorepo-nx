@@ -10,9 +10,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
+      'ebhwmitkbhdwyccdkuzj.supabase.co',
       'avatars.githubusercontent.com',
       'images.unsplash.com',
       'lh3.googleusercontent.com',
+      'thurrott.s3.amazonaws.com',
     ],
   },
   nx: {

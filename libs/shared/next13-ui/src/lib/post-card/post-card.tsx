@@ -51,7 +51,7 @@ export function PostCard(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid gap-3 grid-cols-10 gap-x-8  border-b-2 p-4 py-4 hover:bg-gray-100">
+    <div className="group grid gap-3 grid-cols-10 gap-x-8  border-b-2 p-4 py-4 hover:bg-gray-100 ">
       <div className="rounded-none bg-gray-200 col-span-10">
         <Image
           src={

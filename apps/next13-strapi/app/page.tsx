@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { siteConfig } from 'libs/shared/next13-ui/src/shadnui/config/site';
 import { buttonVariants } from 'libs/shared/next13-ui/src/shadnui/ui/button';
 import { cn } from 'libs/shared/next13-ui/src/utils/utils';
-import { SiteHeader } from '@front-end-nx/shared/next13-ui';
 
 export default function Home() {
   return (

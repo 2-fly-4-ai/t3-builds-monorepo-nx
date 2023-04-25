@@ -23,31 +23,31 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
     <main
       className={`${
         showSidebar ? 'col-span-9' : 'col-span-12'
-      } border-gray  xl:px-8 2xl:px-8 h-full   w-full border-r  border-gray-200  transition-all duration-500 ease-in-out `}
+      } border-gray   xl:px-8 2xl:px-6 min-h-screen  px-8  w-full border-r  border-gray-200  transition-all duration-500 ease-in-out `}
     >
       <div className=" mb-4 flex flex-col items-center border-b-2 py-4">
         <div className="flex w-full items-center justify-between space-x-4  py-2 ">
           <label
             htmlFor="search"
-            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 bg-white p-1 px-2 font-medium  "
+            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300  p-1 px-2 font-medium  "
           >
             <AiOutlineSearch />
             <input
               type="text"
               name="search"
               id="search"
-              className="w-full px-2 outline-none "
+              className="w-full px-2 outline-none dark:bg-black"
               placeholder="Search...."
             />
           </label>
           <div className="ml-auto flex gap-2 ">
-            <div className="my-auto mx-2">Topics:</div>
+            <div className="my-auto mx-2 text-lg font-bold">Topics:</div>
             <div>
               <ul className=" flex items-center justify-center space-x-2 text-sm">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <li
                     key={i}
-                    className="flex cursor-pointer items-center space-x-2 bg-gradient-to-tr from-gray-300 via-gray-200 to-white  rounded-md border-2  border-gray-300 bg-white p-2 px-3 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 hover:border-black hover:shadow-black"
+                    className="flex cursor-pointer items-center space-x-2   rounded-md border-2 dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:border-white  border-gray-300 p-2 px-3 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 hover:border-black hover:shadow-black"
                   >
                     Design
                   </li>
@@ -57,15 +57,15 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
           </div>
         </div>
         <div className="flex w-full items-center justify-between py-2">
-          <div className="text-lg font-medium">Articles</div>
+          <div className="text-2xl font-bold">Articles</div>
           <div className="flex gap-2">
-            <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 bg-white p-2 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  hover:border-black hover:shadow-black">
+            <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 dark:border-white dark:hover:bg-white dark:hover:text-white dark:hover:bg-opacity-60 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  hover:border-black hover:shadow-black">
               <div className="text-sm font-semibold ">Following</div>
               <div>
                 <BsChevronDown />
               </div>
             </button>
-            <div className="bg-gray-200 flex justify-center px-1 gap-2">
+            <div className=" flex justify-center px-1 gap-2">
               {!showListView ? (
                 <button onClick={() => setListView(true)}>
                   {/* I need this button to set List view true when clicked */}
@@ -104,14 +104,14 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
             </div>
             {!showSidebar ? (
               <button
-                className="bg-gray-100 border-gray-400 border-2 w-10 h-10  text-lg font-bold right-72 mr-2 hover:animate-pulse text-black top-60"
+                className=" border-gray-400 dark:border-white border-2 w-8 h-8 dark:hover:bg-white dark:hover:bg-opacity-60  text-lg font-bold right-72 mr-2 hover:animate-pulse  top-60"
                 onClick={toggleSidebar}
               >
                 {showSidebar ? '-' : '+'}
               </button>
             ) : (
               <button
-                className="bg-gray-100 border-gray-400 border-2 w-10 h-10  text-lg font-bold right-72 mr-2 hover:animate-pulse text-black top-60"
+                className=" border-gray-400 border-2 w-8 h-8 dark:border-white dark:hover:bg-white dark:hover:bg-opacity-60  text-lg font-bold right-72 mr-2 hover:animate-pulse  top-60"
                 onClick={toggleSidebar}
               >
                 {showSidebar ? '-' : '+'}
@@ -136,11 +136,15 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
 
       <div
         className={`
-  my-8 grid gap-8
+  my-8 grid gap-6 
   ${
-    showListView ? 'grid-cols-1' : showSidebar ? '' : 'grid-cols-5'
-  } gap-6 justify-center
-  ${showSidebar && !showListView ? '2xl:grid-cols-4' : ''} 
+    showListView
+      ? 'grid-cols-1'
+      : showSidebar
+      ? ''
+      : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5'
+  } gap-4 justify-center
+  ${showSidebar && !showListView ? 'xl:grid-cols-2 2xl:grid-cols-4' : ''} 
 `}
       >
         {getPosts.isLoading && <LoadingSpinner />}

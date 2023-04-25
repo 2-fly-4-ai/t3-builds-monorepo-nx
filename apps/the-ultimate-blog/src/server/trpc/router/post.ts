@@ -1,4 +1,5 @@
 import { router, protectedProcedure, publicProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
 import { WriteFormSchema } from '../../../components/Writeform';
 import slugify from 'slugify';
 import { z } from 'zod';
@@ -17,7 +18,6 @@ export const postRouter = router({
             title,
             description,
             text,
-            html,
             slug: slugify(title),
             author: {
               connect: {
@@ -40,6 +40,7 @@ export const postRouter = router({
         title: true,
         description: true,
         createdAt: true,
+        featuredImage: true,
         author: {
           select: {
             name: true,
@@ -77,6 +78,9 @@ export const postRouter = router({
           title: true,
           text: true,
           html: true,
+          authorId: true,
+          slug: true,
+          featuredImage: true,
           likes: session?.user?.id
             ? {
                 where: {
@@ -125,7 +129,7 @@ export const postRouter = router({
   likeComment: protectedProcedure
     .input(
       z.object({
-        postId: z.string(), // Add postId as a required field
+        // Add postId as a required field
         commentId: z.string(),
       })
     )
@@ -134,7 +138,7 @@ export const postRouter = router({
         await prisma.like.create({
           data: {
             userId: session.user.id,
-            postId, // Use postId instead of commentId
+            // postId, // Use postId instead of commentId
             commentId,
           },
         });
@@ -144,24 +148,19 @@ export const postRouter = router({
   dislikeComment: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
         commentId: z.string(),
       })
     )
-    .mutation(
-      async ({ ctx: { prisma, session }, input: { postId, commentId } }) => {
-        await prisma.like.delete({
-          where: {
-            userId_postId: {
-              postId,
-              userId: session.user.id,
-            },
-          },
-        });
-        9;
-      }
-    ),
-
+    .mutation(async ({ ctx: { prisma, session }, input: { commentId } }) => {
+      await prisma.like.deleteMany({
+        where: {
+          AND: [
+            { commentId: { equals: commentId } },
+            { userId: { equals: session.user.id } },
+          ],
+        },
+      });
+    }),
   bookmarkPost: protectedProcedure
     .input(
       z.object({
@@ -257,6 +256,7 @@ export const postRouter = router({
           postId: true,
           post: true,
           id: true,
+          likes: true,
 
           user: {
             select: {
@@ -271,13 +271,48 @@ export const postRouter = router({
       return comments;
     }),
 
+  updatePostFeaturedImage: protectedProcedure
+    .input(
+      z.object({
+        imageUrl: z.string().url(),
+        postId: z.string(),
+      })
+    )
+    .mutation(
+      async ({ ctx: { prisma, session }, input: { imageUrl, postId } }) => {
+        // we have to check if the user is owner of the given post
+
+        const postData = await prisma.post.findUnique({
+          where: {
+            id: postId,
+          },
+        });
+
+        if (postData?.authorId !== session.user.id) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'you are not owner of this post',
+          });
+        }
+
+        await prisma.post.update({
+          where: {
+            id: postId,
+          },
+          data: {
+            featuredImage: imageUrl,
+          },
+        });
+      }
+    ),
+
   getReadingList: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {
       const allBookmarks = await prisma.bookMark.findMany({
         where: {
           userId: session.user.id,
         },
-        take: 4,
+        take: 10,
         orderBy: {
           createdAt: 'desc',
         },
@@ -285,6 +320,7 @@ export const postRouter = router({
           id: true,
           post: {
             select: {
+              id: true,
               title: true,
               featuredImage: true,
               description: true,

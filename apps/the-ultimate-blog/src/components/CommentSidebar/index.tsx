@@ -8,10 +8,11 @@ import { trpc } from '../../utils/trpc';
 import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-
+import { useCommentStore } from 'libs/shared/ui/src/zustand/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
+// import { useCounterStore } from 'libs/shared/ui/src/zustand/store';
 
 type CommentSidebarProps = {
   showCommentSidebar: boolean;
@@ -55,6 +56,12 @@ const CommentSidebar = ({
     },
   });
 
+  // const { count, increment, decrement } = useCounterStore((state) => ({
+  //   count: state[comment.id] || 0,
+  //   increment: () => state[comment.id]++,
+  //   decrement: () => state[comment.id]--,
+  // }));
+
   const removeCommentMutation = trpc.post.removeComment.useMutation({
     onSuccess: () => {
       toast.success('Comment deleted successfully');
@@ -76,42 +83,48 @@ const CommentSidebar = ({
   const getComments = trpc.post.getComments.useQuery({
     postId,
   });
-
   // /////////////////////////////////////////////
+  const likeComment = trpc.post.likeComment.useMutation({
+    onSuccess: () => {
+      toast.success('post created successfully');
+      postRoute.getComments.invalidate();
+    },
+    onError: () => {
+      toast.error('You done fucked up');
+    },
+  });
 
-  const [likedComments, setLikedComments] = useState<string[]>([]);
+  const dislikeComment = trpc.post.dislikeComment.useMutation({
+    onSuccess: () => {
+      toast.success('comment dislked successfully');
+      postRoute.getComments.invalidate();
+    },
+    onError: () => {
+      toast.error('You done fucked up');
+    },
+  });
 
-  const isCommentLiked = (commentId: string) =>
-    likedComments.includes(commentId);
-
-  const likeComment = trpc.post.likeComment.useMutation();
-  const dislikeComment = trpc.post.dislikeComment.useMutation();
+  const { commentLikes, toggleLikeComment } = useCommentStore();
+  const isCommentLiked = (commentId: string) => commentLikes[commentId];
 
   const handleLikeComment = async (commentId: string) => {
-    try {
-      await likeComment.mutate({
-        postId,
-        commentId,
-      });
-      setLikedComments([...likedComments, commentId]);
-      toast.success('Comment liked successfully');
-    } catch (error) {
-      console.error(error);
-    }
+    await likeComment.mutate({
+      commentId,
+    });
+    toggleLikeComment(commentId);
   };
 
   const handleDislikeComment = async (commentId: string) => {
-    try {
-      await dislikeComment.mutate({
-        postId,
-        commentId,
-      });
-      setLikedComments(likedComments.filter((id) => id !== commentId));
-      toast.success('Comment disliked successfully');
-    } catch (error) {
-      console.error(error);
-    }
+    await dislikeComment.mutate({
+      commentId,
+    });
+    toggleLikeComment(commentId);
   };
+
+  // const isCommentLiked = (commentId: string) => {
+  //   // You can replace this with your own logic for checking if the comment is liked by the current user
+  //   return false;
+  // };
 
   ///////////////////////////////////////////////
 
@@ -133,7 +146,7 @@ const CommentSidebar = ({
           >
             <Dialog.Panel className="relative h-screen w-[200px] bg-white shadow-md sm:w-[400px]">
               <div className=" flex h-full w-full flex-col overflow-y-scroll px-6 z-10">
-                <div className="mt-24 mb-5 flex items-center justify-between  text-xl">
+                <div className="mt-24  flex items-center justify-between  text-xl">
                   <h2 className=" font-medium">Responses (4)</h2>
                   <div>
                     <HiXMark
@@ -176,34 +189,6 @@ const CommentSidebar = ({
                         className="flex w-full flex-col space-y-2 border-b border-b-gray-300 pb-4 last:border-none"
                         key={comment.id}
                       >
-                        {sessionData &&
-                          sessionData.user.id === comment.userId && (
-                            <button
-                              className="bg-red-500 p-2"
-                              onClick={() => handleRemoveComment(comment.id)}
-                            >
-                              REMOVE COMMENT
-                            </button>
-                          )}
-
-                        <div className="flex items-center">
-                          {!isCommentLiked(comment.id) ? (
-                            <button
-                              className="bg-black p-4 text-white mr-2"
-                              onClick={() => handleLikeComment(comment.id)}
-                            >
-                              Like
-                            </button>
-                          ) : (
-                            <button
-                              className="bg-red-500 p-4 text-white"
-                              onClick={() => handleDislikeComment(comment.id)}
-                            >
-                              Dislike
-                            </button>
-                          )}
-                        </div>
-
                         <div className="flex w-full items-center space-x-2 text-xs">
                           <div className="relative h-8 w-8 rounded-full bg-gray-400"></div>
                           <div>
@@ -213,6 +198,49 @@ const CommentSidebar = ({
                         </div>
                         <div className="text-sm text-gray-600">
                           {comment.text}
+                        </div>
+                        <div className="flex gap-2">
+                          <div className="flex  items-center">
+                            {!isCommentLiked(comment.id) ? (
+                              <button
+                                className="bg-gray-500 px-2 font-bold text-white rounded-lg"
+                                onClick={() => handleLikeComment(comment.id)}
+                              >
+                                Like
+                              </button>
+                            ) : (
+                              <button
+                                className="bg-gray-500 px-2 font-bold text-white rounded-lg"
+                                onClick={() => handleDislikeComment(comment.id)}
+                              >
+                                Dislike
+                              </button>
+                            )}
+                          </div>
+
+                          {sessionData &&
+                            sessionData.user.id === comment.userId && (
+                              <button
+                                className="bg-gray-400 font-bold hover:bg-red-500 hover:text-white hover:font-bold text-white  px-2 flex items-center rounded-lg"
+                                onClick={() => handleRemoveComment(comment.id)}
+                              >
+                                <svg
+                                  stroke="currentColor"
+                                  fill="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 1024 1024"
+                                  height="1em"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path d="M292.7 840h438.6l24.2-512h-487z"></path>
+                                  <path d="M864 256H736v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zm-504-72h304v72H360v-72zm371.3 656H292.7l-24.2-512h487l-24.2 512z"></path>
+                                </svg>
+                                Delete Comment
+                              </button>
+                            )}
+
+                          <div>{`COUNT: ${comment.likes.length}`}</div>
                         </div>
                       </div>
                     ))}

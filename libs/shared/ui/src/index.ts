@@ -7,3 +7,5 @@ export * from './lib/productCard/product-card';
 export * from './lib/topic-button/topic-button';
 export { default as SearchIcon } from './icons/SearchIcon';
 export { default as UserStarIcon } from './icons/UserStarIcon';
+export * from './shadnui/ui/tabs';
+export * from './zustand/store';

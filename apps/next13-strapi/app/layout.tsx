@@ -6,7 +6,7 @@ import { siteConfig } from 'libs/shared/next13-ui/src/shadnui/config/site';
 import { absoluteUrl, cn } from 'libs/shared/next13-ui/src/utils/utils';
 import { Analytics } from '@front-end-nx/shared/next13-ui';
 import { TailwindIndicator } from '@front-end-nx/shared/next13-ui';
-import { Toaster } from '@front-end-nx/shared/next13-ui';
+// import { Toaster } from '@front-end-nx/shared/next13-ui';
 import { Inter as FontSans } from 'next/font/google';
 
 const fontSans = FontSans({
@@ -92,10 +92,10 @@ export default function RootLayout({
         <Providers>
           <SiteHeader />
           {children}
-          <Toaster />
-          <Analytics />
-          <TailwindIndicator />
-          <SiteFooter />
+          {/* <Toaster /> */}
+          {/* <Analytics />
+          <TailwindIndicator /> */}
+          {/* <SiteFooter /> */}
         </Providers>
       </body>
     </html>

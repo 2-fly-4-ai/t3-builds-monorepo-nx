@@ -3,16 +3,25 @@
 @tailwind utilities;
 
 .ck-editor__editable {
-  min-height: 28vh;
+  min-height: 40vh;
   position: relative;
 }
 
-.ck-editor {
+/* .ck.ck-toolbar {
+  visibility: hidden;
+} */
+
+.ck.ck-balloon-panel {
   visibility: hidden;
 }
-
-.ck-editor__editable {
-  visibility: visible;
+.ck-editor__editable pre {
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
 }
 
 /* .ck.ck-editor__editable_inline {

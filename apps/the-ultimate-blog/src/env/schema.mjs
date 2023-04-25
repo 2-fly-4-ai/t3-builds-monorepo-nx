@@ -23,8 +23,10 @@ export const serverSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  // SUPABASE_PUBLIC_URL: z.string(),
-  // SUPABASE_SECRET_KEY: z.string(),
+  SUPABASE_PUBLIC_URL: z.string(),
+  SUPABASE_SECRET_KEY: z.string(),
+  UNSPLASH_API_SECRET_KEY: z.string(),
+  UNSPLASH_API_ACCESS_KEY: z.string(),
 });
 
 /**
@@ -33,8 +35,8 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_PUBLIC_URL: z.string(),
-  NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: z.string(),
+  // NEXT_PUBLIC_SUPABASE_PUBLIC_URL: z.string(),
+  // NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: z.string(),
 });
 
 /**
@@ -44,6 +46,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_SUPABASE_PUBLIC_URL: process.env.NX_SUPABASE_PUBLIC_URL,
-  NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: process.env.NX_PUBLIC_SUPABASE_PUBLIC_KEY,
+  // NEXT_PUBLIC_SUPABASE_PUBLIC_URL: process.env.NX_SUPABASE_PUBLIC_URL,
+  // NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: process.env.NX_PUBLIC_SUPABASE_PUBLIC_KEY,
 };
