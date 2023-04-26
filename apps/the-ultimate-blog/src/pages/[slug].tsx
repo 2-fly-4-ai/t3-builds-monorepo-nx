@@ -73,7 +73,6 @@ export default function PostPage() {
           countLikes={getPost?.data?.likes?.length ?? 0}
           onLike={(postId) => likePost.mutate({ postId })}
           onDislike={(postId) => dislikePost.mutate({ postId })}
-          // onComment={(postId) => console.log('comment on post', postId)}
           setShowSidebar={() => setShowCommentSidebar(true)}
           showSidebar={showCommentSidebar}
 

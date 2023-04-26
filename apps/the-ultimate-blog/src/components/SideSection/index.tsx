@@ -8,7 +8,8 @@ import { useState } from 'react';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
   const readingList = trpc.post.getReadingList.useQuery();
-  const suggestions = trpc.user.getSuggestions.useQuery();
+  // const suggestions = trpc.user.getSuggestions.useQuery();
+
   const [mainClass, setMainClass] = useState('');
 
   // useEffect(() => {
@@ -23,7 +24,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
     <aside
       className={`${mainClass} ${
         showSidebar ? 'col-span-3 ' : '   hidden'
-      } space-between flex h-full w-full flex-col space-y-4 py-6 px-2 transition-transform duration-500 ease-out relative `}
+      } space-between relative flex h-full w-full flex-col space-y-4 px-2 py-6 transition-transform duration-500 ease-out `}
     >
       <div className="">
         <div className="flex flex-col ">
@@ -38,13 +39,13 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                   <div className="text-sm font-bold text-gray-500 dark:text-orange-400">
                     lorem ipsum
                   </div>
-                  <div className="text-sm line-clamp-2">
+                  <div className="line-clamp-2 text-sm">
                     lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
                     lorem ipsum lorem ipsum lorem ipsum
                   </div>
                 </div>
                 <div>
-                  <button className="flex items-center space-x-3 rounded border-2  border-gray-300 hover:bg-gray-600  p-2 text-sm px-4 py-2 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  dark:hover:border-white dark dark:hover:bg-white dark:hover:bg-opacity-50 shadow-gray-300 transition  hover:border-black hover:text-gray-900  duration-200 dark:hover:text-white  hover:shadow-black ease-in-out">
+                  <button className="dark flex items-center space-x-3 rounded  border-2 border-gray-300  p-2 px-4 py-2 text-sm font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 transition duration-200 ease-in-out hover:border-black hover:bg-gray-200  hover:text-gray-900 hover:shadow-black  dark:hover:border-white dark:hover:bg-white  dark:hover:bg-opacity-50 dark:hover:text-white">
                     Follow
                   </button>
                 </div>
@@ -55,12 +56,12 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
       </div>
       <div>
         <button
-          className="bg-gray-100 hover:animate-pulse font-bold dark:bg-black dark:hover:bg-white dark:hover:bg-opacity-60 dark:text-white  border-gray-400 dark:border-white border-2 absolute w-10 h-10 rounded-full  -left-5 mr-2 top-96  text-gray-500  transition-transform duration-500 ease-out"
+          className="absolute -left-5 top-96 mr-2 h-10 w-10 rounded-full border-2  border-gray-400 bg-gray-100 font-bold text-gray-500 transition-transform duration-500 ease-out  hover:animate-pulse hover:bg-gray-200 dark:border-white  dark:bg-black  dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60"
           onClick={toggleSidebar}
         >
           -
         </button>
-        <h3 className="my-4 font-bold px-4 text-lg">Your reading list:</h3>
+        <h3 className="my-4 px-4 text-lg font-bold">Your reading list:</h3>
         <div className="flex flex-col ">
           {readingList.data &&
             readingList.data.map((bookmark, i) => (
@@ -82,7 +83,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                     )}
                   </div>
                   <div className="flex w-3/5 flex-col space-y-2">
-                    <div className=" font-semibold decoration-gray-300 line-clamp-3 decoration-2 group-hover:underline ">
+                    <div className=" line-clamp-3 font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
                       {bookmark.post.title}
                     </div>
                     {/* <div className="text-sm line-clamp-2">

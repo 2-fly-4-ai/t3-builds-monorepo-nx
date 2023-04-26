@@ -34,11 +34,11 @@ export function PostCardUserProfile(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group border-2 rounded-xl transition duration-500 dark:bg-white dark:bg-opacity-10   hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)]  grid gap-4 grid-cols-10 gap-x-8 dark:border-gray-300  p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]">
-      <div className="relative rounded-none  col-span-full">
-        <div className="group absolute flex h-full w-full group-hover:bg-black group-hover:bg-opacity-20 transition duration-500">
-          <Link href={`/${props.post.slug}`} className="my-auto mt-4 mx-auto">
-            <button className="mx-auto  text-base font-bold antialiased  border-4 group-hover:dark:bg-black group-hover:bg-opacity-80 backdrop-blur duration-500 transition py-1 px-2 hidden rounded-lg group-hover:bg-white group-hover:flex  justify-center items-center gap-2 dark:group-hover:bg-opacity-50">
+    <div className="group grid grid-cols-10 gap-4 gap-x-8 rounded-xl border-2   p-4  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)]  dark:border-gray-300 dark:bg-white dark:bg-opacity-10">
+      <div className="relative col-span-full  rounded-none">
+        <div className="group absolute flex h-full w-full transition duration-500 group-hover:bg-black group-hover:bg-opacity-20">
+          <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
+            <button className="mx-auto  hidden items-center justify-center  gap-2 rounded-lg border-4 px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex  group-hover:bg-white group-hover:bg-opacity-80 group-hover:dark:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg
                 stroke="currentColor"
@@ -63,7 +63,7 @@ export function PostCardUserProfile(props: PostCardProps) {
               }
               width={400}
               height={400}
-              className="f-full object-cover h-56"
+              className="f-full h-56 object-cover"
               alt={'' ?? ''}
             />
           </div>
@@ -73,7 +73,7 @@ export function PostCardUserProfile(props: PostCardProps) {
       <div className="col-span-10   h-28">
         <Link href={`/${props.post.slug}`}>
           <div className="col-span-4 "></div>
-          <h3 className="cursor-pointer text-xl  line-clamp-4 font-bold   ">
+          <h3 className="line-clamp-4 cursor-pointer  text-xl font-bold   ">
             {props.post.title}
           </h3>
         </Link>
@@ -82,8 +82,8 @@ export function PostCardUserProfile(props: PostCardProps) {
         </div> */}
       </div>
 
-      <div className="flex  items-center col-span-10">
-        <div className="flex  mr-auto space-x-3 ">
+      <div className="col-span-10  flex items-center">
+        <div className="mr-auto  flex space-x-3 ">
           {/* post.tags */}
           {Array.from({ length: 0 }).map((tag) => (
             <div
@@ -91,7 +91,7 @@ export function PostCardUserProfile(props: PostCardProps) {
               onClick={() => {
                 // redirect the user to specific tag page, where all the post related to that tag should be shown
               }}
-              className="flex items-center rounded-lg border-2  border-gray-300  bg-gradient-to-tr from-gray-300 via-gray-200 to-white p-2 px-4 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition  hover:border-black hover:text-gray-900 hover:shadow-black cursor-pointer"
+              className="flex cursor-pointer items-center rounded-lg  border-2  border-gray-300 bg-gradient-to-tr from-gray-300 via-gray-200 to-white p-2 px-4 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  transition hover:border-black hover:text-gray-900 hover:shadow-black"
             >
               TEST
               {/* {tag.name} */}
@@ -99,7 +99,7 @@ export function PostCardUserProfile(props: PostCardProps) {
           ))}
         </div>
         <div className=" flex w-full">
-          <div className="flex  px-2 font-medium bg-gray-200 dark:bg-white dark:bg-opacity-10 gap-1 p-1 ">
+          <div className="flex  gap-1 bg-gray-200 p-1 px-2 font-medium dark:bg-white dark:bg-opacity-10 ">
             <BiUpvote /> {props.post.likes.length}
           </div>
         </div>

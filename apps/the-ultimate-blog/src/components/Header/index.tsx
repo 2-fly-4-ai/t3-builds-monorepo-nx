@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { FiLogIn, GoThreeBars } from '../../icons';
+import React from 'react';
+import { FiLogIn } from '../../icons';
 import { AiOutlineBell } from '../../icons';
 import { AiOutlineEdit } from '../../icons';
 import { signIn } from 'next-auth/react';
@@ -7,53 +7,64 @@ import { signOut } from 'next-auth/react';
 import { FiLogOut } from '../../icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { GlobalContext } from '../../context/GlobalContext';
+import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import Link from 'next/link';
-import NavigationMenuDemo from 'libs/shared/ui/src/layouts/nav-menu/nav-menu';
-import { useEffect, useRef } from 'react';
+
 import { ThemeToggle } from 'libs/shared/next13-ui/src/shadnui/components/theme-toggle/theme-toggle';
 import { MainNav } from 'libs/shared/next13-ui/src/shadnui/main-nav';
+import { useSelectedLayoutSegment } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+// const NavigationMenuDemo = dynamic(
+//   () => import('libs/shared/ui/src/layouts/nav-menu/nav-menu'),
+//   { ssr: false }
+// );
 
 export default function Header() {
   const { data: sessionData, status } = useSession();
-  const { isWriteModalOpen, setIsWriteModalOpen } = useContext(GlobalContext);
-  const [openSidebar, setIsOpenSideBar] = useState(false);
-  const headerRef = useRef(null);
-  const handleCloseSidebar = (event) => {
-    if (headerRef.current && !headerRef.current.contains(event.target)) {
-      setIsOpenSideBar(false);
-    }
-  };
-  useEffect(() => {
-    // Add event listener to body for click event
-    document.body.addEventListener('click', handleCloseSidebar);
+  const { setIsWriteModalOpen } = useGlobalContextStore();
+  const [segment, setSegment] = React.useState('');
 
-    // Cleanup the event listener on component unmount
-    return () => {
-      document.body.removeEventListener('click', handleCloseSidebar);
-    };
+  React.useEffect(() => {
+    setSegment(window.location.pathname.split('/')[1]);
   }, []);
+  const items = [
+    {
+      title: 'Home',
+      href: '/',
+      segment: 'home',
+    },
+    {
+      title: 'About',
+      href: '/about',
+      segment: 'about',
+    },
+    {
+      title: 'Contact',
+      href: '/contact',
+      disabled: true,
+      segment: 'contact',
+    },
+  ];
+
   return (
-    <header
-      ref={headerRef}
-      className="grid w-full grid-cols-12 flex-row items-center  py-3 px-8 sticky top-0 border-b z-10 bg-base dark:bg-black dark:bg-opacity-60 backdrop-blur"
-    >
+    <header className="top-0 z-10 grid w-full grid-cols-12 flex-row items-center  border-b px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
       {/* This is the header */}
-      <div className="flex justify-center items-center col-span-3">
+      <div className="col-span-8 flex items-center justify-center ">
         {/* <GoThreeBars className="mx-4" onClick={() => setIsOpenSideBar(true)} /> 0*/}
-        <MainNav />
-        <Link href="/" className="cursor-pointer mr-auto">
+        <MainNav items={items} segment={segment} />
+        <Link href="/" className="mr-auto cursor-pointer">
           {/* <div className="mx-auto flex cursor-pointer justify-center  text-3xl font-md uppercase bg-gray-300 px-4 py-1 border-2 font-bold text-gray-600 border-greay-200  text-black">
             T3 Blog
           </div> */}
         </Link>
       </div>
-      <div className=" ml-auto hidden lg:flex">
+      {/* <div className=" ml-auto hidden lg:flex">
         <NavigationMenuDemo />
-      </div>
+      </div> */}
 
       {status === 'authenticated' ? (
-        <div className="flex items-center justify-end gap-4  col-span-8">
+        <div className="col-span-4 flex items-center justify-end  gap-4">
           <ThemeToggle />
           <div>
             <AiOutlineBell />
@@ -73,7 +84,7 @@ export default function Header() {
           <div>
             <button
               onClick={() => setIsWriteModalOpen(true)}
-              className="flex items-center justify-center gap-1 rounded-lg  border-2 border-gray-300 dark:hover:border-white dark dark:hover:bg-white dark:hover:bg-opacity-60 p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition  hover:border-black hover:text-gray-700 hover:shadow-black dark:hover:text-white"
+              className="dark flex items-center justify-center gap-1 rounded-lg  border-2 border-gray-300 p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black  dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
             >
               <AiOutlineEdit />
               Write
@@ -82,7 +93,7 @@ export default function Header() {
           <div>
             <button
               onClick={() => signOut()}
-              className="flex items-center justify-center gap-1 rounded-lg border-2  border-gray-300   p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  dark:hover:border-white dark dark:hover:bg-white dark:hover:bg-opacity-60 shadow-gray-300 transition hover:border-black hover:shadow-black"
+              className="dark flex items-center justify-center gap-1 rounded-lg border-2  border-gray-300   p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:shadow-black dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60"
             >
               <FiLogOut />
               Logout
@@ -90,14 +101,14 @@ export default function Header() {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center gap-4 col-span-8 ml-auto">
+        <div className="col-span-8 ml-auto flex items-center justify-center gap-4">
           {/* <div>
           <AiOutlineBell />
         </div>
         <div>
           <div className="h-6 w-6 rounded-full bg-gray-600"></div>
         </div> */}
-          <div>
+          <div className="flex gap-2">
             <ThemeToggle />
             <button
               onClick={() => signIn()}

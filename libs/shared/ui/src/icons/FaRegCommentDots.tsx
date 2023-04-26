@@ -1,7 +1,7 @@
 export function FaRegCommentDots(props) {
   return (
     <svg
-      className="cursor-pointer text-gray-600 hover:scale-105 hover:transform hover:text-black"
+      className="cursor-pointer text-gray-600 dark:text-white hover:scale-105 hover:transform hover:text-black"
       stroke="currentColor"
       fill="currentColor"
       strokeWidth={0}

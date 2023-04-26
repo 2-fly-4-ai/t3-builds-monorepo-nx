@@ -66,7 +66,7 @@ const UnsplahGallary = ({
           type="text"
           id="search"
           {...register('searchQuery')}
-          className="h-full w-full rounded-xl border border-gray-300 p-4 outline-none focus:border-gray-600"
+          className="h-full w-full rounded-xl border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-50"
         />
         {debouncedSearchQuery && fetchUnsplashImages.isLoading && (
           <div className="flex h-full w-full items-center justify-center">

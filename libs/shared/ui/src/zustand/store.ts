@@ -1,18 +1,34 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
+type GlobalContextType = {
+  isWriteModalOpen: boolean;
+  setIsWriteModalOpen: (newValue: boolean) => void;
+};
+
+export const useGlobalContextStore = create(
+  persist(
+    (set): GlobalContextType => ({
+      isWriteModalOpen: false,
+      setIsWriteModalOpen: (newValue) =>
+        set(() => ({ isWriteModalOpen: newValue })),
+    }),
+    { name: 'global-context-store' }
+  )
+);
 
 export const useBookmarkStore = create(
   persist(
     (set) => ({
       bookmarks: [],
-      toggleBookmark: (id) =>
+      toggleBookmark: (id: string) =>
         set((state) => ({
           bookmarks: state.bookmarks.includes(id)
             ? state.bookmarks.filter((bookmarkId) => bookmarkId !== id)
             : [...state.bookmarks, id],
         })),
     }),
-    { name: 'bookmark-store' } // name the store for local storage
+    { name: 'bookmark-store' }
   )
 );
 
@@ -20,7 +36,7 @@ export const useCommentStore = create(
   persist(
     (set) => ({
       commentLikes: {},
-      toggleLikeComment: (commentId) =>
+      toggleLikeComment: (commentId: string) =>
         set((state) => ({
           commentLikes: {
             ...state.commentLikes,
@@ -28,6 +44,6 @@ export const useCommentStore = create(
           },
         })),
     }),
-    { name: 'comment-store' } // name the store for local storage
+    { name: 'comment-store' }
   )
 );

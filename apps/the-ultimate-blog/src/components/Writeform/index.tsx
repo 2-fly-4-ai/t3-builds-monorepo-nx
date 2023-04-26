@@ -1,6 +1,6 @@
 import Modal from '../../components/Modal';
 
-import { GlobalContext } from '../../context/GlobalContext';
+import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
@@ -31,7 +31,7 @@ export const WriteFormSchema = z.object({
 });
 
 export default function WriteFormModal() {
-  const { isWriteModalOpen, setIsWriteModalOpen } = useContext(GlobalContext);
+  const { isWriteModalOpen, setIsWriteModalOpen } = useGlobalContextStore();
 
   const {
     register,
@@ -91,8 +91,8 @@ export default function WriteFormModal() {
               isOpen={isTagCreateModalOpen}
               onClose={() => setIsTagCreateModalOpen(false)}
             />
-            <div className="my-4 flex w-full items-center space-x-4">
-              <div className="z-10 w-4/5">
+            <div className="my-4 flex w-full items-center space-x-4 ">
+              <div className="z-10 w-4/5 border">
                 <TagsAutocompletion
                   tags={getTags.data}
                   setSelectedTags={setSelectedTags}
@@ -140,7 +140,7 @@ export default function WriteFormModal() {
         <input
           type="text"
           id="title"
-          className="h-full w-full border border-gray-300 p-4 outline-none focus:border-gray-600"
+          className="h-full w-full border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
           placeholder="Title of the Blog"
           {...register('title')}
         />
@@ -148,7 +148,7 @@ export default function WriteFormModal() {
         <input
           type="text"
           id="shortDescription"
-          className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600"
+          className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
           placeholder="Short Description...."
           {...register('description')}
         />
@@ -160,7 +160,7 @@ export default function WriteFormModal() {
             name="html"
             control={control}
             render={({ field }) => (
-              <div className=" border prose-li:list-style prose prose-lg w-full h-full  max-w-none marker:text-black prose-a:font-bold prose-li:text-black prose-table:table-auto prose-table:border-2  prose-tr:border-r prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2  prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)]  prose-img:shadow-black h-96 focus-within:border-black shadow-2xl ">
+              <div className="prose-li:list-style prose prose-lg prose-a:font-bold prose-li:text-black prose-table:table-auto  prose-table:border-2 prose-tr:border-r  prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12  prose-img:max-h-custom prose-img:w-auto prose-img:border-2 prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] prose-img:shadow-black prose-p:font-sans prose-li:list-style  prose-table:shadow-lg prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-img:max-h-custom  dark:prose-headings:text-gray-300 dark:prose-p:text-gray-400 prose-li:font-sans  dark:prose-li:text-gray-400 dark:prose-strong:text-red-400  dark:prose-code:text-white  min-h-[40vh]  w-full max-w-none    border   shadow-2xl marker:text-black focus-within:border-black    dark:bg-black dark:bg-opacity-60 dark:text-gray-400  dark:text-opacity-80 dark:marker:text-gray-400">
                 <Editor
                   {...field}
                   onChange={(data: string) => field && field.onChange(data)}

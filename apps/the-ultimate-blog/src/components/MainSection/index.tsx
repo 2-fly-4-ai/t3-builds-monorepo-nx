@@ -12,12 +12,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function MainSection({ showSidebar, toggleSidebar }) {
   const getPosts = trpc.post.getPosts.useQuery();
-  console.warn('TESTER', getPosts.data);
-
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
-
-  // console.warn('TestMainPage', getPost.data.likes);\
 
   return (
     <main
@@ -47,7 +43,7 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
                 {Array.from({ length: 4 }).map((_, i) => (
                   <li
                     key={i}
-                    className="flex cursor-pointer items-center space-x-2   rounded-md border-2 dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:border-white  border-gray-300 p-2 px-3 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 hover:border-black hover:shadow-black"
+                    className="flex cursor-pointer items-center space-x-2  hover:bg-gray-200 rounded-md border-2 dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:border-white  border-gray-300 p-2 px-3 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 hover:border-black hover:shadow-black"
                   >
                     Design
                   </li>
@@ -59,7 +55,7 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
         <div className="flex w-full items-center justify-between py-2">
           <div className="text-2xl font-bold">Articles</div>
           <div className="flex gap-2">
-            <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 dark:border-white dark:hover:bg-white dark:hover:text-white dark:hover:bg-opacity-60 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  hover:border-black hover:shadow-black">
+            <button className="flex items-center space-x-2 rounded-full border-2  hover:bg-gray-200 border-gray-300 dark:border-white dark:hover:bg-white dark:hover:text-white dark:hover:bg-opacity-60 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  hover:border-black hover:shadow-black">
               <div className="text-sm font-semibold ">Following</div>
               <div>
                 <BsChevronDown />
@@ -104,14 +100,14 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
             </div>
             {!showSidebar ? (
               <button
-                className=" border-gray-400 dark:border-white border-2 w-8 h-8 dark:hover:bg-white dark:hover:bg-opacity-60  text-lg font-bold right-72 mr-2 hover:animate-pulse  top-60"
+                className=" border-gray-400 dark:border-white hover:bg-gray-200 border-2 w-8 h-8 dark:hover:bg-white dark:hover:bg-opacity-60  text-lg font-bold right-72 mr-2 hover:animate-pulse  top-60"
                 onClick={toggleSidebar}
               >
                 {showSidebar ? '-' : '+'}
               </button>
             ) : (
               <button
-                className=" border-gray-400 border-2 w-8 h-8 dark:border-white dark:hover:bg-white dark:hover:bg-opacity-60  text-lg font-bold right-72 mr-2 hover:animate-pulse  top-60"
+                className=" border-gray-400 border-2 w-8 h-8 hover:bg-gray-200 dark:border-white dark:hover:bg-white dark:hover:bg-opacity-60  text-lg font-bold right-72 mr-2 hover:animate-pulse  top-60"
                 onClick={toggleSidebar}
               >
                 {showSidebar ? '-' : '+'}
@@ -120,19 +116,6 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
           </div>
         </div>
       </div>
-      {/* 
-      <div className="mx-12 space-y-4">
-        {getPosts.isLoading && <LoadingSpinner />}
-        {getPosts.isSuccess &&
-          getPosts.data.map((post) => {
-            console.warn('TESTXXX', post);
-            return (
-              <div key={post.id}>
-                <PostCard post={post} />
-              </div>
-            );
-          })}
-      </div> */}
 
       <div
         className={`
@@ -150,7 +133,6 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
-            console.warn('TESTXXX', post);
             return (
               <div key={post.id} className=" h-full">
                 {showListView ? (

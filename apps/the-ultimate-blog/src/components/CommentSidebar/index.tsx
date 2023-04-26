@@ -12,6 +12,7 @@ import { useCommentStore } from 'libs/shared/ui/src/zustand/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
+import Image from 'next/image';
 // import { useCounterStore } from 'libs/shared/ui/src/zustand/store';
 
 type CommentSidebarProps = {
@@ -144,9 +145,9 @@ const CommentSidebar = ({
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <Dialog.Panel className="relative h-screen w-[200px] bg-white shadow-md sm:w-[400px]">
+            <Dialog.Panel className="relative h-screen w-[200px] border-l shadow-md sm:w-[400px]">
               <div className=" flex h-full w-full flex-col overflow-y-scroll px-6 z-10">
-                <div className="mt-24  flex items-center justify-between  text-xl">
+                <div className="mt-20  flex items-center justify-between  text-xl">
                   <h2 className=" font-medium">Responses (4)</h2>
                   <div>
                     <HiXMark
@@ -167,7 +168,7 @@ const CommentSidebar = ({
                 >
                   <textarea
                     id="comment"
-                    rows={3}
+                    rows={4}
                     className="w-full rounded-xl border border-gray-300 p-4 shadow-lg outline-none focus:border-gray-600"
                     placeholder="What are your thoughts?"
                     {...register('text')}
@@ -175,7 +176,7 @@ const CommentSidebar = ({
                   {isValid && (
                     <button
                       type="submit"
-                      className="flex items-center space-x-3 rounded border border-gray-300 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
+                      className="flex items-center space-x-3 rounded border border-gray-300 border-2 dark:hover:border-white dark:hover:text-white dark:hover:bg-white dark:hover:bg-opacity-60 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
                     >
                       Comment
                     </button>
@@ -189,14 +190,18 @@ const CommentSidebar = ({
                         className="flex w-full flex-col space-y-2 border-b border-b-gray-300 pb-4 last:border-none"
                         key={comment.id}
                       >
-                        <div className="flex w-full items-center space-x-2 text-xs">
-                          <div className="relative h-8 w-8 rounded-full bg-gray-400"></div>
+                        <div className="flex w-full items-center space-x-2 space-y-2 text-xs">
+                          <div className="relative h-8 w-8 rounded-full bg-gray-400">
+                            <Image src="" alt="" />
+                          </div>
                           <div>
-                            <p className="font-semibold">{comment.user.name}</p>
+                            <p className="font-bold text-base dark:text-orange-400 font-mono">
+                              {comment.user.name}
+                            </p>
                             <p>{dayjs(comment.createdAt).fromNow()}</p>
                           </div>
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-gray-600 dark:text-white dark:text-opacity-80">
                           {comment.text}
                         </div>
                         <div className="flex gap-2">
@@ -240,7 +245,20 @@ const CommentSidebar = ({
                               </button>
                             )}
 
-                          <div>{`COUNT: ${comment.likes.length}`}</div>
+                          <div className="flex items-center gap-2">
+                            <svg
+                              stroke="currentColor"
+                              fill="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              height="1.5em"
+                              width="1.5em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M20,8h-5.612l1.123-3.367c0.202-0.608,0.1-1.282-0.275-1.802S14.253,2,13.612,2H12c-0.297,0-0.578,0.132-0.769,0.36 L6.531,8H4c-1.103,0-2,0.897-2,2v9c0,1.103,0.897,2,2,2h3h10.307c0.829,0,1.581-0.521,1.873-1.298l2.757-7.351 C21.979,12.239,22,12.12,22,12v-2C22,8.897,21.103,8,20,8z M4,10h2v9H4V10z M20,11.819L17.307,19H8V9.362L12.468,4l1.146,0 l-1.562,4.683c-0.103,0.305-0.051,0.64,0.137,0.901C12.377,9.846,12.679,10,13,10h7V11.819z"></path>
+                            </svg>
+                            {`${comment.likes.length}`}
+                          </div>
                         </div>
                       </div>
                     ))}

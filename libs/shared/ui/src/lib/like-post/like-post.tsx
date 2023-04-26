@@ -28,9 +28,9 @@ export function LikePost(props: LikePostProps) {
     <div
       className={`${
         showSidebar === true ? 'hidden transition duration-300 ease-in-out' : ''
-      }  fixed bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center z-10 overflow-auto`}
+      }  fixed bottom-0 left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 justify-center overflow-auto`}
     >
-      <div className="flex items-center gap-3 rounded-xl border-2 border-gray-400 bg-white p-2 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-200 transition duration-300 hover:border-black hover:shadow-black">
+      <div className="flex items-center gap-3 rounded-xl border-2 border-gray-400 bg-white p-2 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-200 backdrop-blur transition duration-300 hover:border-black hover:shadow-black dark:bg-black dark:bg-opacity-60 dark:hover:border-white">
         {countLikes && countLikes > 0 ? (
           <>
             <BiLikeFilled onClick={() => onDislike(id)} />

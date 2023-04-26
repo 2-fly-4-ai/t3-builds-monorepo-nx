@@ -51,11 +51,11 @@ export function PostCardList(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="rounded-xl grid min-h-[10rem] w-full grid-cols-12 dark:bg-white dark:bg-opacity-10 gap-x-8 gap-y-2  p-6 py-4 transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]">
+    <div className="grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6 py-4  shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:bg-white dark:bg-opacity-10">
       <div className="col-span-full flex items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
-            className=" flex gap-2 items-center p-2 hover:bg-gray-200 dark:hover:bg-white dark:hover:bg-opacity-40 hover:border-gray-400 cursor-pointer rounded-lg shadow-sm border-2 border-gray-200
+            className=" flex cursor-pointer items-center gap-2 rounded-lg border-2 border-gray-200 p-2 shadow-sm hover:border-gray-400 hover:bg-gray-200 dark:hover:bg-white dark:hover:bg-opacity-40
         "
           >
             <div className="h-10 w-10 rounded-full bg-gray-300 ">
@@ -71,7 +71,7 @@ export function PostCardList(props: PostCardProps) {
             </div>
             <div className="">
               <div className="flex items-center gap-2 ">
-                <div className="text-lg  capitalize dark:text-orange-400 font-bold">
+                <div className="text-lg  font-bold capitalize dark:text-orange-400">
                   {props.post.author.name}
                 </div>
                 |{' '}
@@ -87,18 +87,18 @@ export function PostCardList(props: PostCardProps) {
 
       <div className="col-span-8  space-y-4 border border-transparent">
         <Link href={`/${props.post.slug}`}>
-          <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 hover:underline transition duration-500">
+          <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 transition duration-500 hover:underline">
             {props.post.title}
           </h3>
         </Link>
-        <div className="break-words text-md dark:text-gray-400 dark:text-opacity-70 font-sans line-clamp-6 text-gray-500 line-clamp-8">
+        <div className="text-md line-clamp-8 line-clamp-6 break-words font-sans text-gray-500 dark:text-gray-400 dark:text-opacity-70">
           {props.post.description}
         </div>
       </div>
-      <div className="col-span-4 relative">
-        <div className="group absolute flex w-full hover:bg-black hover:bg-opacity-20 transition duration-500 h-60">
-          <Link href={`/${props.post.slug}`} className="my-auto mt-4 mx-auto">
-            <button className="mx-auto font-bold text-base antialiased  border-4  group-hover:bg-opacity-80 dark:group-hover:bg-opacity-50  backdrop-blur duration-500 transition py-1 px-2 hidden rounded-lg group-hover:bg-white dark:group-hover:bg-black group-hover:flex  justify-center items-center gap-2">
+      <div className="relative col-span-4">
+        <div className="group absolute flex h-60 w-full transition duration-500 hover:bg-black hover:bg-opacity-20">
+          <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
+            <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg
                 stroke="currentColor"
@@ -124,14 +124,14 @@ export function PostCardList(props: PostCardProps) {
               }
               width={400}
               height={400}
-              className="f-full object-cover h-60 w-full"
+              className="f-full h-60 w-full object-cover"
               alt={'' ?? ''}
             />
           </div>
         </Link>
       </div>
-      <div className="flex items-center col-span-12 my-4">
-        <div className="flex mr-auto space-x-3 ">
+      <div className="col-span-12 my-4 flex items-center">
+        <div className="mr-auto flex space-x-3 ">
           {/* post.tags */}
           {Array.from({ length: 4 }).map((tag) => (
             <div
@@ -139,14 +139,14 @@ export function PostCardList(props: PostCardProps) {
               onClick={() => {
                 // redirect the user to specific tag page, where all the post related to that tag should be shown
               }}
-              className="flex items-center rounded-lg border-2  border-gray-300  dark:hover:text-white   dark:bg-opacity-50 bg-gray-200 dark:bg-black to-white  px-4 py-0 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition  hover:border-black dark:border-white hover:text-gray-900 hover:shadow-black cursor-pointer dark:hover:bg-white dark:hover:bg-opacity-60"
+              className="flex cursor-pointer items-center rounded-lg  border-2  border-gray-300   bg-gray-200 to-white px-4 py-0  font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:text-gray-900  hover:shadow-black dark:border-white dark:bg-black dark:bg-opacity-50 dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
             >
               TEST
               {/* {tag.name} */}
             </div>
           ))}
         </div>
-        <div className="flex py-1 px-2 font-medium bg-gray-200 dark:bg-white dark:bg-opacity-10  mx-1">
+        <div className="mx-1 flex bg-gray-200 px-2 py-1 font-medium dark:bg-white  dark:bg-opacity-10">
           <BiUpvote /> {props.post.likes.length}
         </div>
         {sessionData ? (

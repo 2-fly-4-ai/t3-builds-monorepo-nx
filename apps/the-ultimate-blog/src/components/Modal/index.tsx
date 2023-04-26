@@ -40,7 +40,7 @@ export default function Modal({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="max-h-8xl w-full max-w-5xl px-16 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="max-h-8xl w-full max-w-5xl transform overflow-hidden rounded-2xl bg-white p-6 px-16 text-left align-middle shadow-xl transition-all dark:bg-white dark:bg-opacity-20">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
@@ -49,7 +49,7 @@ export default function Modal({
                   </Dialog.Title>
                   {children}
 
-                  <button onClick={onClose} className="absolute top-2 right-6">
+                  <button onClick={onClose} className="absolute right-6 top-2">
                     <svg
                       className="hover:text-red-500"
                       stroke="currentColor"

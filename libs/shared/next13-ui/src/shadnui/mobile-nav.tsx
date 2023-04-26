@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Link from 'next/link';
 import { useLockBody } from './hooks/use-lock-body';
@@ -32,7 +33,7 @@ export function MobileNav({ items, children }: MobileNavProps) {
               key={index}
               href={item.disabled ? '#' : item.href}
               className={cn(
-                'flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline',
+                'flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline bg-black',
                 item.disabled && 'cursor-not-allowed opacity-60'
               )}
             >

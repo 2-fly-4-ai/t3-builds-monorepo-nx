@@ -1,7 +1,6 @@
 import { type AppType } from 'next/app';
 import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
-import { GlobalContextProvider } from '../context/GlobalContext';
 import { Toaster } from 'react-hot-toast';
 import Providers from '../components/Providers/providers';
 
@@ -16,11 +15,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Toaster />
-      <GlobalContextProvider>
-        <Providers>
-          <Component {...pageProps} />
-        </Providers>
-      </GlobalContextProvider>
+      <Providers>
+        {/* <GlobalContextProvider> */}
+        <Component {...pageProps} />
+        {/* </GlobalContextProvider> */}
+      </Providers>
     </SessionProvider>
   );
 };
