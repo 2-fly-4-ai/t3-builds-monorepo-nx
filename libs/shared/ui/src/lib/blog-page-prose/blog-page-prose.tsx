@@ -15,18 +15,16 @@ export default function BlogPageProse(props: BlogPageProseProps) {
   return (
     <div className=" flex w-full items-center justify-center p-10">
       <div className="w-full max-w-screen-md space-y-8">
-        <div className="relative flex h-[60vh] w-full items-center justify-center overflow-hidden  bg-gray-300 shadow-lg">
+        <div className="relative flex h-[60vh] w-full items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
           {featuredImage && (
-            <Image
-              src={
-                featuredImage ??
-                'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
-              }
-              alt={title}
-              width={400}
-              height={400}
-              className="absolute  lg:h-auto lg:w-full xl:h-auto xl:w-full 2xl:h-full 2xl:w-auto"
-            />
+            <>
+              <Image
+                src={featuredImage}
+                alt={title}
+                fill
+                className="absolute rounded-lg object-cover lg:h-auto lg:w-full xl:h-auto xl:w-full 2xl:h-auto 2xl:w-auto"
+              />
+            </>
           )}
           <div
             id="this button isn't clickable"
@@ -48,7 +46,6 @@ export default function BlogPageProse(props: BlogPageProseProps) {
             </svg>
           </div>
           {/* this is the featured image */}
-
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="mx-10 rounded-xl bg-gray-500 bg-opacity-50 px-4  pb-6 pt-4 text-5xl font-medium text-gray-50 dark:bg-black dark:bg-opacity-80">
               {title}

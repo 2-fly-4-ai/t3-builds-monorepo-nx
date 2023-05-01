@@ -132,6 +132,7 @@ const UserProfilePage = () => {
   });
 
   const { bookmarks, toggleBookmark } = useBookmarkStore();
+
   const handleBookmarkToggle = useCallback(
     (postId: string) => {
       toggleBookmark(postId);
@@ -208,8 +209,8 @@ const UserProfilePage = () => {
       <div className="flex h-full w-full items-center justify-center">
         <div className="my-10 flex h-full w-full flex-col items-center justify-center lg:max-w-screen-md xl:max-w-screen-lg">
           {/* Top section hero */}
-          <div className="flex w-full flex-col rounded-md dark:bg-black dark:bg-opacity-60 shadow-md">
-            <div className="relative h-44 w-full rounded-md bg-gradient-to-r from-rose-100 to-teal-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-600 dark:bg-gradient-to-r">
+          <div className="flex w-full flex-col rounded-md shadow-md dark:bg-black dark:bg-opacity-60">
+            <div className="relative h-44 w-full rounded-md bg-gradient-to-r from-rose-100 to-teal-100 dark:bg-gradient-to-b dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-600">
               <div className="absolute -bottom-10 left-12">
                 <div className="group relative h-28 w-28 rounded-full border-2 border-white bg-gray-100">
                   {currentUser.data?.user?.id === userProfile.data?.id && (
@@ -247,7 +248,7 @@ const UserProfilePage = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-10 ml-12 flex flex-col space-y-0.5 rounded-b-3xl py-4 gap-2">
+            <div className="ml-12 mt-10 flex flex-col gap-2 space-y-0.5 rounded-b-3xl py-4">
               <div className="text-2xl font-semibold ">
                 {userProfile.data?.name}
               </div>
@@ -283,14 +284,14 @@ const UserProfilePage = () => {
                   Followings
                 </button>
               </div>
-              <div className="flex w-full justify-between items-center pr-4 space-x-4">
+              <div className="flex w-full items-center justify-between space-x-4 pr-4">
                 <div className="flex gap-2 ">
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(window.location.href);
                       toast.success('URL copied to clipboard 🥳');
                     }}
-                    className=" flex transform items-center space-x-3 rounded border border-2 rounded-lg border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
+                    className=" flex transform items-center space-x-3 rounded rounded-lg border border-2 border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
                   >
                     <div>Share</div>
                     <div>
@@ -310,7 +311,7 @@ const UserProfilePage = () => {
                               });
                         }
                       }}
-                      className="flex items-center space-x-3  border-gray-400/50 bg-white dark:bg-black border-2 rounded-lg dark:border-white px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
+                      className="flex items-center space-x-3  rounded-lg border-2 border-gray-400/50 bg-white px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 dark:border-white dark:bg-black"
                     >
                       {userProfile.data?.followedBy.length > 0
                         ? 'Unfollow'
@@ -371,7 +372,7 @@ const UserProfilePage = () => {
                     <div
                       className={`${
                         showListView ? 'grid-cols-1' : 'grid-cols-3'
-                      } my-10  gap-6 grid w-full place-items-center`}
+                      } my-10  grid w-full place-items-center gap-6`}
                     >
                       {userPosts.isSuccess &&
                         userPosts.data?.posts.map((post) => (
@@ -413,11 +414,11 @@ const UserProfilePage = () => {
                               </div>
                               <div className="flex w-3/5 flex-col space-y-2">
                                 <Link href={`/${bookmark.post.slug}`}>
-                                  <h3 className=" font-semibold decoration-gray-300 decoration-4 line-clamp-3 group-hover:underline ">
+                                  <h3 className=" line-clamp-3 font-semibold decoration-gray-300 decoration-4 group-hover:underline ">
                                     {bookmark.post.title}
                                   </h3>
                                 </Link>
-                                <div className="text-sm line-clamp-3 font-sans">
+                                <div className="line-clamp-3 font-sans text-sm">
                                   {bookmark.post.description}
                                 </div>
                                 <div>
@@ -438,26 +439,29 @@ const UserProfilePage = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="text-center flex flex-col gap-3 w-48">
+                              <div className="flex w-48 flex-col gap-3 text-center">
                                 <Link href={`/${bookmark.post.slug}`}>
-                                  <button className=" border-2 dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white border-gray-300 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300   hover:border-black hover:text-gray-900 hover:shadow-black  px-2 duration-500 transition bg-whites  text-black  font-bold  py-2 w-full   rounded-lg items-center justify-center">
+                                  <button className=" bg-whites w-full items-center justify-center rounded-lg border-2 border-gray-300 px-2   py-2 font-bold text-black  shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition duration-500  hover:border-black  hover:text-gray-900  hover:shadow-black dark:text-white   dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white">
                                     {' '}
                                     Read Post
                                   </button>
                                 </Link>
-                                <button
-                                  onClick={() => {
-                                    removeBookmark.mutate({
-                                      postId: bookmark.post.id,
-                                    });
-                                    // use the toggleBookmark function from the store and pass the post id
-                                    handleBookmarkToggle(bookmark.post.id);
-                                  }}
-                                  className=" px-2 duration-200 transition  hover:text-white font-bold py-2 dark:bg-gray-400 dark:hover:bg-red-400 bg-gray-200 rounded-lg items-center justify-center"
-                                >
-                                  {' '}
-                                  Remove Bookmark
-                                </button>
+                                {currentUser.data?.user?.id ===
+                                userProfile.data?.id ? (
+                                  <button
+                                    onClick={() => {
+                                      removeBookmark.mutate({
+                                        postId: bookmark.post.id,
+                                      });
+                                      // use the toggleBookmark function from the store and pass the post id
+                                      handleBookmarkToggle(bookmark.post.id);
+                                    }}
+                                    className=" items-center justify-center rounded-lg  bg-gray-200 px-2 py-2 font-bold transition duration-200 hover:text-white dark:bg-gray-400 dark:hover:bg-red-400"
+                                  >
+                                    {' '}
+                                    Remove Bookmark
+                                  </button>
+                                ) : null}
                               </div>
                             </div>
                           ))}

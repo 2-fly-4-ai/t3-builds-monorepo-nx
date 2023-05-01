@@ -50,7 +50,7 @@ export default function Header() {
   return (
     <header className="top-0 z-10 grid w-full grid-cols-12 flex-row items-center  border-b px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
       {/* This is the header */}
-      <div className="col-span-8 flex items-center justify-center ">
+      <div className="col-span-6 flex items-center justify-center ">
         {/* <GoThreeBars className="mx-4" onClick={() => setIsOpenSideBar(true)} /> 0*/}
         <MainNav items={items} segment={segment} />
         <Link href="/" className="mr-auto cursor-pointer">
@@ -64,7 +64,7 @@ export default function Header() {
       </div> */}
 
       {status === 'authenticated' ? (
-        <div className="col-span-4 flex items-center justify-end  gap-4">
+        <div className="col-span-6 flex items-center justify-end  gap-4">
           <ThemeToggle />
           <div>
             <AiOutlineBell />
@@ -101,7 +101,7 @@ export default function Header() {
           </div>
         </div>
       ) : (
-        <div className="col-span-8 ml-auto flex items-center justify-center gap-4">
+        <div className="col-span-6 ml-auto flex items-center justify-center gap-4">
           {/* <div>
           <AiOutlineBell />
         </div>

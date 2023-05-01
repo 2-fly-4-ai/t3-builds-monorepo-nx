@@ -1,21 +1,20 @@
 import { useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DecoupledEditor from 'ckeditor5-custom-build/build/ckeditor';
+import Image from '@ckeditor/ckeditor5-image/src/image';
 import { useEffect, useState } from 'react';
 
 interface CKeditorProps {
   onChange: (data: string) => void;
-  editorLoaded: boolean;
   name: string;
   value: string;
 }
 
 const Editor = ({ onChange, value }: CKeditorProps) => {
-  // const [showEditor, setShowEditor] = useState<boolean>(false);
+  const [showEditor, setShowEditor] = useState<boolean>(false);
 
   if (typeof window !== 'undefined') {
     const balloonPanel = document.querySelector('.ck-balloon-panel');
-    console.warn('TESTBALLOON', balloonPanel);
     {
       balloonPanel &&
         setTimeout(() => {
@@ -24,11 +23,9 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
     }
   }
 
-  // useEffect(() => {
-  //   setShowEditor(true);
-  // }, []);
-  const showEditor = true;
-  // const showEditor = true;
+  useEffect(() => {
+    setShowEditor(true);
+  }, []);
 
   return showEditor ? (
     <CKEditor
@@ -67,7 +64,7 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
       }}
     />
   ) : (
-    <div>Loading...</div>
+    <div className="m-auto">Loading...</div>
   );
 };
 

@@ -7,25 +7,202 @@ import { commentFormSchema } from 'apps/the-ultimate-blog/src/components/Comment
 
 export const postRouter = router({
   createPost: protectedProcedure
-    .input(WriteFormSchema)
+    .input(
+      WriteFormSchema.and(
+        z.object({
+          tagsIds: z
+            .array(
+              z.object({
+                id: z.string(),
+              })
+            )
+            .optional(),
+          featuredImage: z.string().url().optional(),
+        })
+      )
+    )
     .mutation(
       async ({
         ctx: { prisma, session },
-        input: { title, description, text, html },
+        input: { title, description, text, tagsIds, html, featuredImage },
       }) => {
-        await prisma.post.create({
+        // create a function that checks whether the post with this title exists
+
+        const post = await prisma.post.create({
           data: {
             title,
             description,
             text,
+            html,
             slug: slugify(title),
             author: {
               connect: {
                 id: session.user.id,
               },
             },
+            tags: {
+              connect: tagsIds,
+            },
+            featuredImage: featuredImage,
+          },
+          select: {
+            id: true,
           },
         });
+
+        return post;
+      }
+    ),
+
+  editPost: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        html: z.string().optional(),
+        tagsIds: z
+          .array(
+            z.object({
+              id: z.string(),
+            })
+          )
+          .optional(),
+      })
+    )
+    .mutation(
+      async ({
+        ctx: { prisma },
+        input: { id, title, description, tagsIds, html },
+      }) => {
+        const post = await prisma.post.findUnique({ where: { id } });
+
+        if (!post) {
+          throw new Error('Post not found');
+        }
+
+        // check if slug is already set for the post
+        const slug = post.slug || slugify(title);
+
+        const updatedPost = await prisma.post.update({
+          where: {
+            id,
+          },
+          data: {
+            title,
+            description,
+            html,
+            tags: {
+              set: tagsIds,
+            },
+            slug, // use existing slug or new slug based on title
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return updatedPost;
+      }
+    ),
+
+  createTech: protectedProcedure
+    .input(
+      WriteFormSchema.and(
+        z.object({
+          tagsIds: z
+            .array(
+              z.object({
+                id: z.string(),
+              })
+            )
+            .optional(),
+          featuredImage: z.string().url().optional(),
+        })
+      )
+    )
+    .mutation(
+      async ({
+        ctx: { prisma, session },
+        input: { title, description, text, tagsIds, html, featuredImage },
+      }) => {
+        // create a function that checks whether the post with this title exists
+
+        const post = await prisma.post.create({
+          data: {
+            title,
+            description,
+            text,
+            html,
+            slug: slugify(title),
+            author: {
+              connect: {
+                id: session.user.id,
+              },
+            },
+            tags: {
+              connect: tagsIds,
+            },
+            featuredImage: featuredImage,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return post;
+      }
+    ),
+
+  editTech: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        html: z.string().optional(),
+        tagsIds: z
+          .array(
+            z.object({
+              id: z.string(),
+            })
+          )
+          .optional(),
+      })
+    )
+    .mutation(
+      async ({
+        ctx: { prisma },
+        input: { id, title, description, tagsIds, html },
+      }) => {
+        const tech = await prisma.tech.findUnique({ where: { id } });
+
+        if (!tech) {
+          throw new Error('Post not found');
+        }
+
+        // check if slug is already set for the post
+        const slug = tech.slug || slugify(title);
+
+        const updatedPost = await prisma.tech.update({
+          where: {
+            id,
+          },
+          data: {
+            title,
+            description,
+            html,
+            tags: {
+              set: tagsIds,
+            },
+            slug, // use existing slug or new slug based on title
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return updatedPost;
       }
     ),
 
@@ -55,6 +232,13 @@ export const postRouter = router({
               },
             }
           : false,
+        tags: {
+          select: {
+            name: true,
+            id: true,
+            slug: true,
+          },
+        },
         likes: true, // include likes count
       },
     });
@@ -133,17 +317,15 @@ export const postRouter = router({
         commentId: z.string(),
       })
     )
-    .mutation(
-      async ({ ctx: { prisma, session }, input: { postId, commentId } }) => {
-        await prisma.like.create({
-          data: {
-            userId: session.user.id,
-            // postId, // Use postId instead of commentId
-            commentId,
-          },
-        });
-      }
-    ),
+    .mutation(async ({ ctx: { prisma, session }, input: { commentId } }) => {
+      await prisma.like.create({
+        data: {
+          userId: session.user.id,
+          // postId, // Use postId instead of commentId
+          commentId,
+        },
+      });
+    }),
 
   dislikeComment: protectedProcedure
     .input(

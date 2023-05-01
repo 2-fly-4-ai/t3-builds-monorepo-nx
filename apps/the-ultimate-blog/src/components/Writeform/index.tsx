@@ -13,25 +13,31 @@ export type TAG = { id: string; name: string };
 import TagForm from '../TagForm';
 import { FaTimes } from 'react-icons/fa';
 import TagsAutocompletion from '../TagsAutocompletion';
-import UnsplahGallary from '../UnsplashGalleryWriteform';
-import { Suspense } from 'react';
 
-type WriteFormType = {
+import UnsplashGallery from '../UnsplashGallery/index-creation';
+
+type WriteFormModalProps = {
   title: string;
   description: string;
   text: string;
   html: string;
+  postId: string;
+  slug: string;
+  setIsUnsplashModalOpen: (isUnsplashModalOpen: boolean) => void;
+  featuredImage: any;
 };
 
 export const WriteFormSchema = z.object({
   title: z.string().min(20),
-  description: z.string().min(60),
+  description: z.string().min(60).optional(),
   text: z.string().min(100).optional(),
   html: z.string().min(100).optional(),
+  featuredImage: z.string().optional(),
 });
 
-export default function WriteFormModal() {
+export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
   const { isWriteModalOpen, setIsWriteModalOpen } = useGlobalContextStore();
+  const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
 
   const {
     register,
@@ -39,17 +45,20 @@ export default function WriteFormModal() {
     control,
     formState: { errors },
     reset,
-  } = useForm<WriteFormType>({
+  } = useForm<WriteFormModalProps>({
     resolver: zodResolver(WriteFormSchema),
   });
 
+  const [selectedImage, setSelectedImage] = useState('');
+  4;
   const postRoute = trpc.useContext().post;
 
   const createPost = trpc.post.createPost.useMutation({
     onSuccess: () => {
       toast.success('post created successfully');
-      setIsWriteModalOpen(false);
       reset();
+      setIsWriteModalOpen(false);
+
       postRoute.getPosts.invalidate();
 
       //Beautiful implementation of Toast
@@ -60,10 +69,17 @@ export default function WriteFormModal() {
   });
 
   const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
-  const onSubmit = (data: WriteFormType) => {
-    createPost.mutate(
-      selectedTags.length > 0 ? { ...data, tagsIds: selectedTags } : data
-    );
+
+  const onSubmit = async (data: WriteFormModalProps) => {
+    try {
+      setSelectedImage(null);
+      await createPost.mutateAsync(
+        selectedTags.length > 0 ? { ...data, tagsIds: selectedTags } : data
+      );
+      reset(); // This clears the input fields
+    } catch (error) {
+      console.error(error);
+    }
   };
   const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
 
@@ -78,6 +94,9 @@ export default function WriteFormModal() {
   // useEffect(() => {
   //   setEditorLoaded(true);
   // }, []);
+  const handleImageSelect = (image: string) => {
+    setSelectedImage(image);
+  };
 
   return (
     <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
@@ -85,6 +104,47 @@ export default function WriteFormModal() {
         onSubmit={handleSubmit(onSubmit)}
         className="relative flex flex-col space-y-5 pt-4"
       >
+        <div
+          id="this button isn't clickable"
+          onClick={() => setIsUnsplashModalOpen(true)}
+          className="left-3  z-10  cursor-pointer rounded-lg bg-gray-400 p-1 transition duration-200 hover:bg-gray-50 "
+        >
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            strokeWidth={0}
+            viewBox="0 0 24 24"
+            height="1.5em"
+            width="1.5em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
+            <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
+            <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
+          </svg>
+        </div>
+
+        <div className="border">
+          {' '}
+          <Controller
+            name="featuredImage"
+            control={control}
+            render={({ field }) => (
+              <>
+                <UnsplashGallery
+                  isUnsplashModalOpen={isUnsplashModalOpen}
+                  setIsUnsplashModalOpen={setIsUnsplashModalOpen}
+                  handleImageSelect={(url) => {
+                    field.onChange(url);
+                    setSelectedImage(url); // Update selectedImage state with the selected URL
+                  }}
+                />
+                {selectedImage && <img src={selectedImage} alt="Selected" />}
+              </>
+            )}
+          />
+        </div>
+
         {getTags.isSuccess && (
           <>
             <TagForm
@@ -137,6 +197,7 @@ export default function WriteFormModal() {
             <div>Loading...</div>
           </div>
         )}
+
         <input
           type="text"
           id="title"
@@ -165,7 +226,6 @@ export default function WriteFormModal() {
                   {...field}
                   onChange={(data: string) => field && field.onChange(data)}
                   value={field.value}
-                  // editorLoaded={editorLoaded}
                 />
               </div>
             )}

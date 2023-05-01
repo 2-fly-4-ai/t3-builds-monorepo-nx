@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
   const readingList = trpc.post.getReadingList.useQuery();
-  // const suggestions = trpc.user.getSuggestions.useQuery();
+  const suggestions = trpc.user.getSuggestions.useQuery();
 
   const [mainClass, setMainClass] = useState('');
 
@@ -31,27 +31,35 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
             People you might be interested in:
           </h3>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Link href="/" key={i}>
-              <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
-                <div>
-                  <div className="text-sm font-bold text-gray-500 dark:text-orange-400">
-                    lorem ipsum
+          {suggestions.isSuccess &&
+            suggestions.data.map((user) => (
+              <Link href="/" key={10}>
+                <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                  <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
+                  <div>
+                    <div className="text-base text-sm font-bold text-gray-500 dark:text-orange-400">
+                      {user.name}
+                    </div>
+                    <div className="line-clamp-2 text-sm">
+                      lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
+                      ipsum lorem ipsum lorem ipsum lorem ipsum
+                    </div>
                   </div>
-                  <div className="line-clamp-2 text-sm">
-                    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    lorem ipsum lorem ipsum lorem ipsum
+                  <div>
+                    <button
+                      // onClick={() =>
+                      //     followUser.mutate({
+                      //       followingUserId: user.id,
+                      //     })
+                      //   }
+                      className="dark flex items-center space-x-3 rounded  border-2 border-gray-300  p-2 px-4 py-2 text-sm font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 transition duration-200 ease-in-out hover:border-black hover:bg-gray-200  hover:text-gray-900 hover:shadow-black  dark:hover:border-white dark:hover:bg-white  dark:hover:bg-opacity-50 dark:hover:text-white"
+                    >
+                      Follow
+                    </button>
                   </div>
                 </div>
-                <div>
-                  <button className="dark flex items-center space-x-3 rounded  border-2 border-gray-300  p-2 px-4 py-2 text-sm font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 transition duration-200 ease-in-out hover:border-black hover:bg-gray-200  hover:text-gray-900 hover:shadow-black  dark:hover:border-white dark:hover:bg-white  dark:hover:bg-opacity-50 dark:hover:text-white">
-                    Follow
-                  </button>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
         </div>
       </div>
       <div>
@@ -67,12 +75,13 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
                 <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                  <div className="   bg-gray-300">
+                  <div className="flex    w-40 justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
                     {bookmark?.post?.featuredImage ? (
                       <Image
                         src={bookmark?.post?.featuredImage ?? null}
                         width={220}
                         height={220}
+                        className="max-h-32 w-auto"
                       />
                     ) : (
                       <Image

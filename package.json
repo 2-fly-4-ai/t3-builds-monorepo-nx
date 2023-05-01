@@ -10,6 +10,7 @@
     "@ckeditor/ckeditor5-build-classic": "^36.0.1",
     "@ckeditor/ckeditor5-build-inline": "^36.0.1",
     "@ckeditor/ckeditor5-code-block": "^37.1.0",
+    "@ckeditor/ckeditor5-image": "^37.1.0",
     "@ckeditor/ckeditor5-link": "^36.0.1",
     "@ckeditor/ckeditor5-react": "^5.0.2",
     "@ckeditor/ckeditor5-ui": "^37.0.1",

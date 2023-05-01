@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useBookmarkStore } from '../../zustand/store';
 
 /* eslint-disable-next-line */
-export interface PostCardProps {
+export interface TechCardProps {
   countlikes: React.ReactNode;
   post: {
     author: {
@@ -28,7 +28,7 @@ export interface PostCardProps {
     likes: string;
   };
 }
-export function PostCard(props: PostCardProps) {
+export function TechCard(props: TechCardProps) {
   const postRoute = trpc.useContext().post;
 
   const bookmarkPost = trpc.post.bookmarkPost.useMutation({
@@ -93,7 +93,8 @@ export function PostCard(props: PostCardProps) {
           </div>
         </Link>
       </div>
-      <div className="group col-span-full items-center gap-3 py-1 transition-all duration-500  hover:bg-gray-200 ">
+
+      {/* <div className="group col-span-full items-center gap-3 py-1 transition-all duration-500  hover:bg-gray-200 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
             className=" flex cursor-pointer items-center gap-2   border-b-2  border-gray-200 p-1 shadow-sm
@@ -120,18 +121,18 @@ export function PostCard(props: PostCardProps) {
                   {dayjs(props.post.createdAt).format('DD/MM/YY')}
                 </div>
               </div>
-              {/* <div className="text-sm underline">Teacher & Developer</div> */}
             </div>
           </div>
         </Link>
-      </div>
+      </div> */}
 
-      <div className="col-span-full   h-28">
+      <div className="col-span-full   h-24">
         <Link href={`/${props.post.slug}`}>
-          <div className="col-span-4 "></div>
-          <h3 className=" line-clamp-4  cursor-pointer  text-xl font-bold decoration-gray-300 ">
+          <div className="col-span-4 space-y-4"></div>
+          <h3 className=" line-clamp-2  cursor-pointer  text-xl font-bold decoration-gray-300 ">
             {props.post.title}
           </h3>
+          <p>This is the explanation of stack la la ala la la la la</p>
         </Link>
         {/* <div className="break-words line-clamp-3  text-md line text-gray-500">
           {props.post.description}
@@ -194,4 +195,4 @@ export function PostCard(props: PostCardProps) {
   );
 }
 
-export default PostCard;
+export default TechCard;

@@ -7,6 +7,7 @@ import { useCallback, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
 import toast, { Toaster } from 'react-hot-toast';
+import { useBookmarkStore } from '../../zustand/store';
 
 /* eslint-disable-next-line */
 export interface PostCardProps {
@@ -28,13 +29,33 @@ export interface PostCardProps {
 }
 
 export function PostCardUserProfile(props: PostCardProps) {
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
+  const isBookmarked = bookmarks.includes(props.post.id);
   const postRoute = trpc.useContext().post;
   const { data: sessionData, status } = useSession();
+
+  const bookmarkPost = trpc.post.bookmarkPost.useMutation({
+    onSuccess: () => {
+      toast.success('Bookmark Added');
+      postRoute.getReadingList.invalidate();
+    },
+  });
+
+  const removeBookmark = trpc.post.removeBookmark.useMutation({
+    onSuccess: () => {
+      toast.success('Bookmark Removed');
+      postRoute.getReadingList.invalidate();
+    },
+  });
+
+  const handleBookmarkToggle = useCallback(() => {
+    toggleBookmark(props.post.id);
+  }, [props.post.id, isBookmarked, toggleBookmark]);
 
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid grid-cols-10 gap-4 gap-x-8 rounded-xl border-2   p-4  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)]  dark:border-gray-300 dark:bg-white dark:bg-opacity-10">
+    <div className="group grid  grid-cols-10 gap-4 gap-x-8 rounded-xl border-2  p-4  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)]  dark:border-gray-300 dark:bg-white dark:bg-opacity-10">
       <div className="relative col-span-full  rounded-none">
         <div className="group absolute flex h-full w-full transition duration-500 group-hover:bg-black group-hover:bg-opacity-20">
           <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
@@ -58,7 +79,7 @@ export function PostCardUserProfile(props: PostCardProps) {
           <div className="h-56">
             <Image
               src={
-                props.post.featuredImage ??
+                props?.post?.featuredImage ??
                 'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s'
               }
               width={400}
@@ -83,25 +104,38 @@ export function PostCardUserProfile(props: PostCardProps) {
       </div>
 
       <div className="col-span-10  flex items-center">
-        <div className="mr-auto  flex space-x-3 ">
-          {/* post.tags */}
-          {Array.from({ length: 0 }).map((tag) => (
-            <div
-              // key={tag.id}
-              onClick={() => {
-                // redirect the user to specific tag page, where all the post related to that tag should be shown
-              }}
-              className="flex cursor-pointer items-center rounded-lg  border-2  border-gray-300 bg-gradient-to-tr from-gray-300 via-gray-200 to-white p-2 px-4 py-1 font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300  transition hover:border-black hover:text-gray-900 hover:shadow-black"
-            >
-              TEST
-              {/* {tag.name} */}
-            </div>
-          ))}
-        </div>
         <div className=" flex w-full">
           <div className="flex  gap-1 bg-gray-200 p-1 px-2 font-medium dark:bg-white dark:bg-opacity-10 ">
-            <BiUpvote /> {props.post.likes.length}
+            <BiUpvote /> {props?.post?.likes?.length}
           </div>
+          {sessionData ? (
+            <div className="text-gray-400 hover:text-black dark:hover:text-white">
+              {isBookmarked ? (
+                <BiBookmarkMinus
+                  onClick={() => {
+                    removeBookmark.mutate({
+                      postId: props.post.id,
+                    });
+                    // use the toggleBookmark function from the store and pass the post id
+                    handleBookmarkToggle();
+                  }}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <BiBookmarkPlus
+                  // countLikes={props.countlikes?.length()}
+                  onClick={() => {
+                    bookmarkPost.mutate({
+                      postId: props.post.id,
+                    });
+                    // use the toggleBookmark function from the store and pass the post id
+                    handleBookmarkToggle();
+                  }}
+                  className="cursor-pointer"
+                />
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
 

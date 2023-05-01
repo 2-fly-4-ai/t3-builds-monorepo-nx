@@ -54,19 +54,15 @@ export const userRouter = router({
         where: {
           username,
         },
-
         select: {
           posts: {
-            orderBy: {
-              createdAt: 'desc',
-            },
             select: {
               id: true,
               slug: true,
               title: true,
               description: true,
-              likes: true,
               createdAt: true,
+              likes: true,
               featuredImage: true,
               author: {
                 select: {
@@ -127,7 +123,7 @@ export const userRouter = router({
       const {
         data: { publicUrl },
       } = supabase.storage.from('public').getPublicUrl(data?.path);
-      console.warn(publicUrl);
+
       await prisma.user.update({
         where: {
           id: session.user.id,

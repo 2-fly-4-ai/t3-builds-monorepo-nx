@@ -5,6 +5,8 @@ export * from './lib/like-post/like-post';
 export * from './lib/blog-page-prose/blog-page-prose';
 export * from './lib/productCard/product-card';
 export * from './lib/topic-button/topic-button';
+export * from './lib/tech-card/tech-card';
+export * from './lib/tech-card/tech-card-list';
 export { default as SearchIcon } from './icons/SearchIcon';
 export { default as UserStarIcon } from './icons/UserStarIcon';
 export * from './shadnui/ui/tabs';

@@ -25,15 +25,13 @@ export const unsplashSearchRouteSchema = z.object({
 type UnsplahGallaryProps = {
   isUnsplashModalOpen: boolean;
   setIsUnsplashModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  postId: string;
-  slug: string;
+  handleImageSelect: (url: string) => void;
 };
 
 const UnsplahGallary = ({
   isUnsplashModalOpen,
   setIsUnsplashModalOpen,
-  postId,
-  slug,
+  handleImageSelect,
 }: UnsplahGallaryProps) => {
   const { register, watch, reset } = useForm<{ searchQuery: string }>({
     resolver: zodResolver(unsplashSearchRouteSchema),
@@ -41,8 +39,7 @@ const UnsplahGallary = ({
 
   const watchSearchQuery = watch('searchQuery');
   const debouncedSearchQuery = useDebounce(watchSearchQuery, 3000);
-
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState(''); //This is for the preview
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   const fetchUnsplashImages = trpc.unsplash.getImages.useQuery(
@@ -56,27 +53,31 @@ const UnsplahGallary = ({
 
   const utils = trpc.useContext();
 
-  const updateFeaturedImage = trpc.post.updatePostFeaturedImage.useMutation({
-    onSuccess: () => {
-      utils.post.getPost.invalidate({ slug });
-      reset();
-      setIsUnsplashModalOpen(false);
-      toast.success('featured image updated');
-    },
-    async fn({ imageUrl, postId }) {
-      const formData = new FormData();
-      formData.append('image', dataURLtoFile(imageUrl, 'image.jpg'));
-      await axios.post('/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      await trpc.post.updatePostFeaturedImage.mutation({
-        imageUrl: '/images/image.jpg',
-        postId,
-      });
-    },
-  });
+  // const updateFeaturedImage = trpc.post.updatePostFeaturedImage.useMutation({
+  //   onSuccess: () => {
+  //     utils.post.getPost.invalidate({ slug });
+  //     reset();
+  //     setIsUnsplashModalOpen(false);
+  //     toast.success('featured image updated');
+  //   },
+
+  //   async fn({ featuredImage, postId }) {
+  //     const formData = new FormData();
+  //     formData.append('image', featuredImage);
+  //     const { data } = await axios.post('/api/upload', formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+
+  //     await trpc.post.updatePost.mutation({
+  //       postId,
+  //       input: {
+  //         featuredImage: data.url,
+  //       },
+  //     });
+  //   },
+  // });
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer.setData('text/plain', 'image');
@@ -94,17 +95,17 @@ const UnsplahGallary = ({
     setSelectedImage(URL.createObjectURL(file));
   };
 
-  function dataURLtoFile(dataurl: string, filename: string): File {
-    const arr = dataurl.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  }
+  // function dataURLtoFile(dataurl: string, filename: string): File {
+  //   const arr = dataurl.split(',');
+  //   const mime = arr[0].match(/:(.*?);/)[1];
+  //   const bstr = atob(arr[1]);
+  //   let n = bstr.length;
+  //   const u8arr = new Uint8Array(n);
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+  //   return new File([u8arr], filename, { type: mime });
+  // }
 
   const [isOpenUploadTab, setIsOpenUploadTab] = useState(false);
 
@@ -132,7 +133,7 @@ const UnsplahGallary = ({
                 setIsOpenUploadTab(false);
                 setSelectedImage(null);
 
-                // setSelectedImageFile(null);
+                setSelectedImageFile(null);
               }}
             >
               <TabsTrigger value="unsplash">Unsplash</TabsTrigger>
@@ -142,7 +143,7 @@ const UnsplahGallary = ({
               onClick={() => {
                 setIsOpenUploadTab(true);
                 setSelectedImage(null);
-                // setSelectedImageFile(null);
+                setSelectedImageFile(null);
               }}
             >
               <TabsTrigger value="upload">Upload</TabsTrigger>
@@ -212,7 +213,7 @@ const UnsplahGallary = ({
                   alt="Preview"
                   width={400}
                   height={400}
-                  className="mx-auto rounded-md "
+                  className="mx-auto rounded-md border"
                   key={uuidv4()}
                 />
               ) : (
@@ -247,18 +248,22 @@ const UnsplahGallary = ({
           {selectedImage ? (
             <button
               type="submit"
-              className={`${
-                !updateFeaturedImage.isLoading ? 'border-2' : ''
-              } flex h-10 items-center space-x-3 rounded border border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900`}
+              className={`
+                 flex
+               h-10 items-center space-x-3 rounded border-2 border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900`}
               onClick={() => {
-                updateFeaturedImage.mutate({
-                  imageUrl: selectedImage,
-                  postId,
-                });
+                handleImageSelect(selectedImage);
+                setIsOpenUploadTab(false);
+                setIsUnsplashModalOpen(false);
+                toast.success('Successful');
+                // updateFeaturedImage.mutate({
+                //   imageUrl: selectedImage,
+                //   postId,
+                // });
               }}
-              disabled={updateFeaturedImage.isLoading}
+              // disabled={updateFeaturedImage.isLoading}
             >
-              {updateFeaturedImage.isLoading ? 'Loading...' : 'Confirm'}
+              Confirm
             </button>
           ) : (
             <button
@@ -267,27 +272,31 @@ const UnsplahGallary = ({
               onClick={() => {
                 toast.error('None Selected');
               }}
-              disabled={updateFeaturedImage.isLoading}
+              // disabled={updateFeaturedImage.isLoading}
             >
-              {updateFeaturedImage.isLoading ? 'Loading...' : 'None Selected'}
+              None Selected
+              {/* {updateFeaturedImage.isLoading ? 'Loading...' : 'None Selected'} */}
             </button>
           )}
-          <input
-            type="file"
-            className={`${
-              isOpenUploadTab ? 'flex' : 'hidden'
-            }  items-center space-x-3 rounded border border-gray-200 px-4 py-1 transition hover:border-gray-900 hover:text-gray-900`}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              setSelectedImageFile(file);
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onloadend = () => {
-                setSelectedImage(reader.result as string);
-                // clear file input
-              };
-            }}
-          />
+          {isOpenUploadTab && (
+            <input
+              type="file"
+              className={`${
+                isOpenUploadTab ? 'flex' : 'hidden'
+              }  items-center space-x-3 rounded border border-gray-200 px-4 py-1 transition hover:border-gray-900 hover:text-gray-900`}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setSelectedImageFile(file);
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = () => {
+                  setSelectedImage(reader.result as string);
+                  // clear file input(())
+                  handleImageSelect(selectedImage);
+                };
+              }}
+            />
+          )}
         </div>
       </div>
     </Modal>

@@ -1640,6 +1640,15 @@
     ckeditor5 "^37.0.1"
     lodash-es "^4.17.15"
 
+"@ckeditor/ckeditor5-image@^37.1.0":
+  version "37.1.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-image/-/ckeditor5-image-37.1.0.tgz#95871c07c64a14997c902faea133ed60c80b41b0"
+  integrity sha512-wIKGfasamPE7MWnIoNIpmWgxlZOz8bxw8ZaLucRdJGaU1+orzQabYcqZM+y+3puAowXs2MIGcA7kSmyJPvL0Jw==
+  dependencies:
+    "@ckeditor/ckeditor5-ui" "^37.1.0"
+    ckeditor5 "^37.1.0"
+    lodash-es "^4.17.15"
+
 "@ckeditor/ckeditor5-indent@^36.0.1":
   version "36.0.1"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-indent/-/ckeditor5-indent-36.0.1.tgz#82da3df0018f9f8e5645914309a6d39dc46b503d"
