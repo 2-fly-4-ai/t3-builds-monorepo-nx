@@ -44,9 +44,9 @@ export function PostCardListUserProfile(props: PostCardProps) {
         </div>
       </div>
       <div className="relative col-span-4">
-        <div className="group absolute flex h-60 w-full transition duration-500 hover:bg-black hover:bg-opacity-20">
+        <div className="group absolute flex h-60 w-full transition duration-200 hover:bg-black hover:bg-opacity-20">
           <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
-            <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
+            <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-200 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg
                 stroke="currentColor"

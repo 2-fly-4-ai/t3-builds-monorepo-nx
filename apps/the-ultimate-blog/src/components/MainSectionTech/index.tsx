@@ -9,9 +9,10 @@ import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinn
 import { RouterOutputs } from '../../utils/trpc';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import TechModal from '../TechModal';
 
 export default function MainSection({ showSidebar, toggleSidebar }) {
-  const getPosts = trpc.post.getPosts.useQuery();
+  const getPosts = trpc.post.getTechPosts.useQuery();
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
 
@@ -141,7 +142,10 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
                 {showListView ? (
                   <TechCardList post={post} />
                 ) : (
-                  <TechCard post={post} />
+                  <div>
+                    <TechCard post={post} />
+                    <TechModal post={post} />
+                  </div>
                 )}
               </div>
             );

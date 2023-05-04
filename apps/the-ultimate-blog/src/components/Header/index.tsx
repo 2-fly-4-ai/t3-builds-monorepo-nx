@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiLogIn } from '../../icons';
 import { AiOutlineBell } from '../../icons';
 import { AiOutlineEdit } from '../../icons';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import Link from 'next/link';
-
+import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
 import { ThemeToggle } from 'libs/shared/next13-ui/src/shadnui/components/theme-toggle/theme-toggle';
 import { MainNav } from 'libs/shared/next13-ui/src/shadnui/main-nav';
 import { useSelectedLayoutSegment } from 'next/navigation';
@@ -23,6 +23,8 @@ import dynamic from 'next/dynamic';
 export default function Header() {
   const { data: sessionData, status } = useSession();
   const { setIsWriteModalOpen } = useGlobalContextStore();
+  const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
+    useGlobalContextTechStore();
   const [segment, setSegment] = React.useState('');
 
   React.useEffect(() => {
@@ -88,6 +90,15 @@ export default function Header() {
             >
               <AiOutlineEdit />
               Write
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => setIsWriteTechModalOpen(true)}
+              className="dark flex items-center justify-center gap-1 rounded-lg  border-2 border-gray-300 p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black  dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+            >
+              <AiOutlineEdit />
+              Add Tech
             </button>
           </div>
           <div>

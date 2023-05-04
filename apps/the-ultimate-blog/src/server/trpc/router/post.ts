@@ -1,6 +1,7 @@
 import { router, protectedProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { WriteFormSchema } from '../../../components/Writeform';
+import { WriteTechFormSchema } from 'apps/the-ultimate-blog/src/components/WriteformTech';
 import slugify from 'slugify';
 import { z } from 'zod';
 import { commentFormSchema } from 'apps/the-ultimate-blog/src/components/CommentSidebar';
@@ -106,9 +107,9 @@ export const postRouter = router({
       }
     ),
 
-  createTech: protectedProcedure
+  createTechPost: protectedProcedure
     .input(
-      WriteFormSchema.and(
+      WriteTechFormSchema.and(
         z.object({
           tagsIds: z
             .array(
@@ -128,7 +129,7 @@ export const postRouter = router({
       }) => {
         // create a function that checks whether the post with this title exists
 
-        const post = await prisma.post.create({
+        const post = await prisma.tech.create({
           data: {
             title,
             description,
@@ -154,7 +155,7 @@ export const postRouter = router({
       }
     ),
 
-  editTech: protectedProcedure
+  editTechpost: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -253,6 +254,131 @@ export const postRouter = router({
     )
     .query(async ({ ctx: { prisma, session }, input: { slug } }) => {
       const post = await prisma.post.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          id: true,
+          description: true,
+          title: true,
+          text: true,
+          html: true,
+          authorId: true,
+          slug: true,
+          featuredImage: true,
+          likes: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : false,
+        },
+      });
+
+      return post;
+    }),
+
+  getTechPosts: publicProcedure.query(async ({ ctx: { prisma, session } }) => {
+    const posts = await prisma.tech.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        description: true,
+        createdAt: true,
+        html: true,
+        featuredImage: true,
+        author: {
+          select: {
+            name: true,
+            image: true,
+            username: true,
+          },
+        },
+        bookmarks: session?.user?.id
+          ? {
+              where: {
+                userId: session?.user?.id,
+              },
+            }
+          : false,
+        tags: {
+          select: {
+            name: true,
+            id: true,
+            slug: true,
+          },
+        },
+        likes: true, // include likes count
+      },
+    });
+    return posts;
+  }),
+
+  getTechPostsByTag: publicProcedure
+    .input(
+      z.object({
+        tag: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const { tag } = input;
+
+      const where = tag
+        ? {
+            tags: {
+              some: {
+                name: tag,
+              },
+            },
+          }
+        : {};
+
+      const posts = await prisma.tech.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          html: true,
+          featuredImage: true,
+          author: {
+            select: {
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+          tags: {
+            select: {
+              name: true,
+              id: true,
+              slug: true,
+            },
+          },
+          likes: true,
+        },
+        where,
+      });
+      return posts;
+    }),
+
+  getTechPost: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input: { slug } }) => {
+      const post = await prisma.tech.findUnique({
         where: {
           slug,
         },
@@ -456,10 +582,11 @@ export const postRouter = router({
   updatePostFeaturedImage: protectedProcedure
     .input(
       z.object({
-        imageUrl: z.string().url(),
+        imageUrl: z.string(),
         postId: z.string(),
       })
     )
+
     .mutation(
       async ({ ctx: { prisma, session }, input: { imageUrl, postId } }) => {
         // we have to check if the user is owner of the given post

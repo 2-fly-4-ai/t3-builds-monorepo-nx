@@ -14,6 +14,7 @@
     "@ckeditor/ckeditor5-link": "^36.0.1",
     "@ckeditor/ckeditor5-react": "^5.0.2",
     "@ckeditor/ckeditor5-ui": "^37.0.1",
+    "@ckeditor/ckeditor5-upload": "^37.1.0",
     "@headlessui/react": "^1.7.13",
     "@hookform/resolvers": "^3.0.0",
     "@next-auth/prisma-adapter": "^1.0.5",

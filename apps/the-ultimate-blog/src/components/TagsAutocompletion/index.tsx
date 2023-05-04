@@ -2,7 +2,7 @@ import { Fragment, useMemo, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { HiCheck } from 'react-icons/hi';
 import { HiChevronUpDown } from 'react-icons/hi2';
-import type { TAG } from '../WriteFormModal';
+import type { TAG } from '../Writeform';
 
 type TagsAutocompletionProps = {
   tags: TAG[];

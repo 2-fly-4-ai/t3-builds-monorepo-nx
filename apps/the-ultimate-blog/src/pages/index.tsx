@@ -4,6 +4,7 @@ import WriteFormModal from '../components/Writeform';
 import { trpc } from '../utils/trpc';
 import MainSection from '../components/MainSection';
 import SideSection from '../components/SideSection';
+import WriteFormModalTech from '../components/WriteformTech';
 
 function HomePage() {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -22,6 +23,7 @@ function HomePage() {
         {/* This is the button to toggle the sidebar */}
       </section>
       <WriteFormModal />
+      <WriteFormModalTech />
     </MainLayout>
   );
 }

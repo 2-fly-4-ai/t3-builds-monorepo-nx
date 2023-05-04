@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainLayout from '../layouts/MainLayout';
-import WriteFormModal from '../components/Writeform';
-import MainSection from '../components/MainSectionTechStack';
+import WriteFormModalTech from '../components/WriteformTech';
+import MainSection from '../components/MainSectionTech';
 import SideSection from '../components/SideSection';
 
 export default function techStackPage() {
@@ -20,7 +20,7 @@ export default function techStackPage() {
         <SideSection showSidebar={showSidebar} toggleSidebar={toggleSidebar} />
         {/* This is the button to toggle the sidebar */}
       </section>
-      <WriteFormModal />
+      <WriteFormModalTech />
     </MainLayout>
   );
 }

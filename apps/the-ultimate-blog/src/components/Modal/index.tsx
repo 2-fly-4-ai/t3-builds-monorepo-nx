@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
-
+import { Fragment, useState, useEffect } from 'react';
+import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
+import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -13,9 +14,22 @@ export default function Modal({
   title,
   children,
 }: React.PropsWithChildren<ModalProps>) {
+  const { setIsWriteTechModalOpen } = useGlobalContextTechStore();
+  const { setIsWriteModalOpen } = useGlobalContextStore();
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      setIsWriteTechModalOpen(false);
+      setIsWriteModalOpen(false);
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
   return (
     <>
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={isOpen ? true : false} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={onClose}>
           <Transition.Child
             as={Fragment}

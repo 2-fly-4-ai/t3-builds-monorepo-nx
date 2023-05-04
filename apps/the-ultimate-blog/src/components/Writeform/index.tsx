@@ -100,10 +100,7 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
 
   return (
     <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="relative flex flex-col space-y-5 pt-4"
-      >
+      <form className="relative flex flex-col space-y-5 pt-4">
         <div
           id="this button isn't clickable"
           onClick={() => setIsUnsplashModalOpen(true)}
@@ -221,7 +218,7 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
             name="html"
             control={control}
             render={({ field }) => (
-              <div className="prose-li:list-style prose prose-lg prose-a:font-bold prose-li:text-black prose-table:table-auto  prose-table:border-2 prose-tr:border-r  prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12  prose-img:max-h-custom prose-img:w-auto prose-img:border-2 prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] prose-img:shadow-black prose-p:font-sans prose-li:list-style  prose-table:shadow-lg prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-img:max-h-custom  dark:prose-headings:text-gray-300 dark:prose-p:text-gray-400 prose-li:font-sans  dark:prose-li:text-gray-400 dark:prose-strong:text-red-400  dark:prose-code:text-white  min-h-[40vh]  w-full max-w-none    border   shadow-2xl marker:text-black focus-within:border-black    dark:bg-black dark:bg-opacity-60 dark:text-gray-400  dark:text-opacity-80 dark:marker:text-gray-400">
+              <div className="prose-li:list-style prose prose-lg prose-a:font-bold prose-li:text-black prose-table:table-auto prose-table:border-2 prose-tr:border-r  prose-th:border prose-th:p-2  prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto  prose-img:border-2 prose-img:border-black prose-img:py-12  prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] prose-img:shadow-black dark:prose-img:bg-black prose-p:font-sans prose-li:list-style prose-table:shadow-lg prose-th:bg-gray-300  dark:prose-th:bg-opacity-0 prose-img:max-h-custom dark:prose-headings:text-gray-300 dark:prose-p:text-gray-400  prose-li:font-sans dark:prose-li:text-gray-400 dark:prose-strong:text-red-400  dark:prose-code:text-white min-h-[40vh]  w-full  max-w-none  border px-8    py-8   shadow-2xl marker:text-black focus-within:border-black    dark:bg-black dark:bg-opacity-60 dark:text-gray-400  dark:text-opacity-80 dark:marker:text-gray-400">
                 <Editor
                   {...field}
                   onChange={(data: string) => field && field.onChange(data)}
@@ -235,6 +232,7 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
         <p>{errors.text?.message}</p>
         <div className="flex w-full justify-end">
           <button
+            onClick={handleSubmit(onSubmit)}
             type="submit"
             className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
           >

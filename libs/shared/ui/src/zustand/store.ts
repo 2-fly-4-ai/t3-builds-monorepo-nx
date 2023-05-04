@@ -6,6 +6,16 @@ type GlobalContextType = {
   setIsWriteModalOpen: (newValue: boolean) => void;
 };
 
+type GlobalContextTechType = {
+  isWriteTechModalOpen: boolean;
+  setIsWriteTechModalOpen: (newValue: boolean) => void;
+};
+
+type GlobalContextTechModalType = {
+  isTechModalOpen: boolean;
+  setIsTechModalOpen: (newValue: boolean) => void;
+};
+
 export const useGlobalContextStore = create(
   persist(
     (set): GlobalContextType => ({
@@ -14,6 +24,32 @@ export const useGlobalContextStore = create(
         set(() => ({ isWriteModalOpen: newValue })),
     }),
     { name: 'global-context-store' }
+  )
+);
+
+export const useGlobalContextTechStore = create(
+  persist(
+    (set): GlobalContextTechType => ({
+      isWriteTechModalOpen: false,
+      setIsWriteTechModalOpen: (newValue) =>
+        set(() => ({ isWriteTechModalOpen: newValue })),
+    }),
+    { name: 'global-context-tech-store' }
+  )
+);
+
+export const useGlobalContextTechModalStore = create(
+  persist(
+    (set) => ({
+      posts: [],
+      togglePosts: (id: string) =>
+        set((state) => ({
+          posts: state.posts.includes(id)
+            ? state.posts.filter((postId) => postId !== id)
+            : [...state.posts, id],
+        })),
+    }),
+    { name: 'global-context-tech-modal-store' }
   )
 );
 

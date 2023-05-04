@@ -55,11 +55,11 @@ export function PostCardUserProfile(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid  grid-cols-10 gap-4 gap-x-8 rounded-xl border-2  p-4  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)]  dark:border-gray-300 dark:bg-white dark:bg-opacity-10">
+    <div className="group grid  grid-cols-10 gap-4 gap-x-8 rounded-xl border-2  p-4  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)]  dark:border-gray-300 dark:bg-white dark:bg-opacity-10">
       <div className="relative col-span-full  rounded-none">
-        <div className="group absolute flex h-full w-full transition duration-500 group-hover:bg-black group-hover:bg-opacity-20">
+        <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black group-hover:bg-opacity-20">
           <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
-            <button className="mx-auto  hidden items-center justify-center  gap-2 rounded-lg border-4 px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex  group-hover:bg-white group-hover:bg-opacity-80 group-hover:dark:bg-black dark:group-hover:bg-opacity-50">
+            <button className="mx-auto  hidden items-center justify-center  gap-2 rounded-lg border-4 px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-200 group-hover:flex  group-hover:bg-white group-hover:bg-opacity-80 group-hover:dark:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg
                 stroke="currentColor"

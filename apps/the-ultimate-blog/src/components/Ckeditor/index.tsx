@@ -3,6 +3,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DecoupledEditor from 'ckeditor5-custom-build/build/ckeditor';
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { useSupabase } from '../../hooks/supabase';
 
 interface CKeditorProps {
   onChange: (data: string) => void;
@@ -22,10 +24,32 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
         }, 100);
     }
   }
+  const { supabase, error } = useSupabase();
 
   useEffect(() => {
+    // Show the editor once supabase is ready
     setShowEditor(true);
   }, []);
+
+  const handleImageUpload = async (file: File): Promise<string> => {
+    // Check if supabase is ready
+    if (!supabase) {
+      return '';
+    }
+
+    const { data, error } = await supabase.storage
+      .from('my-bucket')
+      .upload(`images/${file.name}`, file, {
+        contentType: file.type,
+      });
+
+    if (error) {
+      console.log('Error uploading image:', error);
+      return '';
+    }
+
+    return data?.Key || '';
+  };
 
   return showEditor ? (
     <CKEditor
@@ -33,20 +57,18 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
       data={value}
       config={{
         placeholder: 'Type here to get started',
+        upload: {
+          types: ['png', 'jpeg', 'jpg', 'gif', 'webp'],
+          // Use a custom upload function that calls handleImageUpload
+          handler: async (file) => {
+            const uploadedImageUrl = await handleImageUpload(file);
+            return { default: uploadedImageUrl };
+          },
+        },
         codeBlock: {
           languages: [
-            // { language: 'plaintext', label: 'Plain text' },
-            // { language: 'c', label: 'C' },
-            // { language: 'cs', label: 'C#' },
-            // { language: 'cpp', label: 'C++' },
-            // { language: 'css', label: 'CSS' },
-            // { language: 'diff', label: 'Diff' },
-            // { language: 'html', label: 'HTML' },
-            // { language: 'java', label: 'Java' },
             { language: 'javascript', label: 'JavaScript' },
-            // { language: 'php', label: 'PHP' },
             { language: 'python', label: 'Python' },
-            // { language: 'ruby', label: 'Ruby' },
             { language: 'typescript', label: 'TypeScript' },
             // { language: 'xml', label: 'XML' },
           ],

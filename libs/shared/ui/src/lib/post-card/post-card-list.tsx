@@ -51,7 +51,7 @@ export function PostCardList(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6 py-4  shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:bg-white dark:bg-opacity-10">
+    <div className="grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6 py-4  shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:bg-white dark:bg-opacity-10">
       <div className="col-span-full flex items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author.username}` ?? null}>
           <div
@@ -87,7 +87,7 @@ export function PostCardList(props: PostCardProps) {
 
       <div className="col-span-8  space-y-4 border border-transparent">
         <Link href={`/${props.post.slug}`}>
-          <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 transition duration-500 hover:underline">
+          <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 transition duration-200 hover:underline">
             {props.post.title}
           </h3>
         </Link>
@@ -96,9 +96,9 @@ export function PostCardList(props: PostCardProps) {
         </div>
       </div>
       <div className="relative col-span-4">
-        <div className="group absolute flex h-60 w-full transition duration-500 hover:bg-black hover:bg-opacity-20">
+        <div className="group absolute flex h-60 w-full transition duration-200 hover:bg-black hover:bg-opacity-20">
           <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
-            <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
+            <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-200 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg
                 stroke="currentColor"

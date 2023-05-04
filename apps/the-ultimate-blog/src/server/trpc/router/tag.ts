@@ -6,11 +6,9 @@ import { tagCreateSchema } from '../../../components/TagForm';
 import { protectedProcedure, router } from '../trpc';
 
 export const tagRouter = router({
-  createTag: protectedProcedure.input(tagCreateSchema).mutation(
-    // we need to define some validations over here!
-
-    async ({ ctx: { prisma }, input }) => {
-      // validation
+  createTag: protectedProcedure
+    .input(tagCreateSchema)
+    .mutation(async ({ ctx: { prisma }, input }) => {
       const tag = await prisma.tag.findUnique({
         where: {
           name: input.name,
@@ -30,10 +28,37 @@ export const tagRouter = router({
           slug: slugify(input.name),
         },
       });
-    }
-  ),
+    }),
 
   getTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
     return await prisma.tag.findMany();
+  }),
+
+  createTechTag: protectedProcedure
+    .input(tagCreateSchema)
+    .mutation(async ({ ctx: { prisma }, input }) => {
+      const tag = await prisma.techTag.findUnique({
+        where: {
+          name: input.name,
+        },
+      });
+
+      if (tag) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'tag already exists!',
+        });
+      }
+
+      await prisma.techTag.create({
+        data: {
+          ...input,
+          slug: slugify(input.name),
+        },
+      });
+    }),
+
+  getTechTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
+    return await prisma.techTag.findMany();
   }),
 });
