@@ -125,16 +125,34 @@ export const postRouter = router({
     .mutation(
       async ({
         ctx: { prisma, session },
-        input: { title, description, text, tagsIds, html, featuredImage },
+        input: {
+          title,
+          techDescription,
+          shortDescription,
+          text,
+          tagsIds,
+          html,
+          featuredImage,
+          docsUrl,
+          webUrl,
+          githubUrl,
+          pricingUrl,
+        },
       }) => {
         // create a function that checks whether the post with this title exists
 
         const post = await prisma.tech.create({
           data: {
             title,
-            description,
+            techDescription,
+            shortDescription,
+            docsUrl,
+            webUrl,
+            githubUrl,
+            pricingUrl,
             text,
             html,
+
             slug: slugify(title),
             author: {
               connect: {
@@ -160,7 +178,12 @@ export const postRouter = router({
       z.object({
         id: z.string(),
         title: z.string().optional(),
-        description: z.string().optional(),
+        shortDescription: z.string().optional(),
+        techDescription: z.string().optional(),
+        docsUrl: z.string().optional(),
+        webUrl: z.string().optional(),
+        githubUrl: z.string().optional(),
+        pricingUrl: z.string().optional(),
         html: z.string().optional(),
         tagsIds: z
           .array(
@@ -174,7 +197,18 @@ export const postRouter = router({
     .mutation(
       async ({
         ctx: { prisma },
-        input: { id, title, description, tagsIds, html },
+        input: {
+          id,
+          title,
+          techDescription,
+          shortDescription,
+          docsUrl,
+          webUrl,
+          githubUrl,
+          pricingUrl,
+          tagsIds,
+          html,
+        },
       }) => {
         const tech = await prisma.tech.findUnique({ where: { id } });
 
@@ -191,7 +225,12 @@ export const postRouter = router({
           },
           data: {
             title,
-            description,
+            techDescription,
+            shortDescription,
+            docsUrl,
+            webUrl,
+            githubUrl,
+            pricingUrl,
             html,
             tags: {
               set: tagsIds,
@@ -288,7 +327,12 @@ export const postRouter = router({
         id: true,
         slug: true,
         title: true,
-        description: true,
+        shortDescription: true,
+        techDescription: true,
+        docsUrl: true,
+        webUrl: true,
+        githubUrl: true,
+        pricingUrl: true,
         createdAt: true,
         html: true,
         featuredImage: true,
@@ -346,7 +390,12 @@ export const postRouter = router({
           id: true,
           slug: true,
           title: true,
-          description: true,
+          shortDescription: true,
+          techDescription: true,
+          docsUrl: true,
+          webUrl: true,
+          githubUrl: true,
+          pricingUrl: true,
           createdAt: true,
           html: true,
           featuredImage: true,
@@ -384,7 +433,12 @@ export const postRouter = router({
         },
         select: {
           id: true,
-          description: true,
+          shortDescription: true,
+          techDescription: true,
+          docsUrl: true,
+          webUrl: true,
+          githubUrl: true,
+          pricingUrl: true,
           title: true,
           text: true,
           html: true,

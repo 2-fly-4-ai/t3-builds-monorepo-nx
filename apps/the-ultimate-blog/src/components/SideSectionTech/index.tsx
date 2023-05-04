@@ -81,13 +81,14 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                         src={bookmark?.post?.featuredImage ?? null}
                         width={220}
                         height={220}
-                        className="max-h-32 w-auto"
+                        className="aspect-video max-h-32 w-auto"
                       />
                     ) : (
                       <Image
                         src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
                         width={200}
                         height={200}
+                        className="aspect-video"
                       />
                     )}
                   </div>

@@ -97,7 +97,8 @@ model Post {
 model Tech {
   id            String    @id @default(cuid())
   title         String    @unique
-  description   String
+  shortDescription   String
+  techDescription String
   slug          String    @unique
   featuredImage String?
   html          String?   @db.Text
@@ -105,6 +106,8 @@ model Tech {
   authorId      String?
   docsUrl       String?
   webUrl        String?
+  githubUrl     String?
+  pricingUrl    String?
   author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

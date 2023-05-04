@@ -75,19 +75,20 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
                 <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                  <div className="flex    w-40 justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
+                  <div className="flex  aspect-video  w-40  justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
                     {bookmark?.post?.featuredImage ? (
                       <Image
                         src={bookmark?.post?.featuredImage ?? null}
                         width={220}
                         height={220}
-                        className="max-h-32 w-auto"
+                        className="max-h-40 w-auto"
                       />
                     ) : (
                       <Image
                         src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
                         width={200}
                         height={200}
+                        className="aspect-video max-h-28 w-auto"
                       />
                     )}
                   </div>
