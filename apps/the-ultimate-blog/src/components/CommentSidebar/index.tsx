@@ -146,7 +146,7 @@ const CommentSidebar = ({
             leaveTo="-translate-x-full"
           >
             <Dialog.Panel className="relative h-screen w-[200px] border-l shadow-md sm:w-[400px]">
-              <div className=" flex h-full w-full flex-col overflow-y-scroll px-6 z-10">
+              <div className="z-10 flex h-full w-full flex-col overflow-y-scroll bg-white px-6 dark:bg-black dark:bg-opacity-60 dark:backdrop-blur">
                 <div className="mt-20  flex items-center justify-between  text-xl">
                   <h2 className=" font-medium">Responses (4)</h2>
                   <div>
@@ -176,7 +176,7 @@ const CommentSidebar = ({
                   {isValid && (
                     <button
                       type="submit"
-                      className="flex items-center space-x-3 rounded border border-gray-300 border-2 dark:hover:border-white dark:hover:text-white dark:hover:bg-white dark:hover:bg-opacity-60 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900"
+                      className="flex items-center space-x-3 rounded border border-2 border-gray-300 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
                     >
                       Comment
                     </button>
@@ -195,7 +195,7 @@ const CommentSidebar = ({
                             <Image src="" alt="" />
                           </div>
                           <div>
-                            <p className="font-bold text-base dark:text-orange-400 font-mono">
+                            <p className="font-mono text-base font-bold dark:text-orange-400">
                               {comment.user.name}
                             </p>
                             <p>{dayjs(comment.createdAt).fromNow()}</p>
@@ -208,14 +208,14 @@ const CommentSidebar = ({
                           <div className="flex  items-center">
                             {!isCommentLiked(comment.id) ? (
                               <button
-                                className="bg-gray-500 px-2 font-bold text-white rounded-lg"
+                                className="rounded-lg bg-gray-500 px-2 font-bold text-white"
                                 onClick={() => handleLikeComment(comment.id)}
                               >
                                 Like
                               </button>
                             ) : (
                               <button
-                                className="bg-gray-500 px-2 font-bold text-white rounded-lg"
+                                className="rounded-lg bg-gray-500 px-2 font-bold text-white"
                                 onClick={() => handleDislikeComment(comment.id)}
                               >
                                 Dislike
@@ -226,7 +226,7 @@ const CommentSidebar = ({
                           {sessionData &&
                             sessionData.user.id === comment.userId && (
                               <button
-                                className="bg-gray-400 font-bold hover:bg-red-500 hover:text-white hover:font-bold text-white  px-2 flex items-center rounded-lg"
+                                className="flex items-center rounded-lg bg-gray-400 px-2 font-bold  text-white hover:bg-red-500 hover:font-bold hover:text-white"
                                 onClick={() => handleRemoveComment(comment.id)}
                               >
                                 <svg

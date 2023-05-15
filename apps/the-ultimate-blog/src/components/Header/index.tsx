@@ -27,9 +27,10 @@ export default function Header() {
     useGlobalContextTechStore();
   const [segment, setSegment] = React.useState('');
 
-  React.useEffect(() => {
-    setSegment(window.location.pathname.split('/')[1]);
-  }, []);
+  // React.useEffect(() => {
+  //   setSegment(window.location.pathname.split('/')[1]);
+  // }, []);
+
   const items = [
     {
       title: 'Home',
@@ -50,7 +51,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="top-0 z-10 grid w-full grid-cols-12 flex-row items-center  border-b px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
+    <header className=" top-0 z-10 grid w-full grid-cols-12 flex-row  items-center border-b-2 px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
       {/* This is the header */}
       <div className="col-span-6 flex items-center justify-center ">
         {/* <GoThreeBars className="mx-4" onClick={() => setIsOpenSideBar(true)} /> 0*/}

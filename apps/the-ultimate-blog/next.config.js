@@ -15,6 +15,7 @@ const nextConfig = {
       'images.unsplash.com',
       'lh3.googleusercontent.com',
       'thurrott.s3.amazonaws.com',
+      'plus.unsplash.com',
     ],
   },
   nx: {

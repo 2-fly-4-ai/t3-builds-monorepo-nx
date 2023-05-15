@@ -7,18 +7,10 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
-  const readingList = trpc.post.getReadingList.useQuery();
+  const readingList = trpc.post.getTechReadingList.useQuery();
   const suggestions = trpc.user.getSuggestions.useQuery();
 
   const [mainClass, setMainClass] = useState('');
-
-  // useEffect(() => {
-  //   setMainClass(showSidebar ? 'slide-right ' : 'slide-left translate-x-1/2');
-  // }, [showSidebar]);
-
-  // if (!showSidebar) {
-  //   return null;
-  // }
 
   return (
     <aside
@@ -69,44 +61,44 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         >
           -
         </button>
-        <h3 className="my-4 px-4 text-lg font-bold">Your reading list:</h3>
+        <h3 className="my-4 px-4 text-lg font-bold">Your tech stack:</h3>
         <div className="flex flex-col ">
           {readingList.data &&
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
                 <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                  <div className="flex    w-40 justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
-                    {bookmark?.post?.featuredImage ? (
+                  <div className="flex  aspect-video w-28 justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50 ">
+                    {bookmark?.tech?.featuredImage ? (
                       <Image
-                        src={bookmark?.post?.featuredImage ?? null}
+                        src={bookmark?.tech?.featuredImage ?? null}
                         width={220}
                         height={220}
-                        className="aspect-video max-h-32 w-auto"
+                        className=" object-cover 2xl:max-h-40"
                       />
                     ) : (
                       <Image
                         src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
                         width={200}
                         height={200}
-                        className="aspect-video"
+                        className="max-h-28 w-auto"
                       />
                     )}
                   </div>
                   <div className="flex w-3/5 flex-col space-y-2">
                     <div className=" line-clamp-3 font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
-                      {bookmark.post.title}
+                      {bookmark.tech.title}
                     </div>
                     {/* <div className="text-sm line-clamp-2">
                       {bookmark.post.description}
                     </div> */}
                     <div>
-                      <div className="flex w-full items-center space-x-1">
+                      <div className="hidden w-full items-center space-x-1 2xl:flex">
                         <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                         <div className="text-sm font-bold text-black dark:text-gray-500 dark:text-white">
-                          {bookmark.post.author.name}
+                          {bookmark.tech.author.name}
                         </div>
                         <div className="text-xs">
-                          {dayjs(bookmark.post.createdAt).format('DD/MM/YYYY')}
+                          {dayjs(bookmark.tech.createdAt).format('DD/MM/YYYY')}
                         </div>
                       </div>
                     </div>

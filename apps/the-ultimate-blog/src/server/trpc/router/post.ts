@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { WriteFormSchema } from '../../../components/Writeform';
 import { WriteTechFormSchema } from 'apps/the-ultimate-blog/src/components/WriteformTech';
 import slugify from 'slugify';
+
 import { z } from 'zod';
 import { commentFormSchema } from 'apps/the-ultimate-blog/src/components/CommentSidebar';
 
@@ -35,7 +36,7 @@ export const postRouter = router({
             description,
             text,
             html,
-            slug: slugify(title),
+            slug: slugify(title, { lower: true }),
             author: {
               connect: {
                 id: session.user.id,
@@ -153,7 +154,7 @@ export const postRouter = router({
             text,
             html,
 
-            slug: slugify(title),
+            slug: slugify(title, { lower: true }),
             author: {
               connect: {
                 id: session.user.id,
@@ -461,35 +462,46 @@ export const postRouter = router({
   likePost: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
+        postId: z.string().optional(),
+        techId: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
-      await prisma.like.create({
-        data: {
-          userId: session.user.id,
-          postId,
-        },
-      });
+    .mutation(async ({ ctx: { prisma, session }, input }) => {
+      const { postId, techId } = input;
+      if (!postId && !techId) {
+        throw new Error('Either postId or techId must be provided.');
+      }
+
+      const data = {
+        userId: session.user.id,
+        ...(postId && { postId }),
+        ...(techId && { techId }),
+      };
+
+      await prisma.like.create({ data });
     }),
 
   disLikePost: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
+        postId: z.string().optional(),
+        techId: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
-      await prisma.like.delete({
-        where: {
-          userId_postId: {
-            postId: postId,
-            userId: session.user.id,
-          },
-        },
-      });
-    }),
+    .mutation(async ({ ctx: { prisma, session }, input }) => {
+      const { postId, techId } = input;
+      if (!postId && !techId) {
+        throw new Error('Either postId or techId must be provided.');
+      }
 
+      const where = {
+        userId: session.user.id,
+        ...(postId && { postId }),
+        ...(techId && { techId }),
+      };
+
+      await prisma.like.deleteMany({ where });
+    }),
   likeComment: protectedProcedure
     .input(
       z.object({
@@ -539,6 +551,22 @@ export const postRouter = router({
       });
     }),
 
+  bookmarkTech: protectedProcedure
+    .input(
+      z.object({
+        techId: z.string(),
+      })
+    )
+
+    .mutation(async ({ ctx: { prisma, session }, input: { techId } }) => {
+      await prisma.techBookMark.create({
+        data: {
+          userId: session.user.id,
+          techId,
+        },
+      });
+    }),
+
   removeBookmark: protectedProcedure
     .input(
       z.object({
@@ -556,30 +584,60 @@ export const postRouter = router({
       });
     }),
 
-  submitComment: protectedProcedure
+  removeBookmarkTech: protectedProcedure
     .input(
       z.object({
-        text: z.string().min(3),
-        postId: z.string(),
+        techId: z.string(),
       })
     )
-    .mutation(async ({ ctx: { prisma, session }, input: { text, postId } }) => {
-      await prisma.comment.create({
-        data: {
+    .mutation(async ({ ctx: { prisma, session }, input: { techId } }) => {
+      const bookmark = await prisma.techBookMark.findFirst({
+        where: {
+          techId: techId,
+          userId: session.user.id,
+        },
+      });
+
+      if (bookmark) {
+        await prisma.techBookMark.delete({
+          where: {
+            id: bookmark.id,
+          },
+        });
+      }
+    }),
+
+  submitComment: protectedProcedure
+    .input(
+      z
+        .object({
+          text: z.string().min(3),
+          postId: z.string().optional(),
+          techId: z.string().optional(),
+        })
+        .refine((input) => input.postId || input.techId, {
+          message:
+            "Either 'postId' or 'techId' must be provided, but not both.",
+        })
+    )
+    .mutation(
+      async ({ ctx: { prisma, session }, input: { text, postId, techId } }) => {
+        const data = {
           text,
           user: {
             connect: {
               id: session.user.id,
             },
           },
-          post: {
-            connect: {
-              id: postId,
-            },
-          },
-        },
-      });
-    }),
+          ...(postId && { post: { connect: { id: postId } } }),
+          ...(techId && { tech: { connect: { id: techId } } }),
+        };
+
+        await prisma.comment.create({
+          data,
+        });
+      }
+    ),
 
   removeComment: protectedProcedure
     .input(
@@ -603,15 +661,26 @@ export const postRouter = router({
 
   getComments: publicProcedure
     .input(
-      z.object({
-        postId: z.string(),
-      })
+      z
+        .object({
+          postId: z.string().optional(),
+          techId: z.string().optional(),
+        })
+        .refine((input) => {
+          if (!input.postId && !input.techId) {
+            throw new Error(
+              "Either 'postId' or 'techId' must be provided, but not both."
+            );
+          }
+          return true;
+        })
     )
-    .query(async ({ ctx: { prisma }, input: { postId } }) => {
+    .query(async ({ ctx: { prisma }, input }) => {
+      const { postId, techId } = input;
+      const where = postId ? { postId } : techId ? { techId } : undefined;
+
       const comments = await prisma.comment.findMany({
-        where: {
-          postId,
-        },
+        where,
         select: {
           text: true,
           userId: true,
@@ -619,7 +688,6 @@ export const postRouter = router({
           post: true,
           id: true,
           likes: true,
-
           user: {
             select: {
               name: true,
@@ -640,28 +708,40 @@ export const postRouter = router({
         postId: z.string(),
       })
     )
-
     .mutation(
       async ({ ctx: { prisma, session }, input: { imageUrl, postId } }) => {
-        // we have to check if the user is owner of the given post
+        const getModelType = async () => {
+          const techData = await prisma.tech.findUnique({
+            where: { id: postId },
+          });
+          const postData = await prisma.post.findUnique({
+            where: { id: postId },
+          });
+          return techData ? 'tech' : postData ? 'post' : null;
+        };
 
-        const postData = await prisma.post.findUnique({
-          where: {
-            id: postId,
-          },
-        });
+        const modelType = await getModelType();
 
-        if (postData?.authorId !== session.user.id) {
+        if (!modelType) {
           throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'you are not owner of this post',
+            code: 'INVALID_REQUEST',
+            message: 'Invalid post ID',
           });
         }
 
-        await prisma.post.update({
-          where: {
-            id: postId,
-          },
+        const modelData = await prisma[modelType].findUnique({
+          where: { id: postId },
+        });
+
+        if (modelData.authorId !== session.user.id) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'You are not the owner of this post',
+          });
+        }
+
+        await prisma[modelType].update({
+          where: { id: postId },
           data: {
             featuredImage: imageUrl,
           },
@@ -701,6 +781,45 @@ export const postRouter = router({
       });
 
       return allBookmarks;
+    }
+  ),
+
+  getTechReadingList: protectedProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      const allTechBookmarks = await prisma.techBookMark.findMany({
+        where: {
+          userId: session.user.id,
+        },
+        take: 10,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          tech: {
+            select: {
+              id: true,
+              title: true,
+              featuredImage: true,
+              techDescription: true,
+              githubUrl: true,
+              webUrl: true,
+              docsUrl: true,
+              pricingUrl: true,
+              author: {
+                select: {
+                  name: true,
+                  image: true,
+                },
+              },
+              createdAt: true,
+              slug: true,
+            },
+          },
+        },
+      });
+
+      return allTechBookmarks;
     }
   ),
 });

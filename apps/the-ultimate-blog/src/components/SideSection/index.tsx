@@ -5,20 +5,13 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
   const readingList = trpc.post.getReadingList.useQuery();
   const suggestions = trpc.user.getSuggestions.useQuery();
-
+  const user = useSession();
   const [mainClass, setMainClass] = useState('');
-
-  // useEffect(() => {
-  //   setMainClass(showSidebar ? 'slide-right ' : 'slide-left translate-x-1/2');
-  // }, [showSidebar]);
-
-  // if (!showSidebar) {
-  //   return null;
-  // }
 
   return (
     <aside
@@ -26,6 +19,17 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         showSidebar ? 'col-span-3 ' : '   hidden'
       } space-between relative flex h-full w-full flex-col space-y-4 px-2 py-6 transition-transform duration-500 ease-out `}
     >
+      <div className=" w-full px-4 py-1 text-xl ">
+        <div>
+          Welcome Back{' '}
+          <span className="font-bold text-orange-400">
+            {user?.data?.user?.name}{' '}
+          </span>
+        </div>
+        {/* <Link href={user?.data?.user?.name}>PROFILE</Link> */}
+        {/* |<Link href={user?.data?.user?.id ?? ''}>BOOKMARKS</Link> */}
+        TECH-STACK
+      </div>
       <div className="">
         <div className="flex flex-col ">
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
@@ -37,7 +41,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                 <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                   <div>
-                    <div className="text-base text-sm font-bold text-gray-500 dark:text-orange-400">
+                    <div className="text-sm font-bold text-gray-500 dark:text-orange-400">
                       {user.name}
                     </div>
                     <div className="line-clamp-2 text-sm">
@@ -81,7 +85,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                         src={bookmark?.post?.featuredImage ?? null}
                         width={220}
                         height={220}
-                        className="max-h-40 w-auto"
+                        className=" object-cover 2xl:max-h-40"
                       />
                     ) : (
                       <Image
@@ -100,7 +104,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                       {bookmark.post.description}
                     </div> */}
                     <div>
-                      <div className="flex w-full items-center space-x-1">
+                      <div className="hidden w-full items-center space-x-1  2xl:flex">
                         <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                         <div className="text-sm font-bold text-black dark:text-gray-500 dark:text-white">
                           {bookmark.post.author.name}

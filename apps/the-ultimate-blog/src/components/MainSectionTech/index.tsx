@@ -10,11 +10,19 @@ import { RouterOutputs } from '../../utils/trpc';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import TechModal from '../TechModal';
+import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function MainSection({ showSidebar, toggleSidebar }) {
   const getPosts = trpc.post.getTechPosts.useQuery();
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
+  const { togglePosts, posts, resetIsPostModalOpen } =
+    useGlobalContextTechModalStore();
+  const router = useRouter();
+
+  const [shouldReload, setShouldReload] = useState(false);
 
   return (
     <main
@@ -134,18 +142,15 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
-            {
-              console.warn(post);
-            }
             return (
-              <div key={post.id} className=" h-full">
+              <div key={post.id} className="h-full">
                 {showListView ? (
                   <TechCardList post={post} />
                 ) : (
-                  <div>
+                  <>
                     <TechCard post={post} />
-                    <TechModal post={post} />
-                  </div>
+                    {posts[post.id] && <TechModal post={post} />}
+                  </>
                 )}
               </div>
             );

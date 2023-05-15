@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import MainLayout from '../layouts/MainLayout';
-import WriteFormModalTech from '../components/WriteformTech';
-import MainSection from '../components/MainSectionTech';
-import SideSection from '../components/SideSection';
+import MainLayout from '../../layouts/MainLayout';
+import WriteFormModalTech from '../../components/WriteformTech';
+import MainSection from '../../components/MainSectionTech';
+import SideSection from '../../components/SideSectionTech';
+import { Metadata } from 'next';
 
 export default function techStackPage() {
   const [showSidebar, setShowSidebar] = useState(true);

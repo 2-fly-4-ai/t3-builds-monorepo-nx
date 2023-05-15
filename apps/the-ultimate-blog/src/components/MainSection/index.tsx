@@ -137,9 +137,7 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
-            {
-              console.warn(post);
-            }
+            console.warn(post);
             return (
               <div key={post.id} className=" h-full">
                 {showListView ? (

@@ -33,7 +33,7 @@ type TechFormModalProps = {
 };
 
 export const WriteTechFormSchema = z.object({
-  title: z.string().min(1).optional(),
+  title: z.string().min(1).max(40).optional(),
   shortDescription: z.string().min(10).optional(),
   text: z.string().min(100).optional(),
   html: z.string().min(100).optional(),
@@ -42,7 +42,7 @@ export const WriteTechFormSchema = z.object({
   githubUrl: z.string().url().optional(),
   pricingUrl: z.string().url().optional(),
   docsUrl: z.string().url().optional(),
-  techDescription: z.string().optional(),
+  techDescription: z.string().min(10).optional(),
 });
 
 export default function WriteFormModalTech({
@@ -51,8 +51,10 @@ export default function WriteFormModalTech({
 }: TechFormModalProps) {
   const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
     useGlobalContextTechStore();
-
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
+  const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
 
   const {
     register,
@@ -64,26 +66,21 @@ export default function WriteFormModalTech({
     resolver: zodResolver(WriteTechFormSchema),
   });
 
-  const [selectedImage, setSelectedImage] = useState('');
-
   const postRoute = trpc.useContext().post;
+  const getTags = trpc?.tag?.getTechTags?.useQuery();
 
   const createPost = trpc.post.createTechPost.useMutation({
     onSuccess: () => {
-      toast.success('post created successfully');
+      toast.success('Post created successfully');
       reset();
       setIsWriteTechModalOpen(false);
-
       postRoute.getTechPosts.invalidate();
-
-      //Beautiful implementation of Toast
+      // Beautiful implementation of Toast
     },
     onError: () => {
-      toast.error('You done fucked up');
+      toast.error('Something went wrong');
     },
   });
-
-  const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
 
   const onSubmit = async (data: TechFormModalProps) => {
     try {
@@ -96,19 +93,12 @@ export default function WriteFormModalTech({
       console.error(error);
     }
   };
-  const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
-
-  const getTags = trpc?.tag?.getTechTags?.useQuery();
 
   const Editor = dynamic(() => import('../Ckeditor/index'), {
     ssr: false,
     loading: () => <div>Loading editor...</div>,
   });
-  // const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   setEditorLoaded(true);
-  // }, []);
   const handleImageSelect = (image: string) => {
     setSelectedImage(image);
   };
@@ -116,7 +106,10 @@ export default function WriteFormModalTech({
   return (
     <Modal
       isOpen={isWriteTechModalOpen}
-      onClose={() => setIsWriteTechModalOpen(false)}
+      onClose={() => {
+        setIsWriteTechModalOpen(false);
+        setIsTagCreateModalOpen(false);
+      }}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -183,7 +176,7 @@ export default function WriteFormModalTech({
                 Select Tag
               </label>
               <div className=" flex w-full items-center space-x-4 ">
-                <div className="z-10 w-4/5 border">
+                <div className="z-10 w-4/5 border dark:border-gray-600 dark:focus:border-white">
                   <TagsAutocompletion
                     tags={getTags.data}
                     setSelectedTags={setSelectedTags}
@@ -192,7 +185,7 @@ export default function WriteFormModalTech({
                 </div>
                 <button
                   onClick={() => setIsTagCreateModalOpen(true)}
-                  className="space-x-3 whitespace-nowrap rounded border border-gray-200 px-4 py-2 text-sm transition hover:border-gray-900 hover:text-gray-900"
+                  className="space-x-3 whitespace-nowrap rounded border border-gray-200 px-4 py-2 text-sm transition hover:border-gray-900 hover:text-gray-900 dark:border-gray-600 dark:focus:border-white"
                 >
                   Create Tag
                 </button>
@@ -240,7 +233,7 @@ export default function WriteFormModalTech({
             <input
               type="text"
               id="title"
-              className="h-full w-full border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+              className="h-full w-full border border-gray-300 p-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
               placeholder="Title of the Tech"
               {...register('title')}
             />
@@ -258,7 +251,7 @@ export default function WriteFormModalTech({
               <input
                 type="text"
                 id="webUrl"
-                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black  dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="https://example.com"
                 {...register('webUrl')}
               />
@@ -273,7 +266,7 @@ export default function WriteFormModalTech({
               <input
                 type="text"
                 id="githubUrl"
-                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="https://github.com/username/repo"
                 {...register('githubUrl')}
               />
@@ -288,7 +281,7 @@ export default function WriteFormModalTech({
               <input
                 type="text"
                 id="pricingUrl"
-                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="https://example.com/pricing"
                 {...register('pricingUrl')}
               />
@@ -303,7 +296,7 @@ export default function WriteFormModalTech({
               <input
                 type="text"
                 id="docsUrl"
-                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                className="h-full w-full border border-gray-300 px-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="https://example.com/docs"
                 {...register('docsUrl')}
               />
@@ -324,7 +317,7 @@ export default function WriteFormModalTech({
               <textarea
                 rows={1}
                 id="shortDescription"
-                className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="Short Description < 10 words...."
                 {...register('shortDescription')}
               />
@@ -340,7 +333,7 @@ export default function WriteFormModalTech({
               <textarea
                 rows={3}
                 id="techDescription"
-                className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="Description of the tech...."
                 {...register('techDescription')}
               />
@@ -352,20 +345,21 @@ export default function WriteFormModalTech({
             >
               Article
             </label>
-
-            <Controller
-              name="html"
-              control={control}
-              render={({ field }) => (
-                <div className="prose-li:list-style prose prose-lg prose-a:font-bold prose-li:text-black prose-table:table-auto  prose-table:border-2 prose-tr:border-r  prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12  prose-img:max-h-custom prose-img:w-full prose-img:border-2 prose-img:border-black prose-img:py-12  prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] prose-img:shadow-black prose-p:font-sans prose-li:list-style  prose-table:shadow-lg prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-img:max-h-custom  dark:prose-headings:text-gray-300 dark:prose-p:text-gray-400 prose-li:font-sans  dark:prose-li:text-gray-400 dark:prose-strong:text-red-400  dark:prose-code:text-white  min-h-[40vh]  w-full max-w-none    border   shadow-2xl marker:text-black focus-within:border-black    dark:bg-black dark:bg-opacity-60 dark:text-gray-400  dark:text-opacity-80 dark:marker:text-gray-400">
-                  <Editor
-                    {...field}
-                    onChange={(data: string) => field && field.onChange(data)}
-                    value={field.value}
-                  />
-                </div>
-              )}
-            />
+            {Editor ? (
+              <Controller
+                name="html"
+                control={control}
+                render={({ field }) => (
+                  <div className="prose-li:list-style prose prose-lg prose-a:font-bold prose-li:text-black prose-table:table-auto  prose-table:border-2 prose-tr:border-r  prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12  prose-img:max-h-custom prose-img:w-full prose-img:border-2 prose-img:border-black prose-img:py-12  prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] prose-img:shadow-black prose-p:font-sans prose-li:list-style  prose-table:shadow-lg prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-img:max-h-custom  dark:prose-headings:text-gray-300 dark:prose-p:text-gray-400 prose-li:font-sans  dark:prose-li:text-gray-400 dark:prose-strong:text-red-400  dark:prose-code:text-white  min-h-[40vh]  w-full max-w-none    border   shadow-2xl marker:text-black focus-within:border-black    dark:border-gray-600 dark:bg-black dark:bg-opacity-60  dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400 dark:focus:border-white ">
+                    <Editor
+                      {...field}
+                      onChange={(data: string) => field && field.onChange(data)}
+                      value={field.value}
+                    />
+                  </div>
+                )}
+              />
+            ) : null}
             <p>{errors.html?.message}</p>
           </div>
         </div>

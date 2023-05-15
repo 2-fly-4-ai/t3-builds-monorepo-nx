@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { BiLoaderAlt } from 'react-icons/bi';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useEffect } from 'react';
 
 import {
   Tabs,
@@ -59,6 +60,7 @@ const UnsplahGallary = ({
   const updateFeaturedImage = trpc.post.updatePostFeaturedImage.useMutation({
     onSuccess: () => {
       utils.post.getPost.invalidate({ slug });
+      utils.post.getTechPosts.invalidate();
       reset();
       setIsUnsplashModalOpen(false);
       toast.success('featured image updated');
@@ -81,19 +83,35 @@ const UnsplahGallary = ({
     setSelectedImage(URL.createObjectURL(file));
   };
 
-  function dataURLtoFile(dataurl: string, filename: string): File {
-    const arr = dataurl.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  }
+  // function dataURLtoFile(dataurl: string, filename: string): File {
+  //   const arr = dataurl.split(',');
+  //   const mime = arr[0].match(/:(.*?);/)[1];
+  //   const bstr = atob(arr[1]);
+  //   let n = bstr.length;
+  //   const u8arr = new Uint8Array(n);
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+  //   return new File([u8arr], filename, { type: mime });
+  // }
 
-  const [isOpenUploadTab, setIsOpenUploadTab] = useState(false);
+  useEffect(() => {
+    if (selectedImageFile) {
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedImageFile);
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+    } else {
+      setSelectedImage(''); // Clear the selected image when no file is chosen
+    }
+  }, [selectedImageFile]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setSelectedImageFile(file);
+  };
+
   return (
     <Modal
       isOpen={isUnsplashModalOpen}
@@ -113,26 +131,9 @@ const UnsplahGallary = ({
 
         <Tabs defaultValue="unsplash" className="mr-auto w-full">
           <TabsList>
-            <button
-              onClick={() => {
-                setIsOpenUploadTab(false);
-                setSelectedImage(null);
+            <TabsTrigger value="unsplash">Unsplash</TabsTrigger>
 
-                // setSelectedImageFile(null);
-              }}
-            >
-              <TabsTrigger value="unsplash">Unsplash</TabsTrigger>
-            </button>
-
-            <button
-              onClick={() => {
-                setIsOpenUploadTab(true);
-                setSelectedImage(null);
-                // setSelectedImageFile(null);
-              }}
-            >
-              <TabsTrigger value="upload">Upload</TabsTrigger>
-            </button>
+            <TabsTrigger value="upload">Upload</TabsTrigger>
           </TabsList>
           <TabsContent value="unsplash">
             <div className="relative grid h-96 w-full grid-cols-3 place-items-center gap-4 overflow-y-scroll border">
@@ -187,14 +188,14 @@ const UnsplahGallary = ({
           <TabsContent value="upload">
             {' '}
             <div className="relative flex h-96 w-full grid-cols-3 place-items-center justify-center  gap-4 overflow-y-scroll border">
-              {selectedImageFile && isOpenUploadTab ? (
+              {selectedImageFile ? (
                 <Image
                   src={URL.createObjectURL(selectedImageFile)}
                   alt="Preview"
                   width={400}
                   height={400}
                   className="mx-auto rounded-md "
-                  key={uuidv4()}
+                  key="preview"
                 />
               ) : (
                 <div
@@ -255,19 +256,10 @@ const UnsplahGallary = ({
           )}
           <input
             type="file"
-            className={`${
-              isOpenUploadTab ? 'flex' : 'hidden'
-            }  items-center space-x-3 rounded border border-gray-200 px-4 py-1 transition hover:border-gray-900 hover:text-gray-900`}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              setSelectedImageFile(file);
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onloadend = () => {
-                setSelectedImage(reader.result as string);
-                // clear file input
-              };
-            }}
+            className={`flex 
+             
+              items-center space-x-3 rounded border border-gray-200 px-4 py-1 transition hover:border-gray-900 hover:text-gray-900`}
+            onChange={handleFileChange}
           />
         </div>
       </div>

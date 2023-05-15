@@ -5,10 +5,10 @@ import Providers from '../../components/Providers/providers';
 
 export default function MainLayout({ children }: React.PropsWithChildren) {
   return (
-    <div className="font-mono flex h-content w-full flex-col scroll-smooth">
-      {/* <Head>
-       
-      </Head> */}
+    <div className="h-content flex w-full flex-col  font-mono">
+      <Head>
+        <title>My page title</title>
+      </Head>
       <Header />
 
       {children}

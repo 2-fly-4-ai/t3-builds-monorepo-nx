@@ -25,6 +25,7 @@ export default function Modal({
       // scroll the modal element to the top
       modalRef?.current?.scrollIntoView({ behavior: 'smooth' });
     }
+
     // ... rest of your code
   }, [isOpen]);
   return (
@@ -32,35 +33,35 @@ export default function Modal({
       <Transition appear show={isOpen ? true : false} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="relative z-10 "
           onClose={onClose}
           initialFocus={modalRef}
         >
           <Transition.Child
             as={Fragment}
             ref={modalRef}
-            enter="ease-out duration-0"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+            // enter="ease-out duration-0"
+            // enterFrom="opacity-0"
+            // enterTo="opacity-100"
+            // leave="ease-in duration-200"
+            // leaveFrom="opacity-100"
+            // leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-[#363636]  bg-opacity-70 " />
+            <div className=" fixed inset-0  bg-[#363636] bg-opacity-70" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex  items-center justify-center p-4 text-center">
+            <div className="flex  items-center justify-center p-1 text-center">
               <Transition.Child
                 as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
+                // enter="ease-out duration-300"
+                // enterFrom="opacity-0"
+                // enterTo="opacity-100"
+                // leave="ease-in duration-200"
+                // // leaveFrom="opacity-100 "
+                // leaveTo="opacity-0 "
               >
-                <Dialog.Panel className="h-full w-full max-w-5xl transform overflow-hidden rounded-2xl bg-white pt-6 text-left align-middle shadow-xl transition-all dark:border-2 dark:border-white dark:bg-black ">
+                <Dialog.Panel className="h-full w-full max-w-5xl transform  overflow-hidden rounded-2xl bg-white pt-6 text-left align-middle shadow-xl backdrop-blur transition-all dark:border-2 dark:border-white dark:bg-black dark:bg-opacity-80 2xl:max-w-6xl ">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"

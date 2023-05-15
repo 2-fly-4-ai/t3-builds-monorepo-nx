@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DecoupledEditor from 'ckeditor5-custom-build/build/ckeditor';
-import Image from '@ckeditor/ckeditor5-image/src/image';
 import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { useSupabase } from '../../hooks/supabase';
+import useDebounce from '../../hooks/useDebounce';
 
 interface CKeditorProps {
   onChange: (data: string) => void;
@@ -21,7 +20,7 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
       balloonPanel &&
         setTimeout(() => {
           balloonPanel.style.visibility = 'visible';
-        }, 100);
+        }, 1000);
     }
   }
   const { supabase, error } = useSupabase();
@@ -51,42 +50,44 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
     return data?.Key || '';
   };
 
-  return showEditor ? (
-    <CKEditor
-      editor={DecoupledEditor}
-      data={value}
-      config={{
-        placeholder: 'Type here to get started',
-        upload: {
-          types: ['png', 'jpeg', 'jpg', 'gif', 'webp'],
-          // Use a custom upload function that calls handleImageUpload
-          handler: async (file) => {
-            const uploadedImageUrl = await handleImageUpload(file);
-            return { default: uploadedImageUrl };
+  const debouncedValue = useDebounce(value, 300);
+
+  return (
+    showEditor && (
+      <CKEditor
+        editor={DecoupledEditor}
+        data={debouncedValue}
+        config={{
+          placeholder: 'Type here to get started',
+          upload: {
+            types: ['png', 'jpeg', 'jpg', 'gif', 'webp'],
+            // Use a custom upload function that calls handleImageUpload
+            handler: async (file) => {
+              const uploadedImageUrl = await handleImageUpload(file);
+              return { default: uploadedImageUrl };
+            },
           },
-        },
-        codeBlock: {
-          languages: [
-            { language: 'javascript', label: 'JavaScript' },
-            { language: 'python', label: 'Python' },
-            { language: 'typescript', label: 'TypeScript' },
-            // { language: 'xml', label: 'XML' },
-          ],
-        },
-      }}
-      onChange={(event: any, editor: any) => {
-        const data = editor.getData();
-        onChange(data);
-      }}
-      onBlur={(event, editor) => {
-        console.log('Blur.', editor);
-      }}
-      onFocus={(event, editor) => {
-        console.log('Focus.', editor);
-      }}
-    />
-  ) : (
-    <div className="m-auto">Loading...</div>
+          codeBlock: {
+            languages: [
+              { language: 'javascript', label: 'JavaScript' },
+              { language: 'python', label: 'Python' },
+              { language: 'typescript', label: 'TypeScript' },
+              // { language: 'xml', label: 'XML' },
+            ],
+          },
+        }}
+        onChange={(event: any, editor: any) => {
+          const data = editor.getData();
+          onChange(data);
+        }}
+        // onBlur={(event, editor) => {
+        //   console.log('Blur.', editor);
+        // }}
+        // onFocus={(event, editor) => {
+        //   console.log('Focus.', editor);
+        // }}
+      />
+    )
   );
 };
 

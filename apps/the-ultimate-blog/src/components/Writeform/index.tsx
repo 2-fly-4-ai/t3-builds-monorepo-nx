@@ -13,7 +13,7 @@ export type TAG = { id: string; name: string };
 import TagForm from '../TagForm';
 import { FaTimes } from 'react-icons/fa';
 import TagsAutocompletion from '../TagsAutocompletion';
-
+import TechAutocompletion from '../TagsAutocompletion/techRelations';
 import UnsplashGallery from '../UnsplashGallery/index-creation';
 
 type WriteFormModalProps = {
@@ -69,12 +69,13 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
   });
 
   const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
+  const [selectedTechTags, setSelectedTechTags] = useState<TAG[]>([]);
 
   const onSubmit = async (data: WriteFormModalProps) => {
     try {
       setSelectedImage(null);
       await createPost.mutateAsync(
-        selectedTags.length > 0 ? { ...data, tagsIds: selectedTags } : data
+        selectedTechTags.length > 0 ? { ...data, tagsIds: selectedTags } : data
       );
       reset(); // This clears the input fields
     } catch (error) {
@@ -83,24 +84,30 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
   };
   const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
 
-  const getTags = trpc.tag.getTags.useQuery();
-
+  const getTags = trpc?.tag?.getTags.useQuery();
+  // const getTechTags = trpc?.post.getTechPosts.useQuery();
+  // console.warn(getTechTags.data);
   const Editor = dynamic(() => import('../Ckeditor/index'), {
     ssr: false,
     loading: () => <div>Loading editor...</div>,
   });
-  // const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   setEditorLoaded(true);
-  // }, []);
   const handleImageSelect = (image: string) => {
     setSelectedImage(image);
   };
 
   return (
-    <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
-      <form className="relative flex flex-col space-y-5 pt-4">
+    <Modal
+      isOpen={isWriteModalOpen}
+      onClose={() => {
+        setIsWriteModalOpen(false);
+        setIsTagCreateModalOpen(false);
+      }}
+    >
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="relative flex flex-col space-y-5 pt-4 "
+      >
         <div
           id="this button isn't clickable"
           onClick={() => setIsUnsplashModalOpen(true)}
@@ -143,7 +150,7 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
         </div>
 
         {getTags.isSuccess && (
-          <>
+          <div>
             <TagForm
               isOpen={isTagCreateModalOpen}
               onClose={() => setIsTagCreateModalOpen(false)}
@@ -155,6 +162,12 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
                   setSelectedTags={setSelectedTags}
                   selectedTags={selectedTags}
                 />
+                {/* GetTEchTAgs */}
+                {/* <TechAutocompletion
+                  tags={getTechTags.data}
+                  setSelectedTags={setSelectedTechTags}
+                  selectedTags={selectedTechTags}
+                /> */}
               </div>
               <button
                 onClick={() => setIsTagCreateModalOpen(true)}
@@ -184,7 +197,7 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
         {createPost.isLoading && (
           <div className="absolute bottom-2 flex items-center justify-center space-x-4">
@@ -232,7 +245,6 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
         <p>{errors.text?.message}</p>
         <div className="flex w-full justify-end">
           <button
-            onClick={handleSubmit(onSubmit)}
             type="submit"
             className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
           >

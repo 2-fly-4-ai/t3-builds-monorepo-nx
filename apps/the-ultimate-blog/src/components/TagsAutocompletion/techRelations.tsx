@@ -2,7 +2,7 @@ import { Fragment, useMemo, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { HiCheck } from 'react-icons/hi';
 import { HiChevronUpDown } from 'react-icons/hi2';
-import type { TAG } from '../WriteformTech';
+import type { TAG } from '../Writeform';
 
 type TagsAutocompletionProps = {
   tags: TAG[];
@@ -10,7 +10,7 @@ type TagsAutocompletionProps = {
   setSelectedTags: React.Dispatch<React.SetStateAction<TAG[]>>;
 };
 
-export default function TagsAutocompletion({
+export default function TechAutocompletion({
   tags,
   selectedTags,
   setSelectedTags,
@@ -40,7 +40,7 @@ export default function TagsAutocompletion({
       <div className="relative">
         <div className="relative w-full cursor-default overflow-hidden  bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm ">
           <Combobox.Input
-            className="dark:focus-border-white w-full border border-gray-400 px-4 py-2 pr-10 text-sm leading-5 text-gray-900 outline-none focus:ring-0 dark:border-gray-600 dark:bg-black dark:bg-opacity-90 dark:text-gray-400 dark:focus:border-white "
+            className="w-full border border-gray-400 px-4 py-2 pr-10 text-sm leading-5 text-gray-900 outline-none focus:ring-0 dark:bg-black dark:bg-opacity-90 dark:text-gray-400 "
             displayValue={(tag: { name: string }) => tag.name}
             onChange={(event) => setQuery(event.target.value)}
           />

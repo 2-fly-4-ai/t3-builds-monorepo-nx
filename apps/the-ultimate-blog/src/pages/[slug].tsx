@@ -20,6 +20,14 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
+import {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from 'next';
+import { createServerSideHelpers } from '@trpc/react-query/server';
+import { appRouter } from '../server/trpc/router/_app';
+import superjson from 'superjson';
 
 type WriteFormModalProps = {
   id: string;
@@ -39,9 +47,11 @@ export const WriteFormSchema = z.object({
   html: z.string().min(100).optional(),
 });
 
-export default function PostPage() {
+export default function PostPage(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
   // currentUser.data?.user?.id === userProfile.data?.id &&
-
+  const { slug } = props;
   const [showCommentSidebar, setShowCommentSidebar] = useState(false);
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
   const [isTitleEditorOpen, setTitleEditorOpen] = useState(false);
@@ -55,6 +65,7 @@ export default function PostPage() {
   });
   const router = useRouter();
   const postRoute = trpc.useContext().post;
+
   const {
     register,
     handleSubmit,
@@ -65,21 +76,20 @@ export default function PostPage() {
     resolver: zodResolver(WriteFormSchema),
   });
 
-  const getPost = trpc.post.getPost.useQuery(
-    {
-      slug: router.query.slug as string,
-    },
-    {
-      enabled: Boolean(router.query.slug),
-    }
-  );
+  // const getPost = trpc.post.getPost.useQuery(
+  //   {
+  //     slug: router.query.slug as string,
+  //   },
+  //   {
+  //     enabled: Boolean(router.query.slug),
+  //   }
+  // );
+  const getPost = trpc.post.getPost.useQuery({ slug });
+  const { data } = getPost;
 
-  console.warn('POST OBJECT', getPost.data);
   const postUser = getPost?.data?.authorId;
-  console.warn('WARNING1', postUser);
 
   const currentUser = useSession();
-  console.warn('WARNING2', currentUser?.data?.user?.id);
 
   const invalidateCurrentPostPage = useCallback(() => {
     postRoute.getPost.invalidate({ slug: router.query.slug as string });
@@ -101,7 +111,7 @@ export default function PostPage() {
     onSuccess: () => {
       toast.success('Post updated successfully');
       invalidateCurrentPostPage();
-      getPost.revalidate();
+      // getPost.revalidate();
     },
   });
 
@@ -159,7 +169,7 @@ export default function PostPage() {
 
       {getPost.isSuccess && (
         <LikePost
-          id={getPost.data.id}
+          id={getPost?.data?.id}
           countLikes={getPost?.data?.likes?.length ?? 0}
           onLike={(postId) => likePost.mutate({ postId })}
           onDislike={(postId) => dislikePost.mutate({ postId })}
@@ -213,7 +223,7 @@ export default function PostPage() {
       <div>
         <div className="relative  flex w-full items-center justify-center p-10">
           <div className="w-full max-w-screen-md space-y-8">
-            <div className="relative flex h-[60vh] w-full items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
+            <div className="relative flex h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
               {getPost?.data?.featuredImage && (
                 <Image
                   src={
@@ -221,8 +231,9 @@ export default function PostPage() {
                     'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
                   }
                   alt={getPost?.data?.title}
-                  fill
-                  className="absolute rounded-lg object-cover lg:h-auto lg:w-full xl:h-auto xl:w-full 2xl:h-auto 2xl:w-auto"
+                  width={800}
+                  height={800}
+                  className=""
                 />
               )}
               <div
@@ -409,15 +420,17 @@ export default function PostPage() {
             ) : (
               <div className="relative">
                 <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                  <Interweave
+                  {/* <Interweave
                     content={
                       getPost?.data?.html.replaceAll(
                         'href=',
                         'target="_blank" rel="nofollow noreferrer" href='
                       ) ?? null
                     }
-                    q
-                  />
+                  /> */}
+                  <div
+                    dangerouslySetInnerHTML={{ __html: getPost?.data?.html }}
+                  ></div>
                 </div>
 
                 {postUser === currentUser?.data?.user?.id ? (
@@ -475,3 +488,34 @@ export default function PostPage() {
     </MainLayout>
   );
 }
+
+export async function getStaticProps(
+  context: GetStaticPropsContext<{ slug: string[] }>
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: { prisma },
+    transformer: superjson,
+  });
+
+  const slug = context.params?.slug; // Access the first element of the slug array
+
+  await helpers.post.getPost.prefetch({ slug });
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+      slug,
+    },
+    revalidate: 1,
+  };
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const pathsData = [];
+
+  return {
+    paths: pathsData,
+    fallback: 'blocking',
+  };
+};

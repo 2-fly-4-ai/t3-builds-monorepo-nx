@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import Modal from '../Modal';
 
 export const tagCreateSchema = z.object({
   name: z.string().min(3),
@@ -40,42 +39,42 @@ const TagForm = ({ isOpen, onClose }: TagFormProps) => {
     },
   });
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create a tag">
-      <form
-        onSubmit={handleSubmit((data) => createTag.mutate(data))}
-        className="relative flex flex-col items-center justify-center space-y-4"
-      >
-        <input
-          type="text"
-          id="name"
-          className="h-full w-full rounded-xl border border-gray-300 p-4 outline-none focus:border-gray-600"
-          placeholder="name of the tag"
-          {...register('name')}
-        />
-        <p className="w-full pb-2 text-left text-sm text-red-500">
-          {errors.name?.message}
-        </p>
-        <input
-          type="text"
-          id="description"
-          className="h-full w-full rounded-xl border border-gray-300 p-4 outline-none focus:border-gray-600"
-          placeholder="description"
-          {...register('description')}
-        />
-        <p className="w-full pb-2 text-left text-sm text-red-500">
-          {errors.description?.message}
-        </p>
-        <div className="flex w-full justify-end">
-          <button
-            className="w-fit space-x-3 whitespace-nowrap rounded border border-gray-200 px-4 py-2 text-right text-sm transition hover:border-gray-900 hover:text-gray-900"
-            type="submit"
-          >
-            Create
-          </button>
-        </div>
-      </form>
-    </Modal>
+    <form className="relative flex flex-col items-center justify-center space-y-1">
+      <input
+        type="text"
+        id="name"
+        className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
+        placeholder="name of the tag"
+        {...register('name')}
+      />
+      <p className="w-full pb-2 text-left text-sm text-red-500">
+        {errors.name?.message}
+      </p>
+      <input
+        type="text"
+        id="description"
+        className="h-full w-full  border border-gray-300 p-4  outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black  dark:bg-opacity-60 dark:bg-opacity-60 dark:focus:border-white"
+        placeholder="description"
+        {...register('description')}
+      />
+      <p className="w-full pb-2 text-left text-sm text-red-500">
+        {errors.description?.message}
+      </p>
+      <div className="flex w-full justify-end">
+        <button
+          onClick={handleSubmit((data) => createTag.mutate(data))}
+          className="w-fit space-x-3 whitespace-nowrap rounded border border-gray-200 px-4 py-2 text-right text-sm transition hover:border-gray-900 hover:text-gray-900"
+          type="button"
+        >
+          Create
+        </button>
+      </div>
+    </form>
   );
 };
 
