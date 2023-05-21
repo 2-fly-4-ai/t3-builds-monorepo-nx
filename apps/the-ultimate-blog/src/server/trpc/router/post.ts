@@ -3,11 +3,56 @@ import { TRPCError } from '@trpc/server';
 import { WriteFormSchema } from '../../../components/Writeform';
 import { WriteTechFormSchema } from 'apps/the-ultimate-blog/src/components/WriteformTech';
 import slugify from 'slugify';
-
-import { z } from 'zod';
+import { createClient } from '@supabase/supabase-js';
+import { env } from '../../../env/server.mjs';
+const supabase = createClient(env.SUPABASE_PUBLIC_URL, env.SUPABASE_SECRET_KEY);
 import { commentFormSchema } from 'apps/the-ultimate-blog/src/components/CommentSidebar';
+import { z } from 'zod';
+const sharp = require('sharp');
 
 export const postRouter = router({
+  uploadImage: protectedProcedure
+    .input(
+      z.object({
+        file: z.any(),
+        // Modify the type of 'file' based on your requirements
+      })
+    )
+    .mutation(async ({ input: { file } }) => {
+      // Check if supabase is ready
+      if (!supabase) {
+        throw new Error('Supabase is not ready.');
+      }
+
+      // Read the uploaded file using sharp
+      const image = sharp(file);
+
+      // Define the maximum dimension for the resized image
+      const MAX_DIMENSION = 800; // Adjust the maximum dimension as desired
+
+      // Resize the image while maintaining the aspect ratio
+      const resizedImage = image.resize(MAX_DIMENSION, MAX_DIMENSION, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      });
+
+      const resizedImageBuffer = await resizedImage.toBuffer();
+
+      const { data, error } = await supabase.storage
+        .from('public')
+        .upload(`postImages/${file.name}`, resizedImageBuffer, {
+          contentType: 'image/jpeg',
+          upsert: true,
+        });
+
+      if (error) {
+        console.log('Error uploading image:', error, file);
+        return '';
+      }
+      console.warn(data.path);
+      return data?.path || '';
+    }),
+
   createPost: protectedProcedure
     .input(
       WriteFormSchema.and(
@@ -724,7 +769,7 @@ export const postRouter = router({
 
         if (!modelType) {
           throw new TRPCError({
-            code: 'INVALID_REQUEST',
+            code: 'BAD_REQUEST',
             message: 'Invalid post ID',
           });
         }
@@ -740,14 +785,166 @@ export const postRouter = router({
           });
         }
 
+        let publicUrl;
+
+        if (imageUrl.startsWith('data:image')) {
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+
+          const imageBuffer = Buffer.from(
+            imageUrl.replace(/^data:image\/\w+;base64,/, ''),
+            'base64'
+          );
+          const image = sharp(imageBuffer);
+          const metadata = await image.metadata();
+
+          const { width, height } = metadata;
+
+          let resizedImage;
+
+          if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+            resizedImage = image.resize(MAX_WIDTH, MAX_HEIGHT, {
+              fit: 'inside',
+            });
+          } else {
+            resizedImage = image;
+          }
+
+          const resizedImageBuffer = await resizedImage.toBuffer();
+
+          const timestamp = Date.now(); // Generate a unique timestamp
+          const randomString = Math.random().toString(36).substring(7); // Generate a random string
+          const uniqueFilename = `${postId}_${timestamp}_${randomString}.jpeg`;
+
+          const { data, error } = await supabase.storage
+            .from('public')
+            .upload(`featuredImages/${uniqueFilename}`, resizedImageBuffer, {
+              contentType: 'image/jpeg',
+              upsert: true,
+            });
+
+          if (error) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Upload failed to Supabase',
+            });
+          }
+
+          const {
+            data: { publicUrl: uploadedUrl },
+          } = await supabase.storage.from('public').getPublicUrl(data?.path);
+
+          publicUrl = uploadedUrl;
+        } else {
+          publicUrl = imageUrl;
+        }
+
         await prisma[modelType].update({
           where: { id: postId },
           data: {
-            featuredImage: imageUrl,
+            featuredImage: publicUrl,
           },
         });
       }
     ),
+
+  // updatePostFeaturedImage: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       imageUrl: z.string(),
+  //       postId: z.string(),
+  //     })
+  //   )
+  //   .mutation(
+  //     async ({ ctx: { prisma, session }, input: { imageUrl, postId } }) => {
+  //       const getModelType = async () => {
+  //         const techData = await prisma.tech.findUnique({
+  //           where: { id: postId },
+  //         });
+  //         const postData = await prisma.post.findUnique({
+  //           where: { id: postId },
+  //         });
+  //         return techData ? 'tech' : postData ? 'post' : null;
+  //       };
+
+  //       const modelType = await getModelType();
+
+  //       if (!modelType) {
+  //         throw new TRPCError({
+  //           code: 'INVALID_REQUEST',
+  //           message: 'Invalid post ID',
+  //         });
+  //       }
+
+  //       const modelData = await prisma[modelType].findUnique({
+  //         where: { id: postId },
+  //       });
+
+  //       if (modelData.authorId !== session.user.id) {
+  //         throw new TRPCError({
+  //           code: 'FORBIDDEN',
+  //           message: 'You are not the owner of this post',
+  //         });
+  //       }
+
+  //       let publicUrl;
+
+  //       if (imageUrl.startsWith('data:image')) {
+  //         const MAX_WIDTH = 400;
+  //         const MAX_HEIGHT = 500;
+
+  //         const imageBuffer = Buffer.from(
+  //           imageUrl.replace(/^data:image\/\w+;base64,/, ''),
+  //           'base64'
+  //         );
+  //         const image = sharp(imageBuffer);
+  //         const metadata = await image.metadata();
+
+  //         const { width, height } = metadata;
+
+  //         let resizedImage;
+
+  //         if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+  //           resizedImage = image.resize(MAX_WIDTH, MAX_HEIGHT, {
+  //             fit: 'inside',
+  //           });
+  //         } else {
+  //           resizedImage = image;
+  //         }
+
+  //         const resizedImageBuffer = await resizedImage.toBuffer();
+
+  //         const { data, error } = await supabase.storage
+  //           .from('public')
+  //           .upload(`featuredImages/${postId}.webp`, resizedImageBuffer, {
+  //             contentType: 'image/webp',
+  //             upsert: true,
+  //           });
+
+  //         if (error) {
+  //           throw new TRPCError({
+  //             code: 'INTERNAL_SERVER_ERROR',
+  //             message: 'Upload failed to Supabase',
+  //           });
+  //         }
+
+  //         const {
+  //           data: { publicUrl: uploadedUrl },
+  //         } = await supabase.storage.from('public').getPublicUrl(data?.path);
+
+  //         publicUrl = uploadedUrl;
+  //       } else {
+  //         publicUrl = imageUrl;
+  //       }
+
+  //       await prisma[modelType].update({
+  //         where: { id: postId },
+  //         data: {
+  //           featuredImage: publicUrl,
+  //         },
+  //       });
+  //     }
+  //   ),
 
   getReadingList: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {

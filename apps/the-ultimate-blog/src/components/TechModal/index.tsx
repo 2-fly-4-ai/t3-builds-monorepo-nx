@@ -41,6 +41,18 @@ import {
   TabsTrigger,
 } from 'libs/shared/ui/src/shadnui/ui/tabs';
 
+const Editor = dynamic(() => import('../../components/Ckeditor'), {
+  ssr: false,
+  loading: () => <div>Loading editor...</div>,
+});
+
+type ModalProps = {
+  title: string;
+  techDescription: string;
+  html: string;
+  post: any; // Replace 'any' with the appropriate type for 'post'
+};
+
 type TechFormModalProps = {
   post: {
     id: string;
@@ -69,6 +81,8 @@ export const WriteFormSchema = z.object({
 });
 
 export default function TechModal({ post }: TechFormModalProps) {
+  const router = useRouter();
+  const [shouldReload, setShouldReload] = useState(false);
   // generateMetadata({ post });
   //Form Logic
   const {
@@ -99,27 +113,10 @@ export default function TechModal({ post }: TechFormModalProps) {
     shortDescription,
   } = post;
 
-  const router = useRouter();
-  const [shouldReload, setShouldReload] = useState(false);
-
-  useEffect(() => {
-    const handlePopstate = () => {
-      // Reload the page
-      window.location.reload();
-    };
-
-    // Listen for the popstate event
-    window.addEventListener('popstate', handlePopstate);
-
-    // Clean up the event listener
-    return () => {
-      window.removeEventListener('popstate', handlePopstate);
-    };
-  }, []);
-
-  const postsByTag = trpc.post.getTechPostsByTag.useQuery({
-    tag: post?.tags?.[0]?.name,
-  });
+  const test = true;
+  const { value, setValue } = useTabStore();
+  const postUser = id;
+  const currentUser = useSession();
 
   // const getTags = trpc?.tag?.getTechTags?.useQuery();
 
@@ -144,29 +141,9 @@ export default function TechModal({ post }: TechFormModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEditor, setShowEditor] = useState<boolean>(false);
 
-  // const handlePostsModalToggle = useCallback(() => {
-  //   togglePosts(id);
-  // }, [id, togglePosts]);
-
-  const Editor = dynamic(() => import('../../components/Ckeditor'), {
-    ssr: false,
-    loading: () => <div>Loading editor...</div>,
+  const postsByTag = trpc.post.getTechPostsByTag.useQuery({
+    tag: post?.tags?.[0]?.name,
   });
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      handleClose();
-    };
-    setShowEditor(true);
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
-  // // Functions
 
   const handleEditPost = trpc.post.editTechpost.useMutation({
     onSuccess: () => {
@@ -187,17 +164,13 @@ export default function TechModal({ post }: TechFormModalProps) {
         techDescription: formData.techDescription,
         html: formData.html,
       });
-
-      // Invalidate the getPost query so that it is re-fetched with the latest data
-      // invalidateCurrentPostPage();
-
-      // Do something else after the post is updated successfully, e.g. redirect to the updated post page
     } catch (error) {
       console.error('Failed to update post:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
   const handleClose = () => {
     if (router.pathname.includes('/techstack')) {
       router.push('/techstack', undefined, { shallow: true });
@@ -206,27 +179,33 @@ export default function TechModal({ post }: TechFormModalProps) {
     setValue();
   };
 
-  const test = true;
-
-  const { value, setValue } = useTabStore();
-  const postUser = id;
-  const currentUser = useSession();
-
   useEffect(() => {
-    let defaultValues = {};
-    defaultValues.title = title;
-    defaultValues.techDescription = techDescription;
-    defaultValues.html = html;
+    let defaultValues = {} as ModalProps;
+    defaultValues.title = title; // Replace 'Example Title' with your actual title value
+    defaultValues.techDescription = techDescription; // Replace 'Example Tech Description' with your actual tech description value
+    defaultValues.html = html; // Replace 'Example HTML' with your actual HTML value
     reset({ ...defaultValues });
-  }, [post]);
 
-  // const invalidateCurrentPostPage = useCallback(() => {
-  //   postRoute.getTechPosts.invalidate();
-  // }, [postRoute.getTechPosts]);
+    const handlePopstate = () => {
+      // Reload the page
+      window.location.reload();
+    };
 
-  //postUser === currentUser?.data?.user?.id ?
+    const handleBeforeUnload = () => {
+      handleClose();
+    };
 
-  // const test = true;
+    // Listen for the popstate event
+    window.addEventListener('popstate', handlePopstate);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    setShowEditor(true);
+
+    // Clean up the event listeners
+    return () => {
+      window.removeEventListener('popstate', handlePopstate);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <Modal id={id} isOpen={isPostModalOpen} onClose={handleClose}>
@@ -515,19 +494,19 @@ export default function TechModal({ post }: TechFormModalProps) {
                   ) : (
                     <div className="relative">
                       <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                        {/* <Interweave
-                    content={
-                      html.replaceAll(
-                        'href=',
-                        'target="_blank" rel="nofollow noreferrer" href='
-                      ) ?? null
-                    }
-                  /> */}
-                        <div
+                        <Interweave
+                          content={
+                            html.replaceAll(
+                              'href=',
+                              'target="_blank" rel="nofollow noreferrer" href='
+                            ) ?? null
+                          }
+                        />
+                        {/* <div
                           dangerouslySetInnerHTML={{
                             __html: html,
                           }}
-                        ></div>
+                        ></div> */}
                       </div>
 
                       {test ? (
@@ -829,21 +808,6 @@ export default function TechModal({ post }: TechFormModalProps) {
                             <div className=" line-clamp-2 font-mono font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
                               {post?.title}
                             </div>
-
-                            {/* <button
-                              className="bg-red-500 p-4"
-                              onClick={() => {
-                                resetIsPostModalOpen();
-                                togglePosts(post?.id);
-                              }}
-                            >
-                              {' '}
-                              BUTTON
-                            </button> */}
-
-                            {/* <div className="text-sm line-clamp-2">
-                      {bookmark.post.description}
-                    </div> */}
                           </div>
                         </div>
                       </Link>
@@ -855,97 +819,6 @@ export default function TechModal({ post }: TechFormModalProps) {
             </div>
           </div>
         </div>
-
-        {/* 
-        {getTags.isSuccess && (
-          <>
-            <TagForm
-              isOpen={isTagCreateModalOpen}
-              onClose={() => setIsTagCreateModalOpen(false)}
-            />
-            <div className="my-4 flex w-full items-center space-x-4 ">
-              <div className="z-10 w-4/5 border">
-                <TagsAutocompletion
-                  tags={getTags.data}
-                  setSelectedTags={setSelectedTags}
-                  selectedTags={selectedTags}
-                />
-              </div>
-              <button
-                onClick={() => setIsTagCreateModalOpen(true)}
-                className="space-x-3 whitespace-nowrap rounded border border-gray-200 px-4 py-2 text-sm transition hover:border-gray-900 hover:text-gray-900"
-              >
-                Create Tag
-              </button>
-            </div>
-
-            <div className="my-4 flex w-full flex-wrap items-center">
-              {selectedTags.map((tag) => (
-                <div
-                  key={tag.id}
-                  className="m-2 flex items-center justify-center space-x-2 whitespace-nowrap rounded-2xl bg-gray-200/50 px-5 py-3"
-                >
-                  <div>{tag.name}</div>
-                  <div
-                    onClick={() =>
-                      setSelectedTags((prev) =>
-                        prev.filter((currTag) => currTag.id !== tag.id)
-                      )
-                    }
-                    className="cursor-pointer"
-                  >
-                    <FaTimes />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-        {createPost.isLoading && (
-          <div className="absolute bottom-2 flex items-center justify-center space-x-4">
-            <div>
-              <ImSpinner8 className="animate-spin" />
-            </div>
-            <div>Loading...</div>
-          </div>
-        )}
-
-       
-        <input
-          type="text"
-          id="shortDescription"
-          className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
-          placeholder="Short Description...."
-          {...register('description')}
-        />
-
-        <p>{errors.description?.message}</p>
-
-        <div className="modal-container">
-          <Controller
-            name="html"
-            control={control}
-            render={({ field }) => (
-              <div className="prose-li:list-style prose prose-lg prose-a:font-bold prose-li:text-black prose-table:table-auto  prose-table:border-2 prose-tr:border-r  prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-img:mx-auto prose-img:my-12  prose-img:max-h-custom prose-img:w-auto prose-img:border-2 prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] prose-img:shadow-black prose-p:font-sans prose-li:list-style  prose-table:shadow-lg prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-img:max-h-custom  dark:prose-headings:text-gray-300 dark:prose-p:text-gray-400 prose-li:font-sans  dark:prose-li:text-gray-400 dark:prose-strong:text-red-400  dark:prose-code:text-white  min-h-[40vh]  w-full max-w-none    border   shadow-2xl marker:text-black focus-within:border-black    dark:bg-black dark:bg-opacity-60 dark:text-gray-400  dark:text-opacity-80 dark:marker:text-gray-400">
-                <Editor
-                  {...field}
-                  onChange={(data: string) => field && field.onChange(data)}
-                  value={field.value}
-                />
-              </div>
-            )}
-          />
-        </div>
-
-        <p>{errors.text?.message}</p>
-        <div className="flex w-full justify-end">
-          <button
-            type="submit"
-            className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
-          >
-            Publish
-          </button>
-        </div> */}
       </div>
     </Modal>
   );

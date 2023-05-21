@@ -1,21 +1,25 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
+import { zodResolver } from '@hookform/resolvers/zod';
 
+// Define the validation schema for the form fields
 export const tagCreateSchema = z.object({
   name: z.string().min(3),
   description: z.string().min(10),
 });
 
+// Define the props for the TagForm component
 type TagFormProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const TagFormTech = ({ isOpen, onClose }: TagFormProps) => {
+// TagFormTech component
+export default function TagFormTech({ isOpen, onClose }: TagFormProps) {
+  // Initialize react-hook-form
   const {
     register,
     handleSubmit,
@@ -28,21 +32,23 @@ const TagFormTech = ({ isOpen, onClose }: TagFormProps) => {
     resolver: zodResolver(tagCreateSchema),
   });
 
+  // Access the trpc routes
   const tagRouter = trpc.useContext().tag;
 
+  // Define the mutation function to create a tag
   const createTag = trpc.tag.createTechTag.useMutation({
     onSuccess: () => {
-      toast.success('tag successfully created 🥳');
+      toast.success('Tag successfully created 🥳');
       reset();
       onClose();
       tagRouter.getTechTags.invalidate();
     },
   });
 
+  // Return null if the form is not open
   if (!isOpen) {
     return null;
   }
-
   return (
     <form className="relative flex flex-col items-center justify-center space-y-1">
       <input
@@ -76,6 +82,4 @@ const TagFormTech = ({ isOpen, onClose }: TagFormProps) => {
       </div>
     </form>
   );
-};
-
-export default TagFormTech;
+}

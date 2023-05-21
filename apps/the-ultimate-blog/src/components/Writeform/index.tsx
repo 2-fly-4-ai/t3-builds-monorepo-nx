@@ -1,5 +1,4 @@
 import Modal from '../../components/Modal';
-
 import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,13 +12,17 @@ export type TAG = { id: string; name: string };
 import TagForm from '../TagForm';
 import { FaTimes } from 'react-icons/fa';
 import TagsAutocompletion from '../TagsAutocompletion';
-import TechAutocompletion from '../TagsAutocompletion/techRelations';
 import UnsplashGallery from '../UnsplashGallery/index-creation';
 
+const Editor = dynamic(() => import('../Ckeditor/index'), {
+  ssr: false,
+  loading: () => <div>Loading editor...</div>,
+});
+
+//Props
 type WriteFormModalProps = {
   title: string;
   description: string;
-  text: string;
   html: string;
   postId: string;
   slug: string;
@@ -27,18 +30,24 @@ type WriteFormModalProps = {
   featuredImage: any;
 };
 
+//FormSchema
 export const WriteFormSchema = z.object({
   title: z.string().min(20),
   description: z.string().min(60).optional(),
-  text: z.string().min(100).optional(),
   html: z.string().min(100).optional(),
   featuredImage: z.string().optional(),
 });
 
-export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
+//Component
+export default function WriteFormModal() {
+  //StateManagement
   const { isWriteModalOpen, setIsWriteModalOpen } = useGlobalContextStore();
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
+  const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
 
+  //Form Logic
   const {
     register,
     handleSubmit,
@@ -49,9 +58,9 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
     resolver: zodResolver(WriteFormSchema),
   });
 
-  const [selectedImage, setSelectedImage] = useState('');
-  4;
+  //Trpc Routes
   const postRoute = trpc.useContext().post;
+  const getTags = trpc?.tag?.getTags.useQuery();
 
   const createPost = trpc.post.createPost.useMutation({
     onSuccess: () => {
@@ -60,7 +69,6 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
       setIsWriteModalOpen(false);
 
       postRoute.getPosts.invalidate();
-
       //Beautiful implementation of Toast
     },
     onError: () => {
@@ -68,32 +76,16 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
     },
   });
 
-  const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
-  const [selectedTechTags, setSelectedTechTags] = useState<TAG[]>([]);
-
   const onSubmit = async (data: WriteFormModalProps) => {
     try {
       setSelectedImage(null);
       await createPost.mutateAsync(
-        selectedTechTags.length > 0 ? { ...data, tagsIds: selectedTags } : data
+        selectedTags.length > 0 ? { ...data, tagsIds: selectedTags } : data
       );
       reset(); // This clears the input fields
     } catch (error) {
       console.error(error);
     }
-  };
-  const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
-
-  const getTags = trpc?.tag?.getTags.useQuery();
-  // const getTechTags = trpc?.post.getTechPosts.useQuery();
-  // console.warn(getTechTags.data);
-  const Editor = dynamic(() => import('../Ckeditor/index'), {
-    ssr: false,
-    loading: () => <div>Loading editor...</div>,
-  });
-
-  const handleImageSelect = (image: string) => {
-    setSelectedImage(image);
   };
 
   return (
@@ -162,12 +154,6 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
                   setSelectedTags={setSelectedTags}
                   selectedTags={selectedTags}
                 />
-                {/* GetTEchTAgs */}
-                {/* <TechAutocompletion
-                  tags={getTechTags.data}
-                  setSelectedTags={setSelectedTechTags}
-                  selectedTags={selectedTechTags}
-                /> */}
               </div>
               <button
                 onClick={() => setIsTagCreateModalOpen(true)}
@@ -216,6 +202,7 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
           {...register('title')}
         />
         <p>{errors.title?.message}</p>
+
         <input
           type="text"
           id="shortDescription"
@@ -223,7 +210,6 @@ export default function WriteFormModal({ postId, slug }: WriteFormModalProps) {
           placeholder="Short Description...."
           {...register('description')}
         />
-
         <p>{errors.description?.message}</p>
 
         <div className="modal-container">

@@ -3,6 +3,7 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'react-hot-toast';
 import Providers from '../components/Providers/providers';
+import RouterProgressBar from 'libs/shared/ui/src/t3-blog/components/RouterProgressBar';
 
 import { trpc } from '../utils/trpc';
 
@@ -16,6 +17,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <Toaster />
       <Providers>
+        {/* <Head>
+          <title>T3 Blog</title>
+          <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+        </Head>
+        <RouterProgressBar /> */}
         {/* <GlobalContextProvider> */}
         <Component {...pageProps} />
         {/* </GlobalContextProvider> */}

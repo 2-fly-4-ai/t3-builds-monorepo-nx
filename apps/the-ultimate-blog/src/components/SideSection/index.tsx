@@ -16,11 +16,11 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
   return (
     <aside
       className={`${mainClass} ${
-        showSidebar ? 'col-span-3 ' : '   hidden'
-      } space-between relative flex h-full w-full flex-col space-y-4 px-2 py-6 transition-transform duration-500 ease-out `}
+        showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
+      } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
     >
-      <div className=" w-full px-4 py-1 text-xl ">
-        <div>
+      <div className=" w-80 overflow-hidden px-4 py-1 text-xl">
+        <div className="">
           Welcome Back{' '}
           <span className="font-bold text-orange-400">
             {user?.data?.user?.name}{' '}
@@ -30,7 +30,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         {/* |<Link href={user?.data?.user?.id ?? ''}>BOOKMARKS</Link> */}
         TECH-STACK
       </div>
-      <div className="">
+      <div className="w-80 overflow-hidden">
         <div className="flex flex-col ">
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
             People you might be interested in:
@@ -38,11 +38,11 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
           {suggestions.isSuccess &&
             suggestions.data.map((user) => (
               <Link href="/" key={10}>
-                <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                <div className="flex w-80 flex-row  items-center space-x-4 overflow-hidden p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                   <div>
                     <div className="text-sm font-bold text-gray-500 dark:text-orange-400">
-                      {user.name}
+                      {user?.name}
                     </div>
                     <div className="line-clamp-2 text-sm">
                       lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
@@ -73,12 +73,14 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         >
           -
         </button>
-        <h3 className="my-4 px-4 text-lg font-bold">Your reading list:</h3>
+        <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
+          Your reading list:
+        </h3>
         <div className="flex flex-col ">
           {readingList.data &&
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
-                <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                <div className="overflow-hidde group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="flex  aspect-video  w-40  justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
                     {bookmark?.post?.featuredImage ? (
                       <Image
@@ -103,17 +105,17 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                     {/* <div className="text-sm line-clamp-2">
                       {bookmark.post.description}
                     </div> */}
-                    <div>
+                    {/* <div>
                       <div className="hidden w-full items-center space-x-1  2xl:flex">
                         <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                         <div className="text-sm font-bold text-black dark:text-gray-500 dark:text-white">
-                          {bookmark.post.author.name}
+                          {bookmark.post?.author?.name}
                         </div>
                         <div className="text-xs">
                           {dayjs(bookmark.post.createdAt).format('DD/MM/YYYY')}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </Link>

@@ -6,7 +6,9 @@
   min-height: 40vh;
   position: relative;
 }
-
+.ck-body-wrapper {
+  width: 200px;
+}
 /* .ck.ck-toolbar {
   visibility: hidden;
 } */
@@ -34,6 +36,23 @@
   color: #333;
 }
 
+@keyframes delayAnimation {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    /* Any other initial styles you want to apply */
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+    /* Any other final styles you want to apply */
+  }
+}
+
+.delayed-2xl-cols-5 {
+  animation: delayAnimation 1s ease-in-out;
+  /* Change the animation duration and timing function as desired */
+}
 /* .ck.ck-editor__editable_inline {
   visibility: hidden;
   opacity: 0;

@@ -4,21 +4,26 @@ import { trpc } from '../../utils/trpc';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
+import { HiXMark } from 'react-icons/hi2';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
   const readingList = trpc.post.getTechReadingList.useQuery();
   const suggestions = trpc.user.getSuggestions.useQuery();
+  const user = useSession();
 
   const [mainClass, setMainClass] = useState('');
 
   return (
     <aside
       className={`${mainClass} ${
-        showSidebar ? 'col-span-3 ' : '   hidden'
-      } space-between relative flex h-full w-full flex-col space-y-4 px-2 py-6 transition-transform duration-500 ease-out `}
+        showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
+      } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
     >
-      <div className="">
+      <div className="w-80 overflow-hidden">
         <div className="flex flex-col ">
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
             People you might be interested in:
@@ -30,7 +35,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                   <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                   <div>
                     <div className="text-base text-sm font-bold text-gray-500 dark:text-orange-400">
-                      {user.name}
+                      {user?.name}
                     </div>
                     <div className="line-clamp-2 text-sm">
                       lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
@@ -61,12 +66,14 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         >
           -
         </button>
-        <h3 className="my-4 px-4 text-lg font-bold">Your tech stack:</h3>
+        <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
+          Your tech stack:
+        </h3>
         <div className="flex flex-col ">
           {readingList.data &&
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
-                <div className="group flex items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                <div className="group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="flex  aspect-video w-28 justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50 ">
                     {bookmark?.tech?.featuredImage ? (
                       <Image

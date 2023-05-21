@@ -22,49 +22,68 @@ import dynamic from 'next/dynamic';
 
 export default function Header() {
   const { data: sessionData, status } = useSession();
-  const { setIsWriteModalOpen } = useGlobalContextStore();
-  const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
-    useGlobalContextTechStore();
-  const [segment, setSegment] = React.useState('');
-
-  // React.useEffect(() => {
-  //   setSegment(window.location.pathname.split('/')[1]);
-  // }, []);
 
   const items = [
+    // {
+    //   title: 'Home',
+    //   href: '/',
+    //   segment: 'home',
+    // },
+
     {
-      title: 'Home',
-      href: '/',
-      segment: 'home',
+      title: 'TechStack',
+      href: '/techstack',
+      segment: 'blog',
     },
     {
-      title: 'About',
+      title: 'TechProducts',
       href: '/about',
+      disabled: true,
       segment: 'about',
     },
     {
-      title: 'Contact',
+      title: 'Blog',
+      href: '/',
+      segment: '',
+    },
+
+    {
+      title: 'Courses',
+      href: '/contact',
+      disabled: true,
+      segment: 'contact',
+    },
+
+    {
+      title: 'Discussion',
+      href: '/contact',
+      disabled: true,
+      segment: 'contact',
+    },
+    {
+      title: 'Docs',
       href: '/contact',
       disabled: true,
       segment: 'contact',
     },
   ];
 
+  //State Handlers
+  const { setIsWriteModalOpen } = useGlobalContextStore();
+  const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
+    useGlobalContextTechStore();
+  const [segment, setSegment] = React.useState('');
+
+  React.useEffect(() => {
+    setSegment(window.location.pathname.split('/')[1]);
+  }, []);
+
   return (
-    <header className=" top-0 z-10 grid w-full grid-cols-12 flex-row  items-center border-b-2 px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
-      {/* This is the header */}
+    <header className=" top-0 z-10 grid w-full grid-cols-12 flex-row items-center border-b-2  px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
       <div className="col-span-6 flex items-center justify-center ">
-        {/* <GoThreeBars className="mx-4" onClick={() => setIsOpenSideBar(true)} /> 0*/}
         <MainNav items={items} segment={segment} />
-        <Link href="/" className="mr-auto cursor-pointer">
-          {/* <div className="mx-auto flex cursor-pointer justify-center  text-3xl font-md uppercase bg-gray-300 px-4 py-1 border-2 font-bold text-gray-600 border-greay-200  text-black">
-            T3 Blog
-          </div> */}
-        </Link>
+        <Link href="/" className="mr-auto cursor-pointer"></Link>
       </div>
-      {/* <div className=" ml-auto hidden lg:flex">
-        <NavigationMenuDemo />
-      </div> */}
 
       {status === 'authenticated' ? (
         <div className="col-span-6 flex items-center justify-end  gap-4">

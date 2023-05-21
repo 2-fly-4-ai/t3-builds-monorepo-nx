@@ -16,18 +16,14 @@ export default function Modal({
   title,
   children,
 }: React.PropsWithChildren<ModalProps>) {
-  const { setIsWriteTechModalOpen } = useGlobalContextTechStore();
-  const { setIsWriteModalOpen } = useGlobalContextStore();
+  // const { setIsWriteTechModalOpen } = useGlobalContextTechStore();
+  // const { setIsWriteModalOpen } = useGlobalContextStore();
 
   const modalRef = useRef();
   useEffect(() => {
-    if (isOpen) {
-      // scroll the modal element to the top
-      modalRef?.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // ... rest of your code
+    // Remove the scroll functionality from the useEffect hook
   }, [isOpen]);
+
   return (
     <>
       <Transition appear show={isOpen ? true : false} as={Fragment}>
@@ -50,8 +46,8 @@ export default function Modal({
             <div className=" fixed inset-0  bg-[#363636] bg-opacity-70" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex  items-center justify-center p-1 text-center">
+          <div className=" fixed inset-0 overflow-y-auto">
+            <div className="my-5 flex  items-center justify-center p-1 text-center">
               <Transition.Child
                 as={Fragment}
                 // enter="ease-out duration-300"

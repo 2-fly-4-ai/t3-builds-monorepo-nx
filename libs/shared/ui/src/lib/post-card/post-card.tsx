@@ -58,7 +58,7 @@ export function PostCard(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid  grid-cols-10 gap-2 gap-x-8 rounded-xl border-2 bg-white  bg-opacity-10 p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:border-gray-300">
+    <div className="hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] group  grid w-[320px] grid-cols-10 gap-2 gap-x-8 rounded-xl border-2 bg-white bg-opacity-10 p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 dark:border-gray-300">
       <div className="relative col-span-full  rounded-none ">
         <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black group-hover:bg-opacity-20">
           <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
@@ -94,26 +94,26 @@ export function PostCard(props: PostCardProps) {
         </Link>
       </div>
       <div className="group col-span-full items-center gap-3 py-1 transition-all duration-500  hover:bg-gray-200 ">
-        <Link href={`/user/${props.post.author.username}` ?? null}>
+        <Link href={`/user/${props.post.author?.username}` ?? null}>
           <div
             className=" flex cursor-pointer items-center gap-2   border-b-2  border-gray-200 p-1 shadow-sm
         "
           >
             <div className="h-7 w-7 rounded-full bg-gray-300 ">
-              {props.post.author.image && props.post.author.image ? (
+              {props.post.author?.image && props.post.author?.image ? (
                 <Image
-                  src={props.post.author.image ?? ''}
+                  src={props.post.author?.image ?? ''}
                   width={50}
                   height={50}
                   className="rounded-full"
-                  alt={props.post.author.name ?? ''}
+                  alt={props.post.author?.name ?? ''}
                 />
               ) : null}
             </div>
             <div className="">
               <div className="flex items-center gap-2 ">
                 <div className="text-lg font-bold capitalize underline dark:text-orange-400">
-                  {props.post.author.name}
+                  {props.post.author?.name}
                 </div>
                 |{' '}
                 <div className="text-sm font-medium">

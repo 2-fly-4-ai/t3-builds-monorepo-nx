@@ -13,13 +13,18 @@ export type TAG = { id: string; name: string };
 import TagForm from '../TagFormTech';
 import { FaTimes } from 'react-icons/fa';
 import TagsAutocompletion from '../TagsAutocompletionTech';
-
 import UnsplashGallery from '../UnsplashGallery/index-creation';
 
+// Dynamic import for the editor component
+const Editor = dynamic(() => import('../Ckeditor/index'), {
+  ssr: false,
+  loading: () => <div>Loading editor...</div>,
+});
+
+// Props for the TechFormModal
 type TechFormModalProps = {
   title: string;
   shortDescription: string;
-  text: string;
   html: string;
   postId: string;
   slug: string;
@@ -32,10 +37,10 @@ type TechFormModalProps = {
   techDescription: string;
 };
 
+// Validation schema for the WriteTechFormModal
 export const WriteTechFormSchema = z.object({
   title: z.string().min(1).max(40).optional(),
   shortDescription: z.string().min(10).optional(),
-  text: z.string().min(100).optional(),
   html: z.string().min(100).optional(),
   featuredImage: z.string().optional(),
   webUrl: z.string().optional(),
@@ -45,10 +50,8 @@ export const WriteTechFormSchema = z.object({
   techDescription: z.string().min(10).optional(),
 });
 
-export default function WriteFormModalTech({
-  postId,
-  slug,
-}: TechFormModalProps) {
+export default function WriteFormModalTech() {
+  // State and context hooks
   const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
     useGlobalContextTechStore();
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
@@ -56,6 +59,7 @@ export default function WriteFormModalTech({
   const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
   const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
 
+  // React Hook Form setup
   const {
     register,
     handleSubmit,
@@ -66,6 +70,7 @@ export default function WriteFormModalTech({
     resolver: zodResolver(WriteTechFormSchema),
   });
 
+  // trpc routes and mutations
   const postRoute = trpc.useContext().post;
   const getTags = trpc?.tag?.getTechTags?.useQuery();
 
@@ -82,6 +87,7 @@ export default function WriteFormModalTech({
     },
   });
 
+  // Form submit handler
   const onSubmit = async (data: TechFormModalProps) => {
     try {
       setSelectedImage(null);
@@ -92,15 +98,6 @@ export default function WriteFormModalTech({
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const Editor = dynamic(() => import('../Ckeditor/index'), {
-    ssr: false,
-    loading: () => <div>Loading editor...</div>,
-  });
-
-  const handleImageSelect = (image: string) => {
-    setSelectedImage(image);
   };
 
   return (

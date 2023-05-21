@@ -1,31 +1,30 @@
-import React, { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { HiXMark } from 'react-icons/hi2';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
 import { useCommentStore } from 'libs/shared/ui/src/zustand/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import Image from 'next/image';
-// import { useCounterStore } from 'libs/shared/ui/src/zustand/store';
 
+//Typings
 type CommentSidebarProps = {
   techId: string;
 };
-
 type CommentFormType = { text: string };
 
+//Zod Schema
 export const commentFormSchema = z.object({
   text: z.string().min(3),
 });
 
+//Functional Component
 const CommentSidebar = ({ techId }: CommentSidebarProps) => {
+  //Form
   const {
     register,
     handleSubmit,
@@ -38,6 +37,14 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
   const { data: sessionData, status } = useSession();
   const postRoute = trpc.useContext().post;
 
+  //State Handlers
+  const { commentLikes, toggleLikeComment } = useCommentStore();
+  const isCommentLiked = (commentId: string) => commentLikes[commentId];
+
+  //Trpc
+  const getComments = trpc.post.getComments.useQuery({
+    techId,
+  });
   const submitComment = trpc.post.submitComment.useMutation({
     onSuccess: () => {
       toast.success('🥳');
@@ -50,7 +57,6 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
       toast.error(error.message);
     },
   });
-
   const removeCommentMutation = trpc.post.removeComment.useMutation({
     onSuccess: () => {
       toast.success('Comment deleted successfully');
@@ -61,18 +67,6 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
     },
   });
 
-  const handleRemoveComment = async (id: string) => {
-    try {
-      await removeCommentMutation.mutate({ id });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getComments = trpc.post.getComments.useQuery({
-    techId,
-  });
-  // /////////////////////////////////////////////
   const likeComment = trpc.post.likeComment.useMutation({
     onSuccess: () => {
       toast.success('post liked successfully');
@@ -82,7 +76,6 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
       toast.error('You done fucked up');
     },
   });
-
   const dislikeComment = trpc.post.dislikeComment.useMutation({
     onSuccess: () => {
       toast.success('comment dislked successfully');
@@ -93,18 +86,20 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
     },
   });
 
-  const { commentLikes, toggleLikeComment } = useCommentStore();
-
-  const isCommentLiked = (commentId: string) => commentLikes[commentId];
-
+  //Async Handlers
+  const handleRemoveComment = async (id: string) => {
+    try {
+      await removeCommentMutation.mutate({ id });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleLikeComment = async (commentId: string) => {
     await likeComment.mutate({
       commentId,
     });
-
     toggleLikeComment(commentId);
   };
-
   const handleDislikeComment = async (commentId: string) => {
     await dislikeComment.mutate({
       commentId,
@@ -112,21 +107,13 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
     toggleLikeComment(commentId);
   };
 
-  // const isCommentLiked = (commentId: string) => {
-  //   // You can replace this with your own logic for checking if the comment is liked by the current user
-  //   return false;
-  // };
-
-  ///////////////////////////////////////////////
-
   return (
     <div className=" relative  w-full border-l shadow-md">
       <div className=" z-10 flex h-full w-full flex-col  px-6">
         <div className="  flex items-center justify-between  text-xl">
-          <h2 className=" font-medium">Responses (4)</h2>
-          <div>
-            <HiXMark className="cursor-pointer" />
-          </div>
+          <h2 className=" font-medium">
+            Responses ({getComments.data?.length})
+          </h2>
         </div>
 
         <form className="my-6 flex flex-col items-end space-y-5">

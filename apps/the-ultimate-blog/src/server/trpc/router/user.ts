@@ -6,6 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '../../../env/server.mjs';
 import { TRPCError } from '@trpc/server';
 
+const sharp = require('sharp');
 const supabase = createClient(env.SUPABASE_PUBLIC_URL, env.SUPABASE_SECRET_KEY);
 
 export const userRouter = router({
@@ -99,18 +100,33 @@ export const userRouter = router({
       })
     )
     .mutation(async ({ ctx: { prisma, session }, input }) => {
-      // make a function which which grab the user from db using the username and check if it's id is equal to the session user id
+      // make a function which grabs the user from the db using the username and checks if its id is equal to the session user id
 
-      // `image` here is a base64 encoded data URI, it is NOT a base64 string, so we need to extract
-      // the real base64 string from it.
-      // Check the syntax here: https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax
-      // remove the "data:image/jpeg;base64,"
       const imageBase64Str = input.imageAsDataUrl.replace(/^.+,/, '');
+
+      // Define the maximum dimension for the resized image
+      const MAX_DIMENSION = 400;
+
+      // Decode the base64 string and resize the image
+      const imageBuffer = Buffer.from(imageBase64Str, 'base64');
+      const image = sharp(imageBuffer);
+      const metadata = await image.metadata();
+
+      const { width, height } = metadata;
+      let resizedImage;
+
+      if (width > height) {
+        resizedImage = image.resize({ width: MAX_DIMENSION });
+      } else {
+        resizedImage = image.resize({ height: MAX_DIMENSION });
+      }
+
+      const resizedImageBuffer = await resizedImage.jpeg().toBuffer();
 
       const { data, error } = await supabase.storage
         .from('public')
-        .upload(`avatars/${input.username}.png`, decode(imageBase64Str), {
-          contentType: 'image/png',
+        .upload(`avatars/${input.username}.jpg`, resizedImageBuffer, {
+          contentType: 'image/jpeg',
           upsert: true,
         });
 
@@ -325,5 +341,21 @@ export const userRouter = router({
           },
         },
       });
+    }),
+
+  isUserEmailRegistered: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      })
+    )
+    .output(z.boolean())
+    .query(async ({ ctx: { prisma }, input: { email } }) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
+      return !!user; // return true if user exists, false otherwise
     }),
 });

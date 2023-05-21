@@ -5,8 +5,16 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'; // Importing PrismaAd
 import { env } from '../../../env/server.mjs'; // Importing environment variables
 import { prisma } from '../../../server/db/client'; // Importing the Prisma client
 import { generateUsername } from 'apps/the-ultimate-blog/src/utils/generateUsername';
+import EmailProvider from 'next-auth/providers/email';
 
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    verifyRequest: '/auth/verify-request',
+    error: '/auth/error',
+    newUser: '/auth/new-user',
+  },
   // Defining configuration options for NextAuth
   callbacks: {
     // Setting up a callback function to include user.id on the session object
@@ -19,6 +27,17 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma), // Setting up a Prisma adapter to manage sessions and authentication state
   providers: [
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        auth: {
+          user: process.env.MAILER_USER,
+          pass: process.env.MAILER_PASSWORD,
+        },
+      },
+      // from: '"Leonardo Dias" <leojuriolli@gmail.com>',
+    }),
     // Configuring authentication providers
     GithubProvider({
       // Configuring GithubProvider with client ID and client secret from environment variables
@@ -35,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
+
     GoogleProvider({
       // Configuring GoogleProvider with client ID and client secret from environment variables
       clientId: env.GOOGLE_CLIENT_ID,

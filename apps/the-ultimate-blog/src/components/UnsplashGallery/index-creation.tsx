@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { v4 as uuidv4 } from 'uuid';
-
 import Image from 'next/image';
 import useDebounce from '../../hooks/useDebounce';
 import { trpc } from '../../utils/trpc';
@@ -41,6 +40,7 @@ const UnsplahGallary = ({
   const debouncedSearchQuery = useDebounce(watchSearchQuery, 3000);
   const [selectedImage, setSelectedImage] = useState(''); //This is for the preview
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [isOpenUploadTab, setIsOpenUploadTab] = useState(false);
 
   const fetchUnsplashImages = trpc.unsplash.getImages.useQuery(
     {
@@ -50,34 +50,6 @@ const UnsplahGallary = ({
       enabled: Boolean(debouncedSearchQuery),
     }
   );
-
-  const utils = trpc.useContext();
-
-  // const updateFeaturedImage = trpc.post.updatePostFeaturedImage.useMutation({
-  //   onSuccess: () => {
-  //     utils.post.getPost.invalidate({ slug });
-  //     reset();
-  //     setIsUnsplashModalOpen(false);
-  //     toast.success('featured image updated');
-  //   },
-
-  //   async fn({ featuredImage, postId }) {
-  //     const formData = new FormData();
-  //     formData.append('image', featuredImage);
-  //     const { data } = await axios.post('/api/upload', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-
-  //     await trpc.post.updatePost.mutation({
-  //       postId,
-  //       input: {
-  //         featuredImage: data.url,
-  //       },
-  //     });
-  //   },
-  // });
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer.setData('text/plain', 'image');
@@ -94,20 +66,6 @@ const UnsplahGallary = ({
     setSelectedImageFile(file);
     setSelectedImage(URL.createObjectURL(file));
   };
-
-  // function dataURLtoFile(dataurl: string, filename: string): File {
-  //   const arr = dataurl.split(',');
-  //   const mime = arr[0].match(/:(.*?);/)[1];
-  //   const bstr = atob(arr[1]);
-  //   let n = bstr.length;
-  //   const u8arr = new Uint8Array(n);
-  //   while (n--) {
-  //     u8arr[n] = bstr.charCodeAt(n);
-  //   }
-  //   return new File([u8arr], filename, { type: mime });
-  // }
-
-  const [isOpenUploadTab, setIsOpenUploadTab] = useState(false);
 
   return (
     <Modal
@@ -132,7 +90,6 @@ const UnsplahGallary = ({
               onClick={() => {
                 setIsOpenUploadTab(false);
                 setSelectedImage(null);
-
                 setSelectedImageFile(null);
               }}
             >
@@ -256,12 +213,7 @@ const UnsplahGallary = ({
                 setIsOpenUploadTab(false);
                 setIsUnsplashModalOpen(false);
                 toast.success('Successful');
-                // updateFeaturedImage.mutate({
-                //   imageUrl: selectedImage,
-                //   postId,
-                // });
               }}
-              // disabled={updateFeaturedImage.isLoading}
             >
               Confirm
             </button>
@@ -272,10 +224,8 @@ const UnsplahGallary = ({
               onClick={() => {
                 toast.error('None Selected');
               }}
-              // disabled={updateFeaturedImage.isLoading}
             >
               None Selected
-              {/* {updateFeaturedImage.isLoading ? 'Loading...' : 'None Selected'} */}
             </button>
           )}
           {isOpenUploadTab && (
@@ -291,7 +241,6 @@ const UnsplahGallary = ({
                 reader.readAsDataURL(file);
                 reader.onloadend = () => {
                   setSelectedImage(reader.result as string);
-                  // clear file input(())
                   handleImageSelect(selectedImage);
                 };
               }}

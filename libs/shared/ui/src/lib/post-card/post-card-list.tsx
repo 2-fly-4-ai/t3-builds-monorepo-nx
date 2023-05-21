@@ -7,6 +7,7 @@ import { useCallback, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
 import toast, { Toaster } from 'react-hot-toast';
+const dayjs = require('dayjs');
 
 /* eslint-disable-next-line */
 export interface PostCardProps {
@@ -28,7 +29,13 @@ export interface PostCardProps {
 }
 
 export function PostCardList(props: PostCardProps) {
+  const { data: sessionData, status } = useSession();
   const postRoute = trpc.useContext().post;
+
+  //state Handlers
+  const [isBookmarked, setIsBookmarked] = useState(
+    Boolean(props?.post?.bookmarks?.length > 0)
+  );
 
   const bookmarkPost = trpc.post.bookmarkPost.useMutation({
     onSuccess: () => {
@@ -36,43 +43,36 @@ export function PostCardList(props: PostCardProps) {
       postRoute.getReadingList.invalidate();
     },
   });
-
   const removeBookmark = trpc.post.removeBookmark.useMutation({
     onSuccess: () => {
       toast.success('Bookmark Removed');
       postRoute.getReadingList.invalidate();
     },
   });
-  const { data: sessionData, status } = useSession();
-  const [isBookmarked, setIsBookmarked] = useState(
-    Boolean(props?.post?.bookmarks?.length > 0)
-  );
-
-  const dayjs = require('dayjs');
 
   return (
-    <div className="grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6 py-4  shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:bg-white dark:bg-opacity-10">
+    <div className="hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 dark:bg-white dark:bg-opacity-10">
       <div className="col-span-full flex items-center gap-3  py-1 ">
-        <Link href={`/user/${props.post.author.username}` ?? null}>
+        <Link href={`/user/${props.post.author?.username}` ?? null}>
           <div
             className=" flex cursor-pointer items-center gap-2 rounded-lg border-2 border-gray-200 p-2 shadow-sm hover:border-gray-400 hover:bg-gray-200 dark:hover:bg-white dark:hover:bg-opacity-40
         "
           >
             <div className="h-10 w-10 rounded-full bg-gray-300 ">
-              {props.post.author.image && props.post.author.image ? (
+              {props.post.author?.image && props.post.author?.image ? (
                 <Image
-                  src={props.post.author.image ?? ''}
+                  src={props.post.author?.image ?? ''}
                   width={50}
                   height={50}
                   className="rounded-full"
-                  alt={props.post.author.name ?? ''}
+                  alt={props.post.author?.name ?? ''}
                 />
               ) : null}
             </div>
             <div className="">
               <div className="flex items-center gap-2 ">
                 <div className="text-lg  font-bold capitalize dark:text-orange-400">
-                  {props.post.author.name}
+                  {props.post.author?.name}
                 </div>
                 |{' '}
                 <div className="text-sm">

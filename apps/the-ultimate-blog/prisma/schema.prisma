@@ -30,6 +30,8 @@ model Account {
   refresh_token     String?  @db.Text
   access_token      String?  @db.Text
   expires_at        Int?
+  email         String?   @unique
+  emailVerified DateTime?
   token_type        String?
   scope             String?
   id_token          String? // @db.Text
@@ -59,6 +61,8 @@ model User {
   tech          Tech[]
   accounts      Account[]
   sessions      Session[]
+   role           String             @default("user")
+  bio            String?            @db.VarChar(160)
   posts         Post[]
   comments      Comment[]
   likes         Like[]
@@ -66,6 +70,30 @@ model User {
   techBookmarks TechBookMark[]
   followedBy    User[]     @relation("UserFollows")
   followings    User[]     @relation("UserFollows")
+  notified Notification[] @relation(name: "NotifiedNotification")
+  notifier Notification[] @relation(name: "NotifierNotification")
+  createdAt DateTime  @default(now())
+  
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  postId     String?
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId  String?
+  notifiedId String
+  notified   User     @relation(name: "NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
+  notifierId String
+  notifier   User     @relation(name: "NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
+  type       String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([notifiedId])
+  @@index([notifierId])
+  @@index([postId])
+  @@index([commentId])
 }
 model VerificationToken {
   identifier String
@@ -91,6 +119,7 @@ model Post {
   tags          Tag[]
   likes         Like[]
   bookmarks     BookMark[]
+  notifications Notification[]
    @@index([authorId])
 }
 
@@ -130,6 +159,7 @@ model Comment {
   tech      Tech?      @relation(fields: [techId], references: [id],onDelete: Cascade) 
   createdAt DateTime  @default(now())
   likes     Like[]    // new field
+  notifications Notification[]
   @@index([userId])
   @@index([postId])
 
@@ -158,7 +188,7 @@ model Like {
   commentId String?
   techId    String?
   tech      Tech?      @relation(fields: [techId], references: [id], onDelete: Cascade)
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   post      Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
   comment   Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
   @@unique([userId, postId]) // unique constraint on post likes

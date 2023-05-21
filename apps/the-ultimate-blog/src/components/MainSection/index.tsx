@@ -9,23 +9,43 @@ import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinn
 import { RouterOutputs } from '../../utils/trpc';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 
-export default function MainSection({ showSidebar, toggleSidebar }) {
-  const getPosts = trpc.post.getPosts.useQuery();
+export default function MainSection({
+  showNavSidebar,
+  showSidebar,
+  toggleSidebar,
+}) {
+  //EffectHandlers
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
+  const [gridClass, setGridClass] = useState('');
+
+  //Trpc
+  const getPosts = trpc.post.getPosts.useQuery();
+
+  // useEffect(() => {
+  //   const delay = setTimeout(() => {
+  //     setGridClass(
+
+  //   }, 100); // Delay of 1000 milliseconds (1 second)
+
+  //   return () => clearTimeout(delay);
+  // }, [showNavSidebar, showSidebar]);
 
   return (
     <main
       className={`${
-        showSidebar ? 'col-span-9' : 'col-span-12'
-      } border-gray   min-h-screen w-full border-r  border-gray-200  px-8 transition-all  duration-500  ease-in-out xl:px-8 2xl:px-6 `}
+        showSidebar ? 'col-span-12' : 'col-span-12'
+      } border-gray min-h-screen  w-full border-r border-gray-200   px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
+        showNavSidebar || showSidebar ? '2xl:px-10 ' : '2xl:px-10 '
+      } `}
     >
-      <div className=" mb-4 flex flex-col items-center border-b-2 py-4">
+      <div className="mb-4 flex flex-col items-center border-b-2  py-4">
         <div className="flex w-full items-center justify-between space-x-4  py-2 ">
           <label
             htmlFor="search"
-            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 p-1  px-2 font-medium dark:bg-black  "
+            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 bg-opacity-90  p-1 px-2 font-medium dark:bg-black  "
           >
             <AiOutlineSearch />
             <input
@@ -116,36 +136,37 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
           </div>
         </div>
       </div>
-
       <div
-        className={`
-  my-8 grid gap-6 
-  ${
-    showListView
-      ? 'grid-cols-1'
-      : showSidebar
-      ? ''
-      : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5'
-  } justify-center gap-4
-  ${
-    showSidebar && !showListView
-      ? 'grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4'
-      : ''
-  } 
-`}
+        className={`mx-auto my-8 grid max-w-max gap-6 ${
+          showListView
+            ? 'grid-cols-1 2xl:grid-cols-1'
+            : showNavSidebar && showSidebar
+            ? 'xl:grid-cols-2 2xl:grid-cols-3'
+            : showSidebar && !showListView
+            ? 'xl:grid-cols-3 2xl:grid-cols-4'
+            : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3'
+        } justify-center gap-4 ${
+          showListView
+            ? '2xl:grid-cols-1'
+            : showNavSidebar || showSidebar
+            ? ' grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-3'
+            : 'delayed-2xl-cols-5 xl:grid-cols-3 2xl:grid-cols-5 '
+        }`}
       >
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
             console.warn(post);
             return (
-              <div key={post.id} className=" h-full">
-                {showListView ? (
-                  <PostCardList post={post} />
-                ) : (
-                  <PostCard post={post} />
-                )}
-              </div>
+              <>
+                <div key={post.id} className=" h-full">
+                  {showListView ? (
+                    <PostCardList post={post} />
+                  ) : (
+                    <PostCard post={post} />
+                  )}
+                </div>
+              </>
             );
           })}
       </div>

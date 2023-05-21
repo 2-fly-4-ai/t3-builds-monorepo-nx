@@ -4,6 +4,8 @@ import DecoupledEditor from 'ckeditor5-custom-build/build/ckeditor';
 import { useEffect, useState } from 'react';
 import { useSupabase } from '../../hooks/supabase';
 import useDebounce from '../../hooks/useDebounce';
+import { trpc } from '../../utils/trpc';
+// import { MyCustomUploadAdapterPlugin } from '../../hooks/ckEditorUpload';
 
 interface CKeditorProps {
   onChange: (data: string) => void;
@@ -12,6 +14,8 @@ interface CKeditorProps {
 }
 
 const Editor = ({ onChange, value }: CKeditorProps) => {
+  const { supabase, error } = useSupabase();
+  const debouncedValue = useDebounce(value, 300);
   const [showEditor, setShowEditor] = useState<boolean>(false);
 
   if (typeof window !== 'undefined') {
@@ -23,71 +27,53 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
         }, 1000);
     }
   }
-  const { supabase, error } = useSupabase();
+
+  // const uploadImageMutation = trpc.post.uploadImage.useMutation();
+
+  const handleImageUpload = async (file: File): Promise<string> => {
+    try {
+      const { data } = await trpc.post.uploadImage.useMutation({ file }); // Use the `mutateAsync` function
+
+      return data || '';
+    } catch (error) {
+      console.log('Error uploading image:', error);
+      return '';
+    }
+  };
 
   useEffect(() => {
     // Show the editor once supabase is ready
     setShowEditor(true);
   }, []);
 
-  const handleImageUpload = async (file: File): Promise<string> => {
-    // Check if supabase is ready
-    if (!supabase) {
-      return '';
-    }
-
-    const { data, error } = await supabase.storage
-      .from('my-bucket')
-      .upload(`images/${file.name}`, file, {
-        contentType: file.type,
-      });
-
-    if (error) {
-      console.log('Error uploading image:', error);
-      return '';
-    }
-
-    return data?.Key || '';
-  };
-
-  const debouncedValue = useDebounce(value, 300);
-
   return (
-    showEditor && (
-      <CKEditor
-        editor={DecoupledEditor}
-        data={debouncedValue}
-        config={{
-          placeholder: 'Type here to get started',
-          upload: {
-            types: ['png', 'jpeg', 'jpg', 'gif', 'webp'],
-            // Use a custom upload function that calls handleImageUpload
-            handler: async (file) => {
-              const uploadedImageUrl = await handleImageUpload(file);
-              return { default: uploadedImageUrl };
-            },
-          },
-          codeBlock: {
-            languages: [
-              { language: 'javascript', label: 'JavaScript' },
-              { language: 'python', label: 'Python' },
-              { language: 'typescript', label: 'TypeScript' },
-              // { language: 'xml', label: 'XML' },
-            ],
-          },
-        }}
-        onChange={(event: any, editor: any) => {
-          const data = editor.getData();
-          onChange(data);
-        }}
-        // onBlur={(event, editor) => {
-        //   console.log('Blur.', editor);
-        // }}
-        // onFocus={(event, editor) => {
-        //   console.log('Focus.', editor);
-        // }}
-      />
-    )
+    <CKEditor
+      editor={DecoupledEditor}
+      data={debouncedValue}
+      config={{
+        // extraPlugins: [MyCustomUploadAdapterPlugin],
+        placeholder: 'Type here to get started',
+
+        codeBlock: {
+          languages: [
+            { language: 'javascript', label: 'JavaScript' },
+            { language: 'python', label: 'Python' },
+            { language: 'typescript', label: 'TypeScript' },
+            // { language: 'xml', label: 'XML' },
+          ],
+        },
+      }}
+      onChange={(event: any, editor: any) => {
+        const data = editor.getData();
+        onChange(data);
+      }}
+      // onBlur={(event, editor) => {
+      //   console.log('Blur.', editor);
+      // }}
+      // onFocus={(event, editor) => {
+      //   console.log('Focus.', editor);
+      // }}
+    />
   );
 };
 

@@ -14,7 +14,11 @@ import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-export default function MainSection({ showSidebar, toggleSidebar }) {
+export default function MainSection({
+  showNavSidebar,
+  showSidebar,
+  toggleSidebar,
+}) {
   const getPosts = trpc.post.getTechPosts.useQuery();
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
@@ -27,14 +31,16 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
   return (
     <main
       className={`${
-        showSidebar ? 'col-span-9' : 'col-span-12'
-      } border-gray   min-h-screen w-full border-r  border-gray-200  px-8 transition-all  duration-500  ease-in-out xl:px-8 2xl:px-6 `}
+        showSidebar ? 'col-span-12' : 'col-span-12'
+      } border-gray min-h-screen w-full  border-r   px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
+        showNavSidebar || showSidebar ? '2xl:px-10 ' : '2xl:px-10 '
+      } `}
     >
       <div className=" mb-4 flex flex-col items-center border-b-2 py-4">
         <div className="flex w-full items-center justify-between space-x-4  py-2 ">
           <label
             htmlFor="search"
-            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 p-1  px-2 font-medium dark:bg-black  "
+            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 bg-white p-1  px-2 font-medium dark:bg-black  "
           >
             <AiOutlineSearch />
             <input
@@ -127,17 +133,21 @@ export default function MainSection({ showSidebar, toggleSidebar }) {
       </div>
 
       <div
-        className={`
-  my-8 grid gap-6 
-  ${
-    showListView
-      ? 'grid-cols-1'
-      : showSidebar
-      ? ''
-      : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5'
-  } justify-center gap-4
-  ${showSidebar && !showListView ? 'xl:grid-cols-2 2xl:grid-cols-4' : ''} 
-`}
+        className={`mx-auto my-8 grid max-w-max gap-6 ${
+          showListView
+            ? 'grid-cols-1 2xl:grid-cols-1'
+            : showNavSidebar && showSidebar
+            ? 'xl:grid-cols-2 2xl:grid-cols-3'
+            : showSidebar && !showListView
+            ? 'xl:grid-cols-2 2xl:grid-cols-4'
+            : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3'
+        } justify-center gap-4 ${
+          showListView
+            ? '2xl:grid-cols-1'
+            : showNavSidebar || showSidebar
+            ? ' grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-2 2xl:grid-cols-3'
+            : 'delayed-2xl-cols-5 xl:grid-cols-3 2xl:grid-cols-5 '
+        }`}
       >
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&

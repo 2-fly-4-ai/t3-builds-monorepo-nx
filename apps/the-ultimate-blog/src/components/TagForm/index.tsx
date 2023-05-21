@@ -5,17 +5,20 @@ import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 
+//TagSchema
 export const tagCreateSchema = z.object({
   name: z.string().min(3),
   description: z.string().min(10),
 });
 
+//Props
 type TagFormProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const TagForm = ({ isOpen, onClose }: TagFormProps) => {
+export default function TagForm({ isOpen, onClose }: TagFormProps) {
+  //formLogic
   const {
     register,
     handleSubmit,
@@ -28,6 +31,7 @@ const TagForm = ({ isOpen, onClose }: TagFormProps) => {
     resolver: zodResolver(tagCreateSchema),
   });
 
+  //Trpc Routes
   const tagRouter = trpc.useContext().tag;
 
   const createTag = trpc.tag.createTag.useMutation({
@@ -55,6 +59,7 @@ const TagForm = ({ isOpen, onClose }: TagFormProps) => {
       <p className="w-full pb-2 text-left text-sm text-red-500">
         {errors.name?.message}
       </p>
+
       <input
         type="text"
         id="description"
@@ -65,6 +70,7 @@ const TagForm = ({ isOpen, onClose }: TagFormProps) => {
       <p className="w-full pb-2 text-left text-sm text-red-500">
         {errors.description?.message}
       </p>
+
       <div className="flex w-full justify-end">
         <button
           onClick={handleSubmit((data) => createTag.mutate(data))}
@@ -76,6 +82,4 @@ const TagForm = ({ isOpen, onClose }: TagFormProps) => {
       </div>
     </form>
   );
-};
-
-export default TagForm;
+}

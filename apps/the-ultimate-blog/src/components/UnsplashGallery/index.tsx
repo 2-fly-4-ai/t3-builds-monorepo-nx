@@ -11,6 +11,8 @@ import { BiLoaderAlt } from 'react-icons/bi';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
+import { convertToWebP } from 'react-image-conversion';
+import htmlToImage from 'html-to-image';
 
 import {
   Tabs,
@@ -60,7 +62,7 @@ const UnsplahGallary = ({
   const updateFeaturedImage = trpc.post.updatePostFeaturedImage.useMutation({
     onSuccess: () => {
       utils.post.getPost.invalidate({ slug });
-      utils.post.getTechPosts.invalidate();
+      // utils.post.getTechPosts.invalidate();
       reset();
       setIsUnsplashModalOpen(false);
       toast.success('featured image updated');

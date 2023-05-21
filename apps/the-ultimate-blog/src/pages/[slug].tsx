@@ -20,6 +20,9 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
+import { prisma } from '../utils/prisma';
+import { useLikeStore } from '@front-end-nx/shared/ui';
+
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -29,6 +32,13 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '../server/trpc/router/_app';
 import superjson from 'superjson';
 
+//Dynamic Imports
+const Editor = dynamic(() => import('../components/Ckeditor'), {
+  ssr: false,
+  loading: () => <div>Loading editor...</div>,
+});
+
+//Typings
 type WriteFormModalProps = {
   id: string;
   title: string;
@@ -41,30 +51,19 @@ type WriteFormModalProps = {
   // featuredImage: any;
 };
 
+//Zod Schema
 export const WriteFormSchema = z.object({
   title: z.string().min(20),
   description: z.string().min(60).optional(),
   html: z.string().min(100).optional(),
 });
 
+//Functional compontne
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  // currentUser.data?.user?.id === userProfile.data?.id &&
   const { slug } = props;
-  const [showCommentSidebar, setShowCommentSidebar] = useState(false);
-  const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
-  const [isTitleEditorOpen, setTitleEditorOpen] = useState(false);
-  const [isDescriptionEditorOpen, setDescriptionEditorOpen] = useState(false);
-  const [isHTMLEditorOpen, setHTMLEditorOpen] = useState(false);
-  const [isMASTEREditorOpen, setMASTEREditorOpen] = useState(false);
-
-  const Editor = dynamic(() => import('../components/Ckeditor'), {
-    ssr: false,
-    loading: () => <div>Loading editor...</div>,
-  });
-  const router = useRouter();
-  const postRoute = trpc.useContext().post;
+  console.warn(props);
 
   const {
     register,
@@ -76,36 +75,21 @@ export default function PostPage(
     resolver: zodResolver(WriteFormSchema),
   });
 
-  // const getPost = trpc.post.getPost.useQuery(
-  //   {
-  //     slug: router.query.slug as string,
-  //   },
-  //   {
-  //     enabled: Boolean(router.query.slug),
-  //   }
-  // );
-  const getPost = trpc.post.getPost.useQuery({ slug });
-  const { data } = getPost;
-
-  const postUser = getPost?.data?.authorId;
-
+  const router = useRouter();
   const currentUser = useSession();
 
-  const invalidateCurrentPostPage = useCallback(() => {
-    postRoute.getPost.invalidate({ slug: router.query.slug as string });
-  }, [postRoute.getPost, router.query.slug]);
+  //state Management
+  const { likedPosts, addLikedPost, removeLikedPost } = useLikeStore();
+  const [showCommentSidebar, setShowCommentSidebar] = useState(false);
+  const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
+  const [isTitleEditorOpen, setTitleEditorOpen] = useState(false);
+  const [isDescriptionEditorOpen, setDescriptionEditorOpen] = useState(false);
+  const [isHTMLEditorOpen, setHTMLEditorOpen] = useState(false);
+  const [isMASTEREditorOpen, setMASTEREditorOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const likePost = trpc.post.likePost.useMutation({
-    onSuccess: () => {
-      invalidateCurrentPostPage();
-    },
-  });
-
-  const dislikePost = trpc.post.disLikePost.useMutation({
-    onSuccess: () => {
-      invalidateCurrentPostPage();
-    },
-  });
+  const postRoute = trpc.useContext().post;
+  const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
 
   const handleEditPost = trpc.post.editPost.useMutation({
     onSuccess: () => {
@@ -115,11 +99,14 @@ export default function PostPage(
     },
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const invalidateCurrentPostPage = useCallback(() => {
+    postRoute.getPost.invalidate({ slug: router.query.slug as string });
+  }, [postRoute.getPost, router.query.slug]);
+
   const onSubmit = async (formData) => {
     try {
-      const result = await handleEditPost.mutateAsync({
-        id: getPost.data.id,
+      const _result = await handleEditPost.mutateAsync({
+        id: id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
@@ -127,6 +114,9 @@ export default function PostPage(
 
       // Invalidate the getPost query so that it is re-fetched with the latest data
       invalidateCurrentPostPage();
+
+      // Return the result explicitly
+      return _result;
 
       // Do something else after the post is updated successfully, e.g. redirect to the updated post page
     } catch (error) {
@@ -138,11 +128,12 @@ export default function PostPage(
 
   useEffect(() => {
     let defaultValues = {};
-    defaultValues.title = getPost?.data?.title;
-    defaultValues.description = getPost?.data?.description;
-    defaultValues.html = getPost?.data?.html;
+    defaultValues.title = getPost.data?.title;
+    defaultValues.description = getPost.data?.description;
+    defaultValues.html = getPost.data?.html;
     reset({ ...defaultValues });
   }, [getPost.data]);
+
   return (
     <MainLayout>
       {getPost.isSuccess && getPost.data && (
@@ -169,36 +160,34 @@ export default function PostPage(
 
       {getPost.isSuccess && (
         <LikePost
-          id={getPost?.data?.id}
-          countLikes={getPost?.data?.likes?.length ?? 0}
-          onLike={(postId) => likePost.mutate({ postId })}
-          onDislike={(postId) => dislikePost.mutate({ postId })}
+          isLiked={likedPosts.includes(getPost.data?.id)}
+          slug={slug}
+          id={getPost.data?.id}
           setShowSidebar={() => setShowCommentSidebar(true)}
           showSidebar={showCommentSidebar}
-
           // you can replace this with your own logic for commenting
         />
       )}
 
       {/* <BlogPageProse
-        title={getPost?.data?.title}
-        description={getPost?.data?.description}
+        title={title}
+        description={description}
         setIsUnsplashModalOpen={() => setIsUnsplashModalOpen(true)}
         html={
-          getPost?.data?.html?.replaceAll(
+          html?.replaceAll(
             'href=',
             'target="_blank" rel="nofollow noreferrer" href='
           ) ?? null
         }
         featuredImage={
-          getPost?.data?.featuredImage ??
+          featuredImage ??
           'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
         }
       /> */}
 
       {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
-        <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl rounded-lg border  text-2xl">
-          <p className="px-4">MASTER EDITOR</p>
+        <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl rounded-lg border   text-2xl">
+          <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
           <div className=" flex ">
             <button
               onClick={handleSubmit((formData) => {
@@ -209,11 +198,19 @@ export default function PostPage(
 
                 onSubmit(formData);
               })}
-              className="flex items-center justify-center gap-1  border  px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+              className="flex items-center justify-center gap-1  border  px-3 transition hover:border-gray-700  dark:hover:border-white dark:hover:bg-green-400"
             >
               PUBLISH
             </button>
-            <button className="rounded-r-lg border px-4 hover:bg-red-400">
+            <button
+              onClick={handleSubmit(() => {
+                setIsSubmitting(false);
+                setTitleEditorOpen(false);
+                setDescriptionEditorOpen(false);
+                setHTMLEditorOpen(false);
+              })}
+              className="rounded-r-lg border px-4 hover:bg-red-400"
+            >
               CANCEL
             </button>
           </div>
@@ -223,42 +220,43 @@ export default function PostPage(
       <div>
         <div className="relative  flex w-full items-center justify-center p-10">
           <div className="w-full max-w-screen-md space-y-8">
-            <div className="relative flex h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
-              {getPost?.data?.featuredImage && (
+            <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
+              {getPost.data?.featuredImage && (
                 <Image
-                  src={
-                    getPost?.data?.featuredImage ??
-                    'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
-                  }
-                  alt={getPost?.data?.title}
-                  width={800}
-                  height={800}
-                  className=""
+                  src={getPost.data?.featuredImage ?? 'null'}
+                  alt={getPost.data?.title}
+                  priority //FUCKSAKE DONT FORGET THIS
+                  fill
+                  className="object-cover"
                 />
               )}
-              <div
-                id="this button isn't clickable"
-                onClick={() => setIsUnsplashModalOpen(true)}
-                className="absolute left-3 top-3 z-10 cursor-pointer rounded-lg bg-gray-500 p-1 transition duration-200 hover:bg-gray-400 "
-              >
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth={0}
-                  viewBox="0 0 24 24"
-                  height="1.5em"
-                  width="1.5em"
-                  xmlns="http://www.w3.org/2000/svg"
+
+              {getPost.data?.authorId === currentUser?.data?.user?.id && (
+                <div
+                  id="this button isn't clickable"
+                  onClick={() => setIsUnsplashModalOpen(true)}
+                  className="absolute left-3 top-3 z-10 cursor-pointer rounded-lg bg-gray-500 p-1 transition duration-200 hover:bg-gray-400 "
                 >
-                  <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
-                  <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
-                  <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
-                </svg>
-              </div>
+                  <svg
+                    stroke="currentColor"
+                    fill="currentColor"
+                    strokeWidth={0}
+                    viewBox="0 0 24 24"
+                    height="1.5em"
+                    width="1.5em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
+                    <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
+                    <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
+                  </svg>
+                </div>
+              )}
+
               {/* this is the featured image */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="relative mx-10 w-full rounded-xl bg-gray-500 bg-opacity-50 px-4  pb-6 pt-4  font-medium text-gray-50 dark:bg-black dark:bg-opacity-80 ">
-                  {postUser === currentUser?.data?.user?.id ? (
+                  {getPost.data?.authorId === currentUser?.data?.user?.id ? (
                     <button
                       className={`${
                         isTitleEditorOpen ? 'hidden' : 'absolute'
@@ -280,13 +278,13 @@ export default function PostPage(
                   ) : null}
 
                   {!isTitleEditorOpen ? (
-                    <h3 className="text-4xl">{getPost?.data?.title}</h3>
+                    <h3 className="text-4xl">{getPost.data?.title}</h3>
                   ) : (
                     <div className="h-auto">
                       <textarea
                         id="title"
                         rows={5}
-                        className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                        className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 "
                         {...register('title', { required: true })}
                       />
                       {errors.title && (
@@ -320,14 +318,14 @@ export default function PostPage(
 
             <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
               {!isDescriptionEditorOpen ? (
-                getPost?.data?.description
+                getPost.data?.description
               ) : (
                 <div>
                   <textarea
                     rows={5}
                     id="shortDescription"
                     className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
-                    // defaultValue={getPost?.data?.description}
+                    // defaultValue={description}
                     {...register('description')}
                   />
                   {!isSubmitting && (
@@ -354,7 +352,7 @@ export default function PostPage(
                 </div>
               )}
 
-              {postUser === currentUser?.data?.user?.id ? (
+              {getPost.data?.authorId === currentUser?.data?.user?.id ? (
                 <button
                   className={`${
                     isDescriptionEditorOpen ? 'hidden' : 'absolute'
@@ -389,7 +387,7 @@ export default function PostPage(
                           onChange={(data: string) =>
                             field && field.onChange(data)
                           }
-                          value={getPost?.data?.html}
+                          value={getPost.data?.html}
                         />
                       </div>
                     )}
@@ -422,18 +420,18 @@ export default function PostPage(
                 <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
                   {/* <Interweave
                     content={
-                      getPost?.data?.html.replaceAll(
+                      html.replaceAll(
                         'href=',
                         'target="_blank" rel="nofollow noreferrer" href='
                       ) ?? null
                     }
                   /> */}
                   <div
-                    dangerouslySetInnerHTML={{ __html: getPost?.data?.html }}
+                    dangerouslySetInnerHTML={{ __html: getPost.data?.html }}
                   ></div>
                 </div>
 
-                {postUser === currentUser?.data?.user?.id ? (
+                {getPost.data?.authorId === currentUser?.data?.user?.id ? (
                   <button
                     className={`${
                       isHTMLEditorOpen ? 'hidden' : 'absolute'
