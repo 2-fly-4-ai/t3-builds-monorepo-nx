@@ -57,7 +57,7 @@ export default function Modal({
                 // // leaveFrom="opacity-100 "
                 // leaveTo="opacity-0 "
               >
-                <Dialog.Panel className="h-full w-full max-w-5xl transform  overflow-hidden rounded-2xl bg-white pt-6 text-left align-middle shadow-xl backdrop-blur transition-all dark:border-2 dark:border-white dark:bg-black dark:bg-opacity-80 2xl:max-w-6xl ">
+                <Dialog.Panel className="h-full w-full max-w-5xl transform  overflow-hidden rounded-2xl bg-white  text-left align-middle shadow-xl backdrop-blur transition-all dark:border-2 dark:border-white dark:bg-black dark:bg-opacity-80 2xl:max-w-6xl ">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"

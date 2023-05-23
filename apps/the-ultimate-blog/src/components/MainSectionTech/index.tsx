@@ -32,7 +32,7 @@ export default function MainSection({
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      } border-gray min-h-screen w-full  border-r   px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
+      }  min-h-screen w-full    px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
         showNavSidebar || showSidebar ? '2xl:px-10 ' : '2xl:px-10 '
       } `}
     >

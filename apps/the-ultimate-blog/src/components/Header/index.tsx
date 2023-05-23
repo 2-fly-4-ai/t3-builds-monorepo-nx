@@ -11,11 +11,12 @@ import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import Link from 'next/link';
 import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
 import { ThemeToggle } from 'libs/shared/next13-ui/src/shadnui/components/theme-toggle/theme-toggle';
-import { MainNav } from 'libs/shared/next13-ui/src/shadnui/main-nav';
+
 import { useSelectedLayoutSegment } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { usePathname } from 'next/navigation';
+import { MainNav } from '@front-end-nx/shared/ui';
 // const NavigationMenuDemo = dynamic(
 //   () => import('libs/shared/ui/src/layouts/nav-menu/nav-menu'),
 //   { ssr: false }
@@ -29,56 +30,82 @@ export default function Header() {
 
   const { data: sessionData, status } = useSession();
 
-  const items = [
-    // {
-    //   title: 'Home',
-    //   href: '/',
-    //   segment: 'home',
-    // },
-
-    {
-      title: 'TechStack',
-      href: '/techstack',
-      segment: 'blog',
-    },
-    // {
-    //   title: 'TechProducts',
-    //   href: '/about',
-    //   disabled: true,
-    //   segment: 'about',
-    // },
-    {
-      title: 'Posts',
-      href: '/posts',
-      segment: '',
-    },
-
-    {
-      title: 'Courses',
-      href: '/courses',
-      disabled: true,
-      segment: 'contact',
-    },
-
-    // {
-    //   title: 'Discussion',
-    //   href: '/contact',
-    //   disabled: true,
-    //   segment: 'contact',
-    // },
-    {
-      title: 'Docs',
-      href: '/docs',
-      disabled: true,
-      segment: 'contact',
-    },
-    {
-      title: 'Guides',
-      href: '/guides',
-      disabled: true,
-      segment: 'contact',
-    },
-  ];
+  let items;
+  if (path === '/docs') {
+    items = [
+      // {
+      //   title: 'Home',
+      //   href: '/',
+      //   segment: 'home',
+      // },
+      // {
+      //   title: 'Discussion',
+      //   href: '/contact',
+      //   disabled: true,
+      //   segment: 'contact',
+      // },
+      {
+        title: 'Docs',
+        href: '/docs',
+        disabled: false,
+        segment: 'contact',
+      },
+      {
+        title: 'Guides',
+        href: '/guides',
+        disabled: false,
+        segment: 'contact',
+      },
+      {
+        title: 'Rules',
+        href: '/rules',
+        disabled: false,
+        segment: 'contact',
+      },
+    ];
+  } else {
+    items = [
+      {
+        title: 'TechStack',
+        href: '/techstack',
+        segment: 'blog',
+      },
+      {
+        title: 'News',
+        href: '/news',
+        disabled: false,
+        segment: 'news',
+      },
+      {
+        title: 'Posts',
+        href: '/posts',
+        segment: '',
+      },
+      {
+        title: 'Discuss',
+        href: '/discussion',
+        segment: '',
+      },
+      {
+        title: 'Courses',
+        href: '/courses',
+        disabled: false,
+        segment: 'contact',
+      },
+      {
+        title: 'Products',
+        href: '/products',
+        disabled: false,
+        segment: 'contact',
+      },
+      {
+        title: 'Docs',
+        href: '/docs',
+        disabled: false,
+        segment: 'contact',
+      },
+    ];
+  }
 
   //State Handlers
   const { setIsWriteModalOpen } = useGlobalContextStore();
@@ -126,7 +153,7 @@ export default function Header() {
                 Write
               </button>
             </div>
-          ) : path === 'techstack' ? (
+          ) : path === '/techstack' ? (
             <div>
               <button
                 onClick={() => setIsWriteTechModalOpen(true)}

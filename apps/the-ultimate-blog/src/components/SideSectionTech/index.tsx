@@ -21,7 +21,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
     <aside
       className={`${mainClass} ${
         showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
-      } space-between transition-width relative  flex  flex-col space-y-4   bg-gray-100    py-6 duration-500  dark:bg-inherit`}
+      } space-between transition-width relative flex flex-col space-y-4  border-l bg-gray-100   py-6    duration-500   dark:bg-inherit`}
     >
       <div className="w-80 overflow-hidden">
         <div className="flex flex-col ">

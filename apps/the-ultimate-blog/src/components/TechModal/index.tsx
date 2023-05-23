@@ -31,6 +31,7 @@ import { Switch } from '@front-end-nx/shared/ui';
 import { Label } from '@radix-ui/react-label';
 import { BookmarkTech } from '@front-end-nx/shared/ui';
 import { useSession } from 'next-auth/react';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export type TAG = { id: string; name: string };
 
@@ -103,14 +104,12 @@ export default function TechModal({ post }: TechFormModalProps) {
     html,
     slug,
     tags,
-    likes,
     featuredImage,
     webUrl,
     githubUrl,
     docsUrl,
     pricingUrl,
     techDescription,
-    shortDescription,
   } = post;
 
   const test = true;
@@ -209,10 +208,41 @@ export default function TechModal({ post }: TechFormModalProps) {
 
   return (
     <Modal id={id} isOpen={isPostModalOpen} onClose={handleClose}>
+      {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
+        <div className="z-10 mx-auto my-2 flex max-w-5xl items-center justify-center rounded-lg    text-2xl">
+          <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
+          <div className=" flex ">
+            <button
+              onClick={handleSubmit((formData) => {
+                setIsSubmitting(true);
+                onSubmit(formData);
+                setTitleEditorOpen(false);
+                setDescriptionEditorOpen(false);
+                setHTMLEditorOpen(false);
+              })}
+              className="flex items-center justify-center gap-1  border  px-3 transition hover:border-gray-700  dark:hover:border-white dark:hover:bg-green-400"
+            >
+              PUBLISH
+            </button>
+            <button
+              onClick={handleSubmit(() => {
+                setIsSubmitting(false);
+                setTitleEditorOpen(false);
+                setDescriptionEditorOpen(false);
+                setHTMLEditorOpen(false);
+              })}
+              className="rounded-r-lg border px-4 hover:bg-red-400"
+            >
+              CANCEL
+            </button>
+          </div>
+        </div>
+      ) : null}
       <div
         // onSubmit={handleSubmit(onSubmit)}
-        className="relative flex min-h-[90vh] flex-col  space-y-5 pt-4"
+        className="relative flex min-h-[90vh] flex-col  space-y-5 "
       >
+        {' '}
         <div className="grid  w-full grid-cols-12 border">
           <div className="col-span-8 min-h-[90vh] ">
             <Tabs
@@ -254,7 +284,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                       <h3 className="text-4xl">{title}</h3>
                     ) : (
                       <div className="h-auto">
-                        <textarea
+                        <TextareaAutosize
                           id="title"
                           rows={5}
                           className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
@@ -296,7 +326,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                           techDescription
                         ) : (
                           <div>
-                            <textarea
+                            <TextareaAutosize
                               rows={8}
                               id="techDescription"
                               className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
@@ -594,7 +624,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                         Publish
                       </button>
                       <button
-                        onClick={() => setTitleEditorOpen(false)}
+                        onClick={() => setIsUrlBoxEditorOpen(false)}
                         className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
                       >
                         Cancel

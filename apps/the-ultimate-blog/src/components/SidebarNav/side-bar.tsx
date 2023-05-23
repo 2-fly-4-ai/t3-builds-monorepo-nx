@@ -35,7 +35,7 @@ const Sidebar = () => {
       <div
         className={`${
           showNavSidebar ? 'w-80' : 'w-20'
-        } transition-width sticky top-0 h-screen  border-r border-gray-200 bg-gray-100 p-5 duration-300  dark:border-white dark:bg-black sm:block`}
+        } transition-width dark:bg-inheritq sticky top-0  h-screen border-r border-gray-200 bg-gray-100 p-5 duration-300   dark:bg-inherit sm:block`}
       >
         <BsArrowLeftCircle
           className={`${

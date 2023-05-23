@@ -22,6 +22,7 @@ import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
 import { prisma } from '../../utils/prisma';
 import { useLikeStore } from '@front-end-nx/shared/ui';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import {
   GetStaticPaths,
@@ -286,7 +287,7 @@ export default function PostPage(
                     <h3 className="text-4xl">{getPost.data?.title}</h3>
                   ) : (
                     <div className="h-auto">
-                      <textarea
+                      <TextareaAutosize
                         id="title"
                         rows={5}
                         className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 "
@@ -326,7 +327,7 @@ export default function PostPage(
                 getPost.data?.description
               ) : (
                 <div>
-                  <textarea
+                  <TextareaAutosize
                     rows={5}
                     id="shortDescription"
                     className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"

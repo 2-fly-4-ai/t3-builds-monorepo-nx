@@ -21,7 +21,7 @@ export default function GuidesPage() {
 
   return (
     <MainLayout>
-      <div className=" px-16 py-6 lg:py-10">
+      <div className=" min-h-[50vh] px-16 py-6 lg:py-10">
         <DocsPageHeader
           heading="Guides"
           text="This section includes end-to-end guides for developing Next.js 13 apps."
