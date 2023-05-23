@@ -1,12 +1,12 @@
-"use client"
+// 'use client';
 
-import * as React from "react"
-import { useRouter } from "next/navigation"
-import { toast } from "@/hooks/use-toast"
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
-import { cn } from "@/lib/utils"
-import { Icons } from "@/components/icons"
-import { buttonVariants } from "@/components/ui/button"
+import { cn } from './utils/utils';
+import { Icons } from './icons';
+import { buttonVariants } from './ui/button';
 
 interface PostCreateButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {}
@@ -15,46 +15,46 @@ export function PostCreateButton({
   className,
   ...props
 }: PostCreateButtonProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   async function onClick() {
-    setIsLoading(true)
+    setIsLoading(true);
 
-    const response = await fetch("/api/posts", {
-      method: "POST",
+    const response = await fetch('/api/posts', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: "Untitled Post",
+        title: 'Untitled Post',
       }),
-    })
+    });
 
-    setIsLoading(false)
+    setIsLoading(false);
 
     if (!response?.ok) {
       if (response.status === 402) {
         return toast({
-          title: "Limit of 3 posts reached.",
-          description: "Please upgrade to the PRO plan.",
-          variant: "destructive",
-        })
+          title: 'Limit of 3 posts reached.',
+          description: 'Please upgrade to the PRO plan.',
+          variant: 'destructive',
+        });
       }
 
       return toast({
-        title: "Something went wrong.",
-        description: "Your post was not created. Please try again.",
-        variant: "destructive",
-      })
+        title: 'Something went wrong.',
+        description: 'Your post was not created. Please try again.',
+        variant: 'destructive',
+      });
     }
 
-    const post = await response.json()
+    const post = await response.json();
 
     // This forces a cache invalidation.
-    router.refresh()
+    router.refresh();
 
-    router.push(`/editor/${post.id}`)
+    router.push(`/editor/${post.id}`);
   }
 
   return (
@@ -63,7 +63,7 @@ export function PostCreateButton({
       className={cn(
         buttonVariants(),
         {
-          "cursor-not-allowed opacity-60": isLoading,
+          'cursor-not-allowed opacity-60': isLoading,
         },
         className
       )}
@@ -77,5 +77,5 @@ export function PostCreateButton({
       )}
       New post
     </button>
-  )
+  );
 }

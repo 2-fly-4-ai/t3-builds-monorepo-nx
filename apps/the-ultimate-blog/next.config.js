@@ -1,13 +1,8 @@
-//@ts-check
+const { withNx } = require('@nrwl/next/plugins/with-nx.js');
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { withNx } = require('@nrwl/next/plugins/with-nx');
-
-/**
- * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
- **/
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   images: {
     domains: [
       'ebhwmitkbhdwyccdkuzj.supabase.co',
@@ -16,11 +11,10 @@ const nextConfig = {
       'lh3.googleusercontent.com',
       'thurrott.s3.amazonaws.com',
       'plus.unsplash.com',
+      'tx.shadcn.com',
     ],
   },
   nx: {
-    // Set this to true if you would like to use SVGR
-    // See: https://github.com/gregberge/svgr
     svgr: false,
   },
 };

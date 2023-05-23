@@ -1,12 +1,12 @@
-import Link from "next/link"
-import { Post } from "@prisma/client"
+import Link from 'next/link';
+import { Post } from '@prisma/client';
 
-import { formatDate } from "@/lib/utils"
-import { PostOperations } from "@/components/post-operations"
-import { Skeleton } from "@/components/ui/skeleton"
+import { formatDate } from './utils/utils';
+import { PostOperations } from './post-operations';
+import { Skeleton } from './ui/skeleton';
 
 interface PostItemProps {
-  post: Pick<Post, "id" | "title" | "published" | "createdAt">
+  post: Pick<Post, 'id' | 'title' | 'published' | 'createdAt'>;
 }
 
 export function PostItem({ post }: PostItemProps) {
@@ -28,7 +28,7 @@ export function PostItem({ post }: PostItemProps) {
       <PostOperations post={{ id: post.id, title: post.title }} />
       {/* <PostDeleteButton post={{ id: post.id, title: post.title }} /> */}
     </div>
-  )
+  );
 }
 
 PostItem.Skeleton = function PostItemSkeleton() {
@@ -39,5 +39,5 @@ PostItem.Skeleton = function PostItemSkeleton() {
         <Skeleton className="h-4 w-4/5" />
       </div>
     </div>
-  )
-}
+  );
+};

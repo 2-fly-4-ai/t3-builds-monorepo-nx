@@ -2,6 +2,14 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState, useEffect } from 'react';
 import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
 import { useGlobalContextStore } from '@front-end-nx/shared/ui';
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from '@front-end-nx/shared/ui';
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -43,7 +51,7 @@ export default function Modal({
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-lg " />
           </Transition.Child>
 
-          <div className="fixed inset-0  overflow-y-auto">
+          <div className="overflow-y fixed  inset-0">
             <div className="flex min-h-full items-center  justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}

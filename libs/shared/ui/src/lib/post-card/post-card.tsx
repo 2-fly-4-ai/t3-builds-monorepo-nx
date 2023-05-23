@@ -26,6 +26,7 @@ export interface PostCardProps {
     description: string;
     id: string;
     likes: string;
+    featuredImage: string;
   };
 }
 export function PostCard(props: PostCardProps) {
@@ -58,10 +59,13 @@ export function PostCard(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] group  grid w-[320px] grid-cols-10 gap-2 gap-x-8 rounded-xl border-2 bg-white bg-opacity-10 p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 dark:border-gray-300">
+    <div className="group grid  w-[320px] grid-cols-10 gap-2 gap-x-8 rounded-xl border-2 bg-white bg-opacity-10 p-4 py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:border-gray-300">
       <div className="relative col-span-full  rounded-none ">
         <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black group-hover:bg-opacity-20">
-          <Link href={`/${props.post.slug}`} className="mx-auto my-auto mt-4">
+          <Link
+            href={`/posts/${props.post.slug}`}
+            className="mx-auto my-auto mt-4"
+          >
             <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-200 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg
@@ -78,7 +82,7 @@ export function PostCard(props: PostCardProps) {
             </button>
           </Link>
         </div>
-        <Link href={`/${props.post.slug}`} className="">
+        <Link href={`/posts/${props.post.slug}`} className="">
           <div className="h-56">
             <Image
               src={
@@ -127,7 +131,7 @@ export function PostCard(props: PostCardProps) {
       </div>
 
       <div className="col-span-full   h-28">
-        <Link href={`/${props.post.slug}`}>
+        <Link href={`/posts/${props.post.slug}`}>
           <div className="col-span-4 "></div>
           <h3 className=" line-clamp-4  cursor-pointer  text-xl font-bold decoration-gray-300 ">
             {props.post.title}

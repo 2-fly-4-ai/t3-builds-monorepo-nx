@@ -1,17 +1,17 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
-import MainLayout from '../layouts/MainLayout';
-import { trpc } from '../utils/trpc';
+import MainLayout from '../../layouts/MainLayout';
+import { trpc } from '../../utils/trpc';
 import BlogPageProse from 'libs/shared/ui/src/lib/blog-page-prose/blog-page-prose';
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
-import CommentSidebar from '../components/CommentSidebar';
+import CommentSidebar from '../../components/CommentSidebar';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@headlessui/react';
 import { Fragment } from 'react';
-import Modal from '../components/Modal';
-import UnsplashGallery from '../components/UnsplashGallery';
+import Modal from '../../components/Modal';
+import UnsplashGallery from '../../components/UnsplashGallery';
 import toast, { Toaster } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
 import { Controller, useForm } from 'react-hook-form';
@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
-import { prisma } from '../utils/prisma';
+import { prisma } from '../../utils/prisma';
 import { useLikeStore } from '@front-end-nx/shared/ui';
 
 import {
@@ -29,13 +29,15 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { createServerSideHelpers } from '@trpc/react-query/server';
-import { appRouter } from '../server/trpc/router/_app';
+import { appRouter } from '../../server/trpc/router/_app';
 import superjson from 'superjson';
 
 //Dynamic Imports
-const Editor = dynamic(() => import('../components/Ckeditor'), {
+const Editor = dynamic(() => import('../../components/Ckeditor'), {
   ssr: false,
-  loading: () => <div>Loading editor...</div>,
+  loading: () => (
+    <div className="font-mono text-4xl font-bold">Loading editor...</div>
+  ),
 });
 
 //Typings
@@ -62,9 +64,6 @@ export const WriteFormSchema = z.object({
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const { slug } = props;
-  console.warn(props);
-
   const {
     register,
     handleSubmit,
@@ -75,6 +74,7 @@ export default function PostPage(
     resolver: zodResolver(WriteFormSchema),
   });
 
+  const { slug } = props;
   const router = useRouter();
   const currentUser = useSession();
 
@@ -90,6 +90,9 @@ export default function PostPage(
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
+  console.warn(getPost.data);
+
+  // const { id } = getPost;
 
   const handleEditPost = trpc.post.editPost.useMutation({
     onSuccess: () => {
@@ -106,7 +109,7 @@ export default function PostPage(
   const onSubmit = async (formData) => {
     try {
       const _result = await handleEditPost.mutateAsync({
-        id: id,
+        id: getPost.data.id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
@@ -128,6 +131,7 @@ export default function PostPage(
 
   useEffect(() => {
     let defaultValues = {};
+    defaultValues.id = getPost.data?.id;
     defaultValues.title = getPost.data?.title;
     defaultValues.description = getPost.data?.description;
     defaultValues.html = getPost.data?.html;
@@ -192,11 +196,10 @@ export default function PostPage(
             <button
               onClick={handleSubmit((formData) => {
                 setIsSubmitting(true);
+                onSubmit(formData);
                 setTitleEditorOpen(false);
                 setDescriptionEditorOpen(false);
                 setHTMLEditorOpen(false);
-
-                onSubmit(formData);
               })}
               className="flex items-center justify-center gap-1  border  px-3 transition hover:border-gray-700  dark:hover:border-white dark:hover:bg-green-400"
             >
@@ -242,6 +245,7 @@ export default function PostPage(
                     fill="currentColor"
                     strokeWidth={0}
                     viewBox="0 0 24 24"
+                    className="text-white"
                     height="1.5em"
                     width="1.5em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -267,6 +271,7 @@ export default function PostPage(
                         stroke="currentColor"
                         fill="currentColor"
                         strokeWidth="0"
+                        className="text-white"
                         viewBox="0 0 1024 1024"
                         height="1.5em"
                         width="1.5em"
@@ -363,9 +368,10 @@ export default function PostPage(
                     stroke="currentColor"
                     fill="currentColor"
                     strokeWidth="0"
+                    className="text-white"
                     viewBox="0 0 1024 1024"
-                    height="1.5em"
-                    width="1.5em"
+                    height="1.3em"
+                    width="1.3em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
@@ -398,7 +404,7 @@ export default function PostPage(
                     <button
                       onClick={handleSubmit((formData) => {
                         setIsSubmitting(true);
-                        setDescriptionEditorOpen(false);
+                        setHTMLEditorOpen(false);
                         onSubmit(formData);
                       })}
                       className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
@@ -445,6 +451,7 @@ export default function PostPage(
                       viewBox="0 0 1024 1024"
                       height="1.5em"
                       width="1.5em"
+                      className="text-white"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>

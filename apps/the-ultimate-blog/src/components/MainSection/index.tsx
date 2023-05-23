@@ -20,7 +20,10 @@ export default function MainSection({
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
   const [gridClass, setGridClass] = useState('');
-
+  const [animationSwitch, setAnimationSwitch] = useState(false);
+  useEffect(() => {
+    setAnimationSwitch(true);
+  }, [showListView, showNavSidebar, showSidebar]);
   //Trpc
   const getPosts = trpc.post.getPosts.useQuery();
 
@@ -32,6 +35,8 @@ export default function MainSection({
 
   //   return () => clearTimeout(delay);
   // }, [showNavSidebar, showSidebar]);
+
+  const [changeCounter, setChangeCounter] = useState(0);
 
   return (
     <main
@@ -141,17 +146,17 @@ export default function MainSection({
           showListView
             ? 'grid-cols-1 2xl:grid-cols-1'
             : showNavSidebar && showSidebar
-            ? 'xl:grid-cols-2 2xl:grid-cols-3'
-            : showSidebar && !showListView
-            ? 'xl:grid-cols-3 2xl:grid-cols-4'
-            : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3'
+            ? 'custom-animation-switch 2xl:grid-cols-3'
+            : showNavSidebar || showSidebar
+            ? 'xl:grid-cols-2 2xl:grid-cols-4'
+            : 'custom-animation-switch grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3'
         } justify-center gap-4 ${
           showListView
             ? '2xl:grid-cols-1'
             : showNavSidebar || showSidebar
-            ? ' grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-3'
-            : 'delayed-2xl-cols-5 xl:grid-cols-3 2xl:grid-cols-5 '
-        }`}
+            ? ' grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-2 2xl:grid-cols-3'
+            : 'custom-animation-switch  xl:grid-cols-3 2xl:grid-cols-5'
+        } `}
       >
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&

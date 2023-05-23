@@ -20,5 +20,7 @@
       "@front-end-nx/shared/ui": ["libs/shared/ui/src/index.ts"]
     }
   },
+
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "tmp"]
 }

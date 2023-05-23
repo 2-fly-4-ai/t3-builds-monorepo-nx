@@ -134,12 +134,12 @@ const CommentSidebar = ({
     >
       <Dialog as="div" onClose={() => setShowCommentSidebar(false)} static>
         <div
-          className={` absolute right-0 top-0 ${
+          className={`absolute right-0 top-0 overflow-y-auto ${
             !showCommentSidebar ? 'hidden' : ''
           }  `}
         >
-          <Dialog.Panel className="sm:w-[400px] relative h-screen w-[200px] border-l shadow-md">
-            <div className="z-10 flex h-full w-full flex-col overflow-y-scroll bg-white px-6 dark:bg-black dark:bg-opacity-60 dark:backdrop-blur">
+          <Dialog.Panel className="relative h-screen w-[200px] border-l shadow-md sm:w-[400px]">
+            <div className="z-10 flex h-full w-full flex-col overflow-y-auto bg-white px-6 dark:bg-black dark:bg-opacity-60 dark:backdrop-blur">
               <div className="mt-20  flex items-center justify-between  text-xl">
                 <h2 className=" font-medium">
                   Responses ({getComments?.data?.length})

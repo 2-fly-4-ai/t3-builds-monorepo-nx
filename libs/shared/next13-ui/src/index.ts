@@ -11,6 +11,6 @@ export * from './shadnui/components/analytics/analytics';
 export * from './shadnui/components/tailwind-indicator/tailwind-indicator';
 export * from './shadnui/ui/toaster';
 export * from './shadnui/components/site-header/site-header';
-
+export * from './shadnui/components/theme-toggle/theme-toggle';
 export { default as SearchIcon } from './icons/SearchIcon';
 export { default as UserStarIcon } from './icons/UserStarIcon';

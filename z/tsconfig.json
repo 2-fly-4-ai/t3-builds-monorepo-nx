@@ -1,0 +1,11 @@
+// {
+//   "compilerOptions": {
+//     "baseUrl": ".",
+//     "paths": {
+//       // These option allow you to configure module aliases.
+//       // So you will import contentlayer generated content from "contentlayer/generated" instead of "./.contentlayer/generated"
+//       "contentlayer/generated": ["./.contentlayer/generated"]
+//     }
+//   },
+//   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".contentlayer/generated"]
+// }

@@ -36,8 +36,13 @@ export const useGlobalContextStore = create(
   persist(
     (set): GlobalContextType => ({
       isWriteModalOpen: false,
-      setIsWriteModalOpen: (newValue) =>
-        set(() => ({ isWriteModalOpen: newValue })),
+      setIsWriteModalOpen: (newValue) => {
+        // Close the modal when newValue is false
+        if (!newValue) {
+          // Perform any necessary cleanup here
+        }
+        set(() => ({ isWriteModalOpen: newValue }));
+      },
     }),
     { name: 'global-context-store' }
   )
@@ -47,13 +52,17 @@ export const useGlobalContextTechStore = create(
   persist(
     (set): GlobalContextTechType => ({
       isWriteTechModalOpen: false,
-      setIsWriteTechModalOpen: (newValue) =>
-        set(() => ({ isWriteTechModalOpen: newValue })),
+      setIsWriteTechModalOpen: (newValue) => {
+        // Close the modal when newValue is false
+        if (!newValue) {
+          // Perform any necessary cleanup here
+        }
+        set(() => ({ isWriteTechModalOpen: newValue }));
+      },
     }),
     { name: 'global-context-tech-store' }
   )
 );
-
 export const useGlobalContextTechModalStore = create(
   persist(
     (set) => ({

@@ -22,6 +22,7 @@ export interface LikePostProps {
 export function LikePost(props: LikePostProps) {
   const { likedPosts, addLikedPost, removeLikedPost } = useLikeStore();
   const { id, setShowSidebar, slug } = props; // Destructured the props
+  const [shiftFix, setShiftFix] = useState(false);
 
   const postRoute = trpc.useContext().post;
   const [isLiked, setIsLiked] = useState(false);

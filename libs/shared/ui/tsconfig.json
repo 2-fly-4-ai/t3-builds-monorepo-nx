@@ -10,7 +10,6 @@
     "baseUrl": ".",
     "lib": ["ES2021.String"],
     "paths": {
-      "@mylibrary/*": ["src/*"],
       "@myworkspace/mylibrary": ["libs/mylibrary/src/index"],
       "@mylibrary/icons": ["libs/icons/src/index.ts"],
       "@shadnui/icons": ["libs/icons/src/index.ts"],

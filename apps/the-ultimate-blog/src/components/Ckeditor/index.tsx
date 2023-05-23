@@ -41,10 +41,10 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
     }
   };
 
-  useEffect(() => {
-    // Show the editor once supabase is ready
-    setShowEditor(true);
-  }, []);
+  // useEffect(() => {
+  //   // Show the editor once supabase is ready
+  //   setShowEditor(true);
+  // }, []);
 
   return (
     <CKEditor

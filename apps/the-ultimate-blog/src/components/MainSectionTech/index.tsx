@@ -131,23 +131,22 @@ export default function MainSection({
           </div>
         </div>
       </div>
-
       <div
         className={`mx-auto my-8 grid max-w-max gap-6 ${
           showListView
             ? 'grid-cols-1 2xl:grid-cols-1'
             : showNavSidebar && showSidebar
-            ? 'xl:grid-cols-2 2xl:grid-cols-3'
-            : showSidebar && !showListView
+            ? 'custom-animation-switch 2xl:grid-cols-3'
+            : showNavSidebar || showSidebar
             ? 'xl:grid-cols-2 2xl:grid-cols-4'
-            : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3'
+            : 'custom-animation-switch grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3'
         } justify-center gap-4 ${
           showListView
             ? '2xl:grid-cols-1'
             : showNavSidebar || showSidebar
             ? ' grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-2 2xl:grid-cols-3'
-            : 'delayed-2xl-cols-5 xl:grid-cols-3 2xl:grid-cols-5 '
-        }`}
+            : 'custom-animation-switch  xl:grid-cols-3 2xl:grid-cols-5'
+        } `}
       >
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&

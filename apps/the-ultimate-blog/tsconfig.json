@@ -19,7 +19,8 @@
     "**/*.js",
     "**/*.jsx",
     "next-env.d.ts",
-    "../../libs/shared/ui/src/utils/trpc copy.ts"
+    "../../libs/shared/ui/src/utils/trpc copy.ts",
+    "next.config.js"
   ],
   "exclude": [
     "node_modules",
