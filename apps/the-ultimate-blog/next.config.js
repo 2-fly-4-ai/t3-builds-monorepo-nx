@@ -12,6 +12,7 @@ const nextConfig = {
       'thurrott.s3.amazonaws.com',
       'plus.unsplash.com',
       'tx.shadcn.com',
+      'th.bing.com',
     ],
   },
   nx: {

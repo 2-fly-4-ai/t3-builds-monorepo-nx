@@ -43,7 +43,7 @@ export * from './shadnui/pager';
 // export * from './shadnui/search';
 // export * from './shadnui/shell';
 export * from './shadnui/sidebar-nav';
-// export * from './shadnui/site-footer';
+export * from './shadnui/site-footer';
 // export * from './shadnui/tailwind-indicator';
 export * from './shadnui/toc';
 export * from './shadnui/lib/toc';

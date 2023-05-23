@@ -22,7 +22,7 @@ export function MainNav({ items, children, segment }: MainNavProps) {
       <Link href="/" className="hidden items-center space-x-2  md:flex">
         <Icons.logo />
         <span className="hidden whitespace-nowrap text-2xl font-bold sm:flex">
-          THE DEV ZONE
+          SERP.DEV
           {/* {siteConfig.name} */}
         </span>
       </Link>

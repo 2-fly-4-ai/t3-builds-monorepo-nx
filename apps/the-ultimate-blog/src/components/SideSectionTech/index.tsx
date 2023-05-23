@@ -21,7 +21,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
     <aside
       className={`${mainClass} ${
         showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
-      } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
+      } space-between transition-width relative  flex  flex-col space-y-4   bg-gray-100    py-6 duration-500  dark:bg-inherit`}
     >
       <div className="w-80 overflow-hidden">
         <div className="flex flex-col ">
@@ -34,7 +34,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                 <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                   <div>
-                    <div className="text-base text-sm font-bold text-gray-500 dark:text-orange-400">
+                    <div className=" text-sm font-bold text-gray-500 dark:text-orange-400">
                       {user?.name}
                     </div>
                     <div className="line-clamp-2 text-sm">
