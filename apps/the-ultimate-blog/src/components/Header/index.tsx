@@ -26,7 +26,7 @@ export default function Header() {
   const router = useRouter();
   const path = usePathname();
 
-  console.warn('WTFISGOINGON', path); //why is this undefined
+  //why is this undefined
 
   const { data: sessionData, status } = useSession();
 

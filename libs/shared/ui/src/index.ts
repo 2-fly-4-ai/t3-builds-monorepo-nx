@@ -59,6 +59,7 @@ export * from './shadnui/lib/toc';
 // export * from './shadnui/lib/stripe';
 // export * from './shadnui/lib/subscription';
 export * from './shadnui/lib/toc';
+export * from './shadnui/lib/tocHTML';
 export * from './shadnui/ui/dialog';
 export * from './shadnui/components/hero/hero';
 

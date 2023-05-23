@@ -74,6 +74,7 @@ export async function getTableOfContents(
   content: string
 ): Promise<TableOfContents> {
   const result = await remark().use(getToc).process(content);
+  console.warn(result.data);
 
   return result.data;
 }

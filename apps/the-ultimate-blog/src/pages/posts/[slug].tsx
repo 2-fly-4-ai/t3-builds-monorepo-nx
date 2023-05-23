@@ -23,7 +23,8 @@ import { useSession } from 'next-auth/react';
 import { prisma } from '../../utils/prisma';
 import { useLikeStore } from '@front-end-nx/shared/ui';
 import TextareaAutosize from 'react-textarea-autosize';
-
+import { getTableOfContentsHTML } from '@front-end-nx/shared/ui';
+import { DashboardTableOfContents } from '@front-end-nx/shared/ui';
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -92,7 +93,22 @@ export default function PostPage(
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
   console.warn(getPost.data);
+  const [toc, setToc] = useState<TableOfContentsHTML | null>(null);
+  const [modifiedHtml, setModifiedHtml] = useState<string>('');
 
+  if (getPost?.data?.html) {
+    getTableOfContentsHTML(getPost.data.html)
+      .then((result) => {
+        console.warn('Table of Contents:', result.toc);
+        setToc(result.toc);
+        setModifiedHtml(result.html);
+      })
+      .catch((error) => {
+        console.error('Error generating Table of Contents:', error);
+        setToc(null); // Reset toc state in case of error
+      });
+  }
+  console.warn(modifiedHtml);
   // const { id } = getPost;
 
   const handleEditPost = trpc.post.editPost.useMutation({
@@ -141,40 +157,46 @@ export default function PostPage(
 
   return (
     <MainLayout>
-      {getPost.isSuccess && getPost.data && (
-        <UnsplashGallery
-          isUnsplashModalOpen={isUnsplashModalOpen}
-          setIsUnsplashModalOpen={setIsUnsplashModalOpen}
-          postId={getPost.data?.id}
-          slug={getPost.data?.slug}
-        />
-      )}
-
-      {getPost.isLoading && <LoadingSpinner />}
-      {getPost.data?.id && (
-        <Transition.Root show={showCommentSidebar} as={Fragment}>
-          <Dialog as="div" onClose={() => setShowCommentSidebar(false)} static>
-            <CommentSidebar
-              showCommentSidebar={showCommentSidebar}
-              setShowCommentSidebar={setShowCommentSidebar}
+      <section className="flex justify-center gap-4">
+        <section>
+          {getPost.isSuccess && getPost.data && (
+            <UnsplashGallery
+              isUnsplashModalOpen={isUnsplashModalOpen}
+              setIsUnsplashModalOpen={setIsUnsplashModalOpen}
               postId={getPost.data?.id}
+              slug={getPost.data?.slug}
             />
-          </Dialog>
-        </Transition.Root>
-      )}
+          )}
 
-      {getPost.isSuccess && (
-        <LikePost
-          isLiked={likedPosts.includes(getPost.data?.id)}
-          slug={slug}
-          id={getPost.data?.id}
-          setShowSidebar={() => setShowCommentSidebar(true)}
-          showSidebar={showCommentSidebar}
-          // you can replace this with your own logic for commenting
-        />
-      )}
+          {getPost.isLoading && <LoadingSpinner />}
+          {getPost.data?.id && (
+            <Transition.Root show={showCommentSidebar} as={Fragment}>
+              <Dialog
+                as="div"
+                onClose={() => setShowCommentSidebar(false)}
+                static
+              >
+                <CommentSidebar
+                  showCommentSidebar={showCommentSidebar}
+                  setShowCommentSidebar={setShowCommentSidebar}
+                  postId={getPost.data?.id}
+                />
+              </Dialog>
+            </Transition.Root>
+          )}
 
-      {/* <BlogPageProse
+          {getPost.isSuccess && (
+            <LikePost
+              isLiked={likedPosts.includes(getPost.data?.id)}
+              slug={slug}
+              id={getPost.data?.id}
+              setShowSidebar={() => setShowCommentSidebar(true)}
+              showSidebar={showCommentSidebar}
+              // you can replace this with your own logic for commenting
+            />
+          )}
+
+          {/* <BlogPageProse
         title={title}
         description={description}
         setIsUnsplashModalOpen={() => setIsUnsplashModalOpen(true)}
@@ -190,118 +212,159 @@ export default function PostPage(
         }
       /> */}
 
-      {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
-        <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl rounded-lg border   text-2xl">
-          <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
-          <div className=" flex ">
-            <button
-              onClick={handleSubmit((formData) => {
-                setIsSubmitting(true);
-                onSubmit(formData);
-                setTitleEditorOpen(false);
-                setDescriptionEditorOpen(false);
-                setHTMLEditorOpen(false);
-              })}
-              className="flex items-center justify-center gap-1  border  px-3 transition hover:border-gray-700  dark:hover:border-white dark:hover:bg-green-400"
-            >
-              PUBLISH
-            </button>
-            <button
-              onClick={handleSubmit(() => {
-                setIsSubmitting(false);
-                setTitleEditorOpen(false);
-                setDescriptionEditorOpen(false);
-                setHTMLEditorOpen(false);
-              })}
-              className="rounded-r-lg border px-4 hover:bg-red-400"
-            >
-              CANCEL
-            </button>
-          </div>
-        </div>
-      ) : null}
-
-      <div>
-        <div className="relative  flex w-full items-center justify-center p-10">
-          <div className="w-full max-w-screen-md space-y-8">
-            <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
-              {getPost.data?.featuredImage && (
-                <Image
-                  src={getPost.data?.featuredImage ?? 'null'}
-                  alt={getPost.data?.title}
-                  priority //FUCKSAKE DONT FORGET THIS
-                  fill
-                  className="object-cover"
-                />
-              )}
-
-              {getPost.data?.authorId === currentUser?.data?.user?.id && (
-                <div
-                  id="this button isn't clickable"
-                  onClick={() => setIsUnsplashModalOpen(true)}
-                  className="absolute left-3 top-3 z-10 cursor-pointer rounded-lg bg-gray-500 p-1 transition duration-200 hover:bg-gray-400 "
+          {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
+            <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl rounded-lg border   text-2xl">
+              <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
+              <div className=" flex ">
+                <button
+                  onClick={handleSubmit((formData) => {
+                    setIsSubmitting(true);
+                    onSubmit(formData);
+                    setTitleEditorOpen(false);
+                    setDescriptionEditorOpen(false);
+                    setHTMLEditorOpen(false);
+                  })}
+                  className="flex items-center justify-center gap-1  border  px-3 transition hover:border-gray-700  dark:hover:border-white dark:hover:bg-green-400"
                 >
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    strokeWidth={0}
-                    viewBox="0 0 24 24"
-                    className="text-white"
-                    height="1.5em"
-                    width="1.5em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
-                    <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
-                    <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
-                  </svg>
-                </div>
-              )}
+                  PUBLISH
+                </button>
+                <button
+                  onClick={handleSubmit(() => {
+                    setIsSubmitting(false);
+                    setTitleEditorOpen(false);
+                    setDescriptionEditorOpen(false);
+                    setHTMLEditorOpen(false);
+                  })}
+                  className="rounded-r-lg border px-4 hover:bg-red-400"
+                >
+                  CANCEL
+                </button>
+              </div>
+            </div>
+          ) : null}
 
-              {/* this is the featured image */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative mx-10 w-full rounded-xl bg-gray-500 bg-opacity-50 px-4  pb-6 pt-4  font-medium text-gray-50 dark:bg-black dark:bg-opacity-80 ">
-                  {getPost.data?.authorId === currentUser?.data?.user?.id ? (
-                    <button
-                      className={`${
-                        isTitleEditorOpen ? 'hidden' : 'absolute'
-                      }  right-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
-                      onClick={() => setTitleEditorOpen(true)}
+          <div>
+            <div className="relative  flex w-full items-center justify-center p-10">
+              <div className="w-full max-w-screen-md space-y-8">
+                <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
+                  {getPost.data?.featuredImage && (
+                    <Image
+                      src={getPost.data?.featuredImage ?? 'null'}
+                      alt={getPost.data?.title}
+                      priority //FUCKSAKE DONT FORGET THIS
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+
+                  {getPost.data?.authorId === currentUser?.data?.user?.id && (
+                    <div
+                      id="this button isn't clickable"
+                      onClick={() => setIsUnsplashModalOpen(true)}
+                      className="absolute left-3 top-3 z-10 cursor-pointer rounded-lg bg-gray-500 p-1 transition duration-200 hover:bg-gray-400 "
                     >
                       <svg
                         stroke="currentColor"
                         fill="currentColor"
-                        strokeWidth="0"
+                        strokeWidth={0}
+                        viewBox="0 0 24 24"
                         className="text-white"
-                        viewBox="0 0 1024 1024"
                         height="1.5em"
                         width="1.5em"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
+                        <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
+                        <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
+                        <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
                       </svg>
-                    </button>
-                  ) : null}
+                    </div>
+                  )}
 
-                  {!isTitleEditorOpen ? (
-                    <h3 className="text-4xl">{getPost.data?.title}</h3>
-                  ) : (
-                    <div className="h-auto">
-                      <TextareaAutosize
-                        id="title"
-                        rows={5}
-                        className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 "
-                        {...register('title', { required: true })}
-                      />
-                      {errors.title && (
-                        <p className="text-red-500">Title is required</p>
+                  {/* this is the featured image */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative mx-10 w-full rounded-xl bg-gray-500 bg-opacity-50 px-4  pb-6 pt-4  font-medium text-gray-50 dark:bg-black dark:bg-opacity-80 ">
+                      {getPost.data?.authorId ===
+                      currentUser?.data?.user?.id ? (
+                        <button
+                          className={`${
+                            isTitleEditorOpen ? 'hidden' : 'absolute'
+                          }  right-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
+                          onClick={() => setTitleEditorOpen(true)}
+                        >
+                          <svg
+                            stroke="currentColor"
+                            fill="currentColor"
+                            strokeWidth="0"
+                            className="text-white"
+                            viewBox="0 0 1024 1024"
+                            height="1.5em"
+                            width="1.5em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
+                          </svg>
+                        </button>
+                      ) : null}
+
+                      {!isTitleEditorOpen ? (
+                        <h3 className="text-4xl">{getPost.data?.title}</h3>
+                      ) : (
+                        <div className="h-auto">
+                          <TextareaAutosize
+                            id="title"
+                            rows={5}
+                            className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 "
+                            {...register('title', { required: true })}
+                          />
+                          {errors.title && (
+                            <p className="text-red-500">Title is required</p>
+                          )}
+                          {!isSubmitting && (
+                            <div className="flex gap-2 py-2">
+                              <button
+                                onClick={handleSubmit((formData) => {
+                                  setIsSubmitting(true);
+                                  setTitleEditorOpen(false);
+                                  onSubmit(formData);
+                                })}
+                                className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+                              >
+                                Publish
+                              </button>
+                              <button
+                                onClick={() => setTitleEditorOpen(false)}
+                                className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       )}
+                    </div>
+                  </div>
+                </div>
+
+                <div>TEST</div>
+
+                <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
+                  {!isDescriptionEditorOpen ? (
+                    getPost.data?.description
+                  ) : (
+                    <div>
+                      <TextareaAutosize
+                        rows={5}
+                        id="shortDescription"
+                        className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                        // defaultValue={description}
+                        {...register('description')}
+                      />
                       {!isSubmitting && (
                         <div className="flex gap-2 py-2">
                           <button
                             onClick={handleSubmit((formData) => {
                               setIsSubmitting(true);
-                              setTitleEditorOpen(false);
+                              setDescriptionEditorOpen(false);
                               onSubmit(formData);
                             })}
                             className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
@@ -309,123 +372,87 @@ export default function PostPage(
                             Publish
                           </button>
                           <button
-                            onClick={() => setTitleEditorOpen(false)}
+                            onClick={() => setDescriptionEditorOpen(false)}
                             className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
                           >
                             Cancel
                           </button>
                         </div>
                       )}
+                      {errors.description && (
+                        <p>{errors.description.message}</p>
+                      )}
                     </div>
                   )}
-                </div>
-              </div>
-            </div>
 
-            <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
-              {!isDescriptionEditorOpen ? (
-                getPost.data?.description
-              ) : (
-                <div>
-                  <TextareaAutosize
-                    rows={5}
-                    id="shortDescription"
-                    className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
-                    // defaultValue={description}
-                    {...register('description')}
-                  />
-                  {!isSubmitting && (
-                    <div className="flex gap-2 py-2">
-                      <button
-                        onClick={handleSubmit((formData) => {
-                          setIsSubmitting(true);
-                          setDescriptionEditorOpen(false);
-                          onSubmit(formData);
-                        })}
-                        className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+                  {getPost.data?.authorId === currentUser?.data?.user?.id ? (
+                    <button
+                      className={`${
+                        isDescriptionEditorOpen ? 'hidden' : 'absolute'
+                      }  right-4 top-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
+                      onClick={() => setDescriptionEditorOpen(true)}
+                    >
+                      <svg
+                        stroke="currentColor"
+                        fill="currentColor"
+                        strokeWidth="0"
+                        className="text-white"
+                        viewBox="0 0 1024 1024"
+                        height="1.3em"
+                        width="1.3em"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        Publish
-                      </button>
-                      <button
-                        onClick={() => setDescriptionEditorOpen(false)}
-                        className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
-                      >
-                        Cancel
-                      </button>
+                        <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
+                      </svg>
+                    </button>
+                  ) : null}
+                </div>
+
+                {isHTMLEditorOpen ? (
+                  <div className="modal-container">
+                    <div className="modal-container">
+                      <Controller
+                        name="html"
+                        control={control}
+                        render={({ field }) => (
+                          <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
+                            <Editor
+                              {...field}
+                              onChange={(data: string) =>
+                                field && field.onChange(data)
+                              }
+                              value={getPost.data?.html}
+                            />
+                          </div>
+                        )}
+                      />
                     </div>
-                  )}
-                  {errors.description && <p>{errors.description.message}</p>}
-                </div>
-              )}
-
-              {getPost.data?.authorId === currentUser?.data?.user?.id ? (
-                <button
-                  className={`${
-                    isDescriptionEditorOpen ? 'hidden' : 'absolute'
-                  }  right-4 top-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
-                  onClick={() => setDescriptionEditorOpen(true)}
-                >
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    strokeWidth="0"
-                    className="text-white"
-                    viewBox="0 0 1024 1024"
-                    height="1.3em"
-                    width="1.3em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
-                  </svg>
-                </button>
-              ) : null}
-            </div>
-
-            {isHTMLEditorOpen ? (
-              <div className="modal-container">
-                <div className="modal-container">
-                  <Controller
-                    name="html"
-                    control={control}
-                    render={({ field }) => (
-                      <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                        <Editor
-                          {...field}
-                          onChange={(data: string) =>
-                            field && field.onChange(data)
-                          }
-                          value={getPost.data?.html}
-                        />
+                    {!isSubmitting && (
+                      <div className="flex gap-2 py-2">
+                        <button
+                          onClick={handleSubmit((formData) => {
+                            setIsSubmitting(true);
+                            setHTMLEditorOpen(false);
+                            onSubmit(formData);
+                          })}
+                          className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+                        >
+                          Publish
+                        </button>
+                        <button
+                          onClick={() => setHTMLEditorOpen(false)}
+                          className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+                        >
+                          Cancel
+                        </button>
                       </div>
                     )}
-                  />
-                </div>
-                {!isSubmitting && (
-                  <div className="flex gap-2 py-2">
-                    <button
-                      onClick={handleSubmit((formData) => {
-                        setIsSubmitting(true);
-                        setHTMLEditorOpen(false);
-                        onSubmit(formData);
-                      })}
-                      className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
-                    >
-                      Publish
-                    </button>
-                    <button
-                      onClick={() => setHTMLEditorOpen(false)}
-                      className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
-                    >
-                      Cancel
-                    </button>
+                    {errors.description && <p>{errors.description.message}</p>}
                   </div>
-                )}
-                {errors.description && <p>{errors.description.message}</p>}
-              </div>
-            ) : (
-              <div className="relative">
-                <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                  {/* <Interweave
+                ) : (
+                  <div className="relative">
+                    <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
+                      {/* <Interweave
                     content={
                       html.replaceAll(
                         'href=',
@@ -433,46 +460,46 @@ export default function PostPage(
                       ) ?? null
                     }
                   /> */}
-                  <div
-                    dangerouslySetInnerHTML={{ __html: getPost.data?.html }}
-                  ></div>
-                </div>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: modifiedHtml }}
+                      ></div>
+                    </div>
 
-                {getPost.data?.authorId === currentUser?.data?.user?.id ? (
-                  <button
-                    className={`${
-                      isHTMLEditorOpen ? 'hidden' : 'absolute'
-                    }  right-4 top-5 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
-                    onClick={() => setHTMLEditorOpen(true)}
-                  >
-                    <svg
-                      stroke="currentColor"
-                      fill="currentColor"
-                      strokeWidth="0"
-                      viewBox="0 0 1024 1024"
-                      height="1.5em"
-                      width="1.5em"
-                      className="text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
-                    </svg>
-                  </button>
-                ) : null}
+                    {getPost.data?.authorId === currentUser?.data?.user?.id ? (
+                      <button
+                        className={`${
+                          isHTMLEditorOpen ? 'hidden' : 'absolute'
+                        }  right-4 top-5 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
+                        onClick={() => setHTMLEditorOpen(true)}
+                      >
+                        <svg
+                          stroke="currentColor"
+                          fill="currentColor"
+                          strokeWidth="0"
+                          viewBox="0 0 1024 1024"
+                          height="1.5em"
+                          width="1.5em"
+                          className="text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
+                        </svg>
+                      </button>
+                    ) : null}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        <div className="modal-container mx-auto my-16 flex max-w-[800px] flex-col">
-          {/* <button
+            <div className="modal-container mx-auto my-16 flex max-w-[800px] flex-col">
+              {/* <button
             type="submit"
             className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
           >
             Publish
           </button> */}
 
-          {/* Uncomment the code below if you want to allow users to add tags to their post /}
+              {/* Uncomment the code below if you want to allow users to add tags to their post /}
   {/ <Controller
   name="tags"
   control={control}
@@ -489,8 +516,15 @@ export default function PostPage(
   )}
   /> /}
   {/ {errors.tags && <p>This field is required</p>} */}
+            </div>
+          </div>
+        </section>
+        <div className="border px-6">
+          <div className="sticky top-0 mt-10 h-max max-w-[300px] border bg-black  p-6 ">
+            <DashboardTableOfContents toc={toc} />
+          </div>
         </div>
-      </div>
+      </section>
     </MainLayout>
   );
 }

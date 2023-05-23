@@ -13,8 +13,8 @@ interface TocProps {
 export function DashboardTableOfContents({ toc }: TocProps) {
   const itemIds = React.useMemo(
     () =>
-      toc.items
-        ? toc.items
+      toc?.items
+        ? toc?.items
             .flatMap((item) => [item.url, item?.items?.map((item) => item.url)])
             .flat()
             .filter(Boolean)
@@ -88,7 +88,7 @@ interface TreeProps {
 
 function Tree({ tree, level = 1, activeItem }: TreeProps) {
   return tree?.items?.length && level < 3 ? (
-    <ul className={cn('m-0 list-none', { 'pl-4': level !== 1 })}>
+    <ul className={cn(' m-0 list-none', { 'pl-4': level !== 1 })}>
       {tree.items.map((item, index) => {
         return (
           <li key={index} className={cn('mt-0 pt-2')}>
