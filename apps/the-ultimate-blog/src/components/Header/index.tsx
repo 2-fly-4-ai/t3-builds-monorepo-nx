@@ -126,7 +126,7 @@ export default function Header() {
                 Write
               </button>
             </div>
-          ) : (
+          ) : path === 'techstack' ? (
             <div>
               <button
                 onClick={() => setIsWriteTechModalOpen(true)}
@@ -136,7 +136,7 @@ export default function Header() {
                 Add Tech
               </button>
             </div>
-          )}
+          ) : null}
 
           <button
             onClick={() => signOut()}
