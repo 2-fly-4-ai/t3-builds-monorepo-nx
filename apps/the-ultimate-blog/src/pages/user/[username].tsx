@@ -442,10 +442,10 @@ const UserProfilePage = () => {
                                   <div className="flex w-full items-center space-x-1">
                                     <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                                     <Link
-                                      href={`/user/${bookmark.post.author.name}`}
+                                      href={`/user/${bookmark.post.author?.name}`}
                                     >
                                       <div className="text-sm font-bold text-gray-900 dark:text-orange-400">
-                                        {bookmark.post.author.name}
+                                        {bookmark.post.author?.name}
                                       </div>
                                     </Link>
                                     <div className="text-xs">
@@ -531,10 +531,10 @@ const UserProfilePage = () => {
                                       <div className="flex w-full items-center space-x-1">
                                         <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                                         <Link
-                                          href={`/user/${bookmark.tech.author.name}`}
+                                          href={`/user/${bookmark.tech.author?.name}`}
                                         >
                                           <div className="text-sm font-bold text-gray-900 dark:text-orange-400">
-                                            {bookmark.tech.author.name}
+                                            {bookmark.tech.author?.name}
                                           </div>
                                         </Link>
                                         <div className="text-xs">
