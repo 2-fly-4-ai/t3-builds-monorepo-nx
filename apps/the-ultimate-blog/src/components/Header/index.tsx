@@ -48,14 +48,14 @@ export default function Header() {
     //   segment: 'about',
     // },
     {
-      title: 'Blog',
-      href: '/',
+      title: 'Posts',
+      href: '/posts',
       segment: '',
     },
 
     {
       title: 'Courses',
-      href: '/contact',
+      href: '/courses',
       disabled: true,
       segment: 'contact',
     },
@@ -68,7 +68,13 @@ export default function Header() {
     // },
     {
       title: 'Docs',
-      href: '/contact',
+      href: '/docs',
+      disabled: true,
+      segment: 'contact',
+    },
+    {
+      title: 'Guides',
+      href: '/guides',
       disabled: true,
       segment: 'contact',
     },
