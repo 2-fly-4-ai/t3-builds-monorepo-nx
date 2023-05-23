@@ -91,7 +91,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className=" top-0 z-10 grid w-full grid-cols-12 flex-row items-center border-b-2  px-8 py-2  backdrop-blur-md dark:bg-opacity-80    ">
+    <header className="top-0 z-10 grid w-full grid-cols-12 flex-row items-center border-b-2 bg-gray-100  bg-inherit px-8  py-2 backdrop-blur-md  dark:bg-opacity-80  ">
       <div className="col-span-6 flex items-center justify-center ">
         <MainNav items={items} segment={segment} />
         <Link href="/" className="mr-auto cursor-pointer"></Link>
@@ -158,7 +158,7 @@ export default function Header() {
             <ThemeToggle />
             <button
               onClick={() => signIn()}
-              className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
+              className="dark flex items-center justify-center gap-1 rounded-lg border-2  border-gray-300   p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)]  shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:shadow-black dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60"
             >
               <FiLogIn />
               Sign In
