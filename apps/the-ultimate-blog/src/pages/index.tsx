@@ -6,13 +6,17 @@ import { cn } from 'libs/shared/ui/src/utils/utils';
 import Link from 'next/link';
 import { SiteFooter } from '@front-end-nx/shared/ui';
 import { siteConfig } from 'libs/shared/ui/src/shadnui/config/site';
+import Benefits from '../components/Home/benefits';
+import { benefitOne, benefitTwo } from '../components-nextly/data';
+import Testimonials from '../components-nextly/testimonials';
+import SectionTitle from '../components-nextly/sectionTitle';
 
 function index() {
   const stars = '';
   return (
     <MainLayout>
       <section className="flex h-[93vh] w-full items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] to-white dark:from-gray-900 dark:via-gray-900 dark:to-[rgb(18,18,18)]">
-        <section className="container grid  items-center justify-center gap-6  pb-8 pt-6 md:pb-12 md:pt-10 lg:pb-24 lg:pt-16">
+        <section className="container grid  max-w-7xl items-center justify-center  gap-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:pb-24 lg:pt-16">
           {/* <Image
             src="https://tx.shadcn.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fhero.2e703faf.png&w=256&q=75"
             width={250}
@@ -20,7 +24,7 @@ function index() {
             alt="Hero image"
             priority
           /> */}
-          <div className="mx-auto flex flex-col items-center gap-4 border-red-500 text-center lg:w-[60rem]">
+          <div className="mx-auto flex  flex-col items-center gap-4 border-red-500 text-center">
             <a
               href="#_"
               className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2  p-4 px-6 py-3 font-medium  shadow-md transition duration-300 ease-out"
@@ -46,8 +50,9 @@ function index() {
               </span>
               <span className="invisible relative">Follow Us On Twitter</span>
             </a>
-            <h1 className=" text-3xl font-bold leading-[1.1] tracking-tighter text-slate-700 dark:text-slate-200 sm:text-5xl md:text-6xl 2xl:text-[85px]">
-              Unleash the Power of Fullstack Development in the Digital Era
+            <h1 className=" space-y-4 text-3xl font-bold leading-[1.1] tracking-tighter text-slate-700 dark:text-slate-200 sm:text-5xl md:text-6xl 2xl:text-[85px]">
+              Unleashing the Power of Fullstack Development in the Digital Era
+              with SERP.DEV
             </h1>
             <p className="mx-auto max-w-[42rem] leading-normal text-slate-700 dark:text-slate-400 sm:text-xl sm:leading-8">
               Join Our Thriving Community of Cutting-Edge Tech Enthusiasts and
@@ -69,10 +74,52 @@ function index() {
               GitHub
             </Link>
           </div>
+          <div className="mx-auto max-w-5xl px-6 lg:px-8">
+            <h2 className="text-center text-lg font-semibold leading-8 ">
+              Trusted by the world’s most innovative teams
+            </h2>
+            <div className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
+              <img
+                className="col-span-2 max-h-12 w-full object-contain  brightness-0 invert lg:col-span-1"
+                src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg"
+                alt="Transistor"
+                width={158}
+                height={48}
+              />
+              <img
+                className="col-span-2 max-h-12 w-full object-contain brightness-0 invert lg:col-span-1"
+                src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg"
+                alt="Reform"
+                width={158}
+                height={48}
+              />
+              <img
+                className="col-span-2 max-h-12 w-full object-contain brightness-0 invert lg:col-span-1"
+                src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg"
+                alt="Tuple"
+                width={158}
+                height={48}
+              />
+              <img
+                className="col-span-2 max-h-12 w-full object-contain brightness-0 invert sm:col-start-2 lg:col-span-1"
+                src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg"
+                alt="SavvyCal"
+                width={158}
+                height={48}
+              />
+              <img
+                className="col-span-2 col-start-2 max-h-12 w-full object-contain brightness-0 invert sm:col-start-auto lg:col-span-1"
+                src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg"
+                alt="Statamic"
+                width={158}
+                height={48}
+              />
+            </div>
+          </div>
         </section>
       </section>
-      <section className="container mx-auto grid justify-center gap-6 bg-gray-100 py-8 text-center dark:bg-inherit md:py-12 lg:py-24">
-        <div className="mx-auto flex flex-col items-center gap-4  md:max-w-[52rem]">
+      <section className="mx-auto grid min-h-screen max-w-7xl justify-center gap-6  bg-gray-100 py-8 text-center dark:bg-inherit md:py-12 lg:py-24">
+        <div className="mx-auto flex  flex-col items-center gap-4">
           <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
             Features
           </h2>
@@ -83,7 +130,7 @@ function index() {
             expert, you'll find something for you here.
           </p>
         </div>
-        <div className="grid justify-center gap-4 sm:grid-cols-2 md:max-w-[56rem] md:grid-cols-3">
+        <div className="grid justify-center gap-4 sm:grid-cols-2  md:grid-cols-4">
           <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-2 shadow-2xl">
             <div className="flex h-[180px] flex-col justify-between rounded-md bg-[#000000] p-6 text-slate-200">
               <svg viewBox="0 0 24 24" className="h-12 w-12 fill-current">
@@ -170,6 +217,32 @@ function index() {
               </div>
             </div>
           </div>
+          <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-2 shadow-2xl">
+            <div className="flex h-[180px] flex-col justify-between rounded-md bg-[#000000] p-6 text-slate-200">
+              <svg viewBox="0 0 24 24" className="h-12 w-12 fill-current">
+                <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z" />
+              </svg>
+              <div className="space-y-2">
+                <h3 className="font-bold text-slate-100">Subscriptions</h3>
+                <p className="text-sm text-slate-100">
+                  Free and paid subscriptions using Stripe.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-2 shadow-2xl">
+            <div className="flex h-[180px] flex-col justify-between rounded-md bg-[#000000] p-6 text-slate-200">
+              <svg viewBox="0 0 24 24" className="h-12 w-12 fill-current">
+                <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z" />
+              </svg>
+              <div className="space-y-2">
+                <h3 className="font-bold text-slate-100">Subscriptions</h3>
+                <p className="text-sm text-slate-100">
+                  Free and paid subscriptions using Stripe.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="mx-auto flex flex-col items-center gap-4 md:max-w-[52rem]">
           <p className="max-w-[85%] leading-normal text-slate-700 dark:text-slate-200 sm:text-lg sm:leading-7">
@@ -178,10 +251,70 @@ function index() {
           </p>
         </div>
       </section>
+      <div className="min-h-screen border py-8 md:py-12 lg:py-24">
+        <Benefits data={benefitOne} />
+        <Benefits imgPos="right" data={benefitTwo} />
+      </div>
+
+      {/* <div className=" py-24 sm:py-32">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <h2 className="text-center text-lg font-semibold leading-8 ">
+            Trusted by the world’s most innovative teams
+          </h2>
+          <div className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
+            <img
+              className="col-span-2 max-h-12 w-full object-contain  brightness-0 invert lg:col-span-1"
+              src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg"
+              alt="Transistor"
+              width={158}
+              height={48}
+            />
+            <img
+              className="col-span-2 max-h-12 w-full object-contain brightness-0 invert lg:col-span-1"
+              src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg"
+              alt="Reform"
+              width={158}
+              height={48}
+            />
+            <img
+              className="col-span-2 max-h-12 w-full object-contain brightness-0 invert lg:col-span-1"
+              src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg"
+              alt="Tuple"
+              width={158}
+              height={48}
+            />
+            <img
+              className="col-span-2 max-h-12 w-full object-contain brightness-0 invert sm:col-start-2 lg:col-span-1"
+              src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg"
+              alt="SavvyCal"
+              width={158}
+              height={48}
+            />
+            <img
+              className="col-span-2 col-start-2 max-h-12 w-full object-contain brightness-0 invert sm:col-start-auto lg:col-span-1"
+              src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg"
+              alt="Statamic"
+              width={158}
+              height={48}
+            />
+          </div>
+        </div>
+      </div> */}
+      <div className="mx-auto min-h-screen max-w-7xl py-8 md:py-12">
+        <SectionTitle
+          pretitle="Testimonials"
+          title="Here's what our customers said"
+        >
+          Testimonails is a great way to increase the brand trust and awareness.
+          Use this section to highlight your popular customers.
+        </SectionTitle>
+        <Testimonials />
+      </div>
+
       <section className="container mx-auto grid items-center justify-center gap-6 py-8 md:py-12 lg:py-24">
         <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
           <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-            Proudly Open Source
+            Proudly Open Sourcing the Internet
           </h2>
           <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
             Taxonomy is open source and powered by open source software. The

@@ -2098,6 +2098,11 @@
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.0.tgz#7e36e6bbc25a24b02011527ae157a000dda88b85"
   integrity sha512-/nDsijOXRwXVLpUBEiYuWguIBSIN3ZbKyah+KPUiD8bdIKtX1U/k+qLYUEr7NCQnSF2e4w1dr8me42ECuG3cvw==
 
+"@heroicons/react@^2.0.18":
+  version "2.0.18"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.18.tgz#f80301907c243df03c7e9fd76c0286e95361f7c1"
+  integrity sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==
+
 "@hookform/resolvers@^3.0.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.1.0.tgz#ff83ef4aa6078173201da131ceea4c3583b67034"
@@ -13236,6 +13241,11 @@ helmet@^4.4.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/helmet/-/helmet-4.6.0.tgz#579971196ba93c5978eb019e4e8ec0e50076b4df"
   integrity sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg==
+
+heroicons@^2.0.18:
+  version "2.0.18"
+  resolved "https://registry.yarnpkg.com/heroicons/-/heroicons-2.0.18.tgz#e4a5d7d0884fb1859f7171d2e41a7d89181c768e"
+  integrity sha512-3iaqznaz5GJ8Mox/eDfKHo7tYKuPiZV4vbg6pB6wjJhBa7ZKQlXT1KuUnsjkEiPy/ezyiqppOX6wUqYguMIq8w==
 
 highlight.js@^10.4.1:
   version "10.7.3"
