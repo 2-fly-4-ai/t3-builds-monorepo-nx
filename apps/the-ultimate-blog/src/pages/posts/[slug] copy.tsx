@@ -2,11 +2,10 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
-
+import BlogPageProse from 'libs/shared/ui/src/lib/blog-page-prose/blog-page-prose';
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
 import CommentSidebar from '../../components/CommentSidebar';
-import TextareaAutosize from 'react-textarea-autosize';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@headlessui/react';
@@ -23,11 +22,9 @@ import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
 import { prisma } from '../../utils/prisma';
 import { useLikeStore } from '@front-end-nx/shared/ui';
+import TextareaAutosize from 'react-textarea-autosize';
 import { getTableOfContentsHTML } from '@front-end-nx/shared/ui';
 import { DashboardTableOfContents } from '@front-end-nx/shared/ui';
-import NewsletterSubscribe from '../../components/NewsLetter/NewsletterSubscribe';
-import Link from 'next/link';
-
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -40,9 +37,10 @@ import superjson from 'superjson';
 //Dynamic Imports
 const Editor = dynamic(() => import('../../components/Ckeditor'), {
   ssr: false,
-  loading: () => <div>Loading editor...</div>,
+  loading: () => (
+    <div className="font-mono text-4xl font-bold">Loading editor...</div>
+  ),
 });
-const dayjs = require('dayjs');
 
 //Typings
 type WriteFormModalProps = {
@@ -68,11 +66,6 @@ export const WriteFormSchema = z.object({
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const { slug } = props;
-  const { tableOfContentsResult } = props;
-
-  console.warn(tableOfContentsResult);
-
   const {
     register,
     handleSubmit,
@@ -83,6 +76,7 @@ export default function PostPage(
     resolver: zodResolver(WriteFormSchema),
   });
 
+  const { slug } = props;
   const router = useRouter();
   const currentUser = useSession();
 
@@ -98,30 +92,23 @@ export default function PostPage(
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
-  interface Item {
-    title: string;
-    url: string;
-    items?: Item[];
+
+  const [toc, setToc] = useState<TableOfContentsHTML | null>(null);
+  const [modifiedHtml, setModifiedHtml] = useState<string>('');
+
+  if (getPost?.data?.html) {
+    getTableOfContentsHTML(getPost.data.html)
+      .then((result) => {
+        setToc(result.toc);
+        setModifiedHtml(result.html);
+      })
+      .catch((error) => {
+        console.error('Error generating Table of Contents:', error);
+        setToc(null); // Reset toc state in case of error
+      });
   }
 
-  interface Items {
-    items?: Item[];
-  }
-
-  // let toc: Items | null = null;
-  // let modifiedHtml: string = '';
-
-  // if (getPost?.data?.html) {
-  //   getTableOfContentsHTML(getPost.data.html)
-  //     .then((result) => {
-  //       toc = result.toc;
-  //       modifiedHtml = result.html;
-  //       // console.warn('ZENOTHEJOKER', result.html, toc);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error generating Table of Contents:', error);
-  //     });
-  // }
+  // const { id } = getPost;
 
   const handleEditPost = trpc.post.editPost.useMutation({
     onSuccess: () => {
@@ -138,7 +125,7 @@ export default function PostPage(
   const onSubmit = async (formData) => {
     try {
       const _result = await handleEditPost.mutateAsync({
-        id: id,
+        id: getPost.data.id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
@@ -160,6 +147,7 @@ export default function PostPage(
 
   useEffect(() => {
     let defaultValues = {};
+    defaultValues.id = getPost.data?.id;
     defaultValues.title = getPost.data?.title;
     defaultValues.description = getPost.data?.description;
     defaultValues.html = getPost.data?.html;
@@ -168,7 +156,7 @@ export default function PostPage(
 
   return (
     <MainLayout>
-      <section className="flex justify-center">
+      <section className="flex justify-center gap-4">
         <section>
           {getPost.isSuccess && getPost.data && (
             <UnsplashGallery
@@ -208,26 +196,24 @@ export default function PostPage(
           )}
 
           {/* <BlogPageProse
-      title={title}
-      description={description}
-      setIsUnsplashModalOpen={() => setIsUnsplashModalOpen(true)}
-      html={
-        html?.replaceAll(
-          'href=',
-          'target="_blank" rel="nofollow noreferrer" href='
-        ) ?? null
-      }
-      featuredImage={
-        featuredImage ??
-        'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
-      }
-    /> */}
+        title={title}
+        description={description}
+        setIsUnsplashModalOpen={() => setIsUnsplashModalOpen(true)}
+        html={
+          html?.replaceAll(
+            'href=',
+            'target="_blank" rel="nofollow noreferrer" href='
+          ) ?? null
+        }
+        featuredImage={
+          featuredImage ??
+          'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
+        }
+      /> */}
 
           {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
-            <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl items-center justify-center rounded-lg   text-2xl">
-              <p className=" rounded-l-lg border bg-gray-400 px-4">
-                MASTER EDITOR
-              </p>
+            <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl rounded-lg border   text-2xl">
+              <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
               <div className=" flex ">
                 <button
                   onClick={handleSubmit((formData) => {
@@ -466,17 +452,15 @@ export default function PostPage(
                   <div className="relative">
                     <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
                       {/* <Interweave
-                  content={
-                    html.replaceAll(
-                      'href=',
-                      'target="_blank" rel="nofollow noreferrer" href='
-                    ) ?? null
-                  }
-                /> */}
+                    content={
+                      html.replaceAll(
+                        'href=',
+                        'target="_blank" rel="nofollow noreferrer" href='
+                      ) ?? null
+                    }
+                  /> */}
                       <div
-                        dangerouslySetInnerHTML={{
-                          __html: tableOfContentsResult.html,
-                        }}
+                        dangerouslySetInnerHTML={{ __html: modifiedHtml }}
                       ></div>
                     </div>
 
@@ -508,80 +492,36 @@ export default function PostPage(
 
             <div className="modal-container mx-auto my-16 flex max-w-[800px] flex-col">
               {/* <button
-          type="submit"
-          className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
-        >
-          Publish
-        </button> */}
+            type="submit"
+            className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
+          >
+            Publish
+          </button> */}
 
               {/* Uncomment the code below if you want to allow users to add tags to their post /}
-{/ <Controller
-name="tags"
-control={control}
-defaultValue={[]}
-render={({ field }) => (
-<Select
-{...field}
-isMulti
-options={allTags.data}
-getOptionLabel={(option) => option.name}
-getOptionValue={(option) => option.id}
-placeholder="Add tags"
-/>
-)}
-/> /}
-{/ {errors.tags && <p>This field is required</p>} */}
+  {/ <Controller
+  name="tags"
+  control={control}
+  defaultValue={[]}
+  render={({ field }) => (
+  <Select
+  {...field}
+  isMulti
+  options={allTags.data}
+  getOptionLabel={(option) => option.name}
+  getOptionValue={(option) => option.id}
+  placeholder="Add tags"
+  />
+  )}
+  /> /}
+  {/ {errors.tags && <p>This field is required</p>} */}
             </div>
           </div>
         </section>
-        <div className="sticky top-0 my-10  w-96 px-6 ">
-          <div className="flex  h-max max-w-[300px] items-center justify-start gap-4 rounded-lg bg-black  p-6  py-3 ">
-            <div className="flex aspect-square h-16 w-16  ">
-              <Image
-                src={getPost?.data?.author?.image}
-                width={400}
-                height={400}
-                alt="test"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold">An Article By: </span>
-              <Link href={'test'} className="underline">
-                {getPost?.data?.author?.name}
-              </Link>
-              <span className="text-sm">
-                {dayjs(getPost?.data?.createdAt).format('DD/MM/YY')}
-              </span>
-            </div>
-          </div>
-          <div className="sticky top-6 ">
-            <div className="mt-6 h-min  max-w-[300px]  rounded-lg  bg-black p-6">
-              <DashboardTableOfContents toc={tableOfContentsResult.toc} />
-            </div>
-            <div className=" mt-6 h-min max-w-[300px] rounded-lg   bg-black p-6 py-4   ">
-              <NewsletterSubscribe />
-            </div>
-            <div className="sticky top-0 mt-6 flex  h-min max-w-[300px] flex-col gap-4 rounded-lg bg-black p-6    ">
-              <span className="text-lg font-bold">Related Posts</span>
-              <div className="flex flex-col gap-4">
-                {[...Array(12)].map((_, index) => (
-                  <div className="flex flex-col gap-2 border-b py-2">
-                    <Link href="test flex flex-col">
-                      <span className="font-bold">
-                        This is a lovely heading
-                      </span>
-                    </Link>
-                    <span className="text-sm">
-                      Read More about this random shit right here
-                    </span>
-                    <btn className="border-l-4  border-red-500 px-2 ">
-                      Read More
-                    </btn>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="border px-6">
+          {/* <div className="sticky top-0 mt-10 h-max max-w-[300px] border bg-black  p-6 ">
+            <DashboardTableOfContents toc={toc} />
+          </div> */}
         </div>
       </section>
     </MainLayout>
@@ -599,20 +539,12 @@ export async function getStaticProps(
 
   const slug = context.params?.slug; // Access the first element of the slug array
 
-  const postData = await helpers.post.getPost.fetch({ slug });
-
-  // Check if the post has HTML content, if so generate the table of contents
-  let tableOfContentsResult: TableOfContentsHTML | null = null;
-  if (postData?.html) {
-    tableOfContentsResult = await getTableOfContentsHTML(postData.html);
-    console.warn(tableOfContentsResult);
-  }
+  await helpers.post.getPost.prefetch({ slug });
 
   return {
     props: {
       trpcState: helpers.dehydrate(),
       slug,
-      tableOfContentsResult,
     },
     revalidate: 1,
   };

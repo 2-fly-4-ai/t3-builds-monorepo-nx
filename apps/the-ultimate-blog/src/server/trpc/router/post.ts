@@ -349,6 +349,13 @@ export const postRouter = router({
           text: true,
           html: true,
           authorId: true,
+          author: {
+            select: {
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
           slug: true,
           featuredImage: true,
           likes: session?.user?.id
