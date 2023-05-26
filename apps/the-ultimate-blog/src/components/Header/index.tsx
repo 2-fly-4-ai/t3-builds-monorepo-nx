@@ -17,6 +17,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { usePathname } from 'next/navigation';
 import { MainNav } from '@front-end-nx/shared/ui';
+import { useEffect } from 'react';
+
 // const NavigationMenuDemo = dynamic(
 //   () => import('libs/shared/ui/src/layouts/nav-menu/nav-menu'),
 //   { ssr: false }
@@ -25,10 +27,18 @@ import { MainNav } from '@front-end-nx/shared/ui';
 export default function Header() {
   const router = useRouter();
   const path = usePathname();
+  console.warn('path', path);
 
   //why is this undefined
 
   const { data: sessionData, status } = useSession();
+  const [headerColor, setHeaderColor] = useState(false);
+
+  useEffect(() => {
+    if (path === '/tools/heros') {
+      setHeaderColor(true);
+    }
+  }, [path]);
 
   let items;
   if (path === '/docs') {
@@ -118,14 +128,18 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="top-0 z-10 grid w-full grid-cols-12 flex-row items-center border-b-2 bg-gray-100  px-8 py-2  backdrop-blur-md dark:bg-inherit  dark:bg-opacity-80  ">
-      <div className="col-span-6 flex items-center justify-center ">
+    <header
+      className={`top-0 z-10 grid w-full grid-cols-12 flex-row items-center  px-8 py-2 backdrop-blur-md ${
+        headerColor ? 'dark:bg-opacity-0' : 'dark:bg-opacity-80'
+      }`}
+    >
+      <div className="col-span-8 flex items-center justify-center ">
         <MainNav items={items} segment={segment} />
         <Link href="/" className="mr-auto cursor-pointer"></Link>
       </div>
 
       {status === 'authenticated' ? (
-        <div className="col-span-6 flex items-center justify-end  gap-4">
+        <div className="col-span-4 flex items-center justify-end  gap-4">
           <ThemeToggle />
           <div>
             <AiOutlineBell />
@@ -174,7 +188,7 @@ export default function Header() {
           </button>
         </div>
       ) : (
-        <div className="col-span-6 ml-auto flex items-center justify-center gap-4">
+        <div className="col-span-4 ml-auto flex items-center justify-center gap-4">
           {/* <div>
           <AiOutlineBell />
         </div>

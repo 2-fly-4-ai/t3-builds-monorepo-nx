@@ -26,13 +26,13 @@ const Benefits = (props) => {
         </div>
 
         <div
-          className={`flex w-full flex-wrap items-center lg:w-1/2 ${
+          className={`flex w-full flex-wrap items-center justify-center lg:w-1/2 ${
             data.imgPos === 'right' ? 'lg:justify-end' : ''
           }`}
         >
           <div>
-            <div className="mt-4 flex w-full flex-col">
-              <h3 className="mt-3 max-w-2xl text-3xl font-bold leading-snug tracking-tight text-gray-800 dark:text-white lg:text-4xl lg:leading-tight">
+            <div className=" flex w-full flex-col">
+              <h3 className="mt-3 max-w-2xl text-3xl font-bold leading-snug tracking-tight text-gray-800 dark:text-white lg:text-5xl lg:leading-tight">
                 {data.title}
               </h3>
 
@@ -41,7 +41,7 @@ const Benefits = (props) => {
               </p>
             </div>
 
-            <div className="mt-2 w-full">
+            <div className="mt-2 flex w-full flex-col justify-center">
               {data.bullets.map((item, index) => (
                 <Benefit key={index} title={item.title} icon={item.icon}>
                   {item.desc}

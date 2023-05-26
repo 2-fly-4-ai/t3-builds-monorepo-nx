@@ -18,10 +18,10 @@ export function MainNav({ items, children, segment }: MainNavProps) {
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
 
   return (
-    <div className="flex gap-6 md:gap-10 xl:gap-20">
+    <div className="flex gap-6  md:gap-10 2xl:gap-20">
       <Link href="/" className="hidden items-center space-x-2  md:flex">
         <Icons.logo />
-        <span className="hidden whitespace-nowrap text-2xl font-bold sm:flex">
+        <span className="hidden  text-2xl font-bold sm:flex">
           SERP.DEV
           {/* {siteConfig.name} */}
         </span>

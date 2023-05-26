@@ -11,7 +11,7 @@ const Testimonials = () => {
     <Container>
       <div className="grid gap-10 lg:grid-cols-2 xl:grid-cols-3">
         <div className="lg:col-span-2 xl:col-auto">
-          <div className="dark:bg-trueGray-800 flex h-full w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
+          <div className="dark:bg-trueGray-800 flex h-80 w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
             <p className="text-xl leading-normal ">
               Share a real <Mark>testimonial</Mark>
               that hits some of your benefits from one of your popular customer.
@@ -25,7 +25,7 @@ const Testimonials = () => {
           </div>
         </div>
         <div className="">
-          <div className="dark:bg-trueGray-800 flex h-full w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
+          <div className="dark:bg-trueGray-800 flex h-80 w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
             <p className="text-xl leading-normal ">
               Make sure you only pick the <Mark>right sentence</Mark>
               to keep it short and simple.
@@ -39,7 +39,7 @@ const Testimonials = () => {
           </div>
         </div>
         <div className="">
-          <div className="dark:bg-trueGray-800 flex h-full w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
+          <div className="dark:bg-trueGray-800 flex h-80 w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
             <p className="text-xl leading-normal ">
               This is an <Mark>awesome</Mark> landing page template I&apos;ve
               seen. I would use this for anything.
@@ -53,7 +53,7 @@ const Testimonials = () => {
           </div>
         </div>
         <div className="">
-          <div className="dark:bg-trueGray-800 flex h-full w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
+          <div className="dark:bg-trueGray-800 flex h-80 w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
             <p className="text-xl leading-normal ">
               This is an <Mark>awesome</Mark> landing page template I&apos;ve
               seen. I would use this for anything.
@@ -67,7 +67,7 @@ const Testimonials = () => {
           </div>
         </div>
         <div className="">
-          <div className="dark:bg-trueGray-800 flex h-full w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
+          <div className="dark:bg-trueGray-800 flex h-80 w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
             <p className="text-xl leading-normal ">
               This is an <Mark>awesome</Mark> landing page template I&apos;ve
               seen. I would use this for anything.
@@ -81,7 +81,7 @@ const Testimonials = () => {
           </div>
         </div>
         <div className="">
-          <div className="dark:bg-trueGray-800 flex h-full w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
+          <div className="dark:bg-trueGray-800 flex h-80 w-full flex-col justify-between rounded-2xl bg-gray-100 px-14 py-14">
             <p className="text-xl leading-normal ">
               This is an <Mark>awesome</Mark> landing page template I&apos;ve
               seen. I would use this for anything.

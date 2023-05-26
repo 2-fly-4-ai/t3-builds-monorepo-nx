@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Add scroll margin for table of contents links */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  scroll-margin-top: 20px; /* Adjust the margin value as needed */
+}
+
 .ck-editor__editable {
   min-height: 20vh;
   position: relative;

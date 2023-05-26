@@ -2,8 +2,11 @@ import React from 'react';
 
 function Footer() {
   return (
-    <footer className="border-t-2 border-t-gray-600 bg-black text-gray-400">
-      <div id="footer-content" className="relative pb-6 pt-8 xl:pb-12 xl:pt-16">
+    <footer className="z-20 border-t-2 border-t-gray-600 bg-black text-gray-400">
+      <div
+        id="footer-content"
+        className="relative px-8 pb-6 pt-8 xl:px-16 xl:pb-12 xl:pt-16"
+      >
         <div className="mx-auto overflow-hidden px-3 xl:container sm:px-4 xl:px-2">
           <div className="-mx-3 flex flex-row flex-wrap lg:justify-between">
             <div className="w-full max-w-full flex-shrink px-3 lg:w-2/5 lg:pr-16">
