@@ -28,23 +28,19 @@ import TechModal from '../../components/TechModal';
 import { useGlobalContextTechModalStore } from 'libs/shared/ui/src/zustand/store';
 
 const UserProfilePage = () => {
-  const readingList = trpc.post.getReadingList.useQuery();
-  const techReadingList = trpc.post.getTechReadingList.useQuery();
-  const [showListView, setListView] = useState(false);
-  const [isToggledPost, setIsToggledPost] = useState('');
-
-  const { togglePosts } = useGlobalContextTechModalStore();
-
-  const handlePostsModalToggle = () => {
-    togglePosts(id);
-  };
-
-  const handleIsResourcesOpen = (bookMarkId) => {
-    setIsToggledPost(bookMarkId);
-  };
-
   const router = useRouter();
   const currentUser = useSession();
+
+  const [isFollowModalOpen, setIsFollowModalOpen] = useState({
+    isOpen: false,
+    modalType: 'followers',
+  });
+  const [showListView, setListView] = useState(false);
+  const [isToggledPost, setIsToggledPost] = useState('');
+  const { togglePosts } = useGlobalContextTechModalStore();
+  console.warn('FUCCCKKKK', router.query.username);
+  const readingList = trpc.post.getReadingList.useQuery();
+  const techReadingList = trpc.post.getTechReadingList.useQuery();
   const userProfile = trpc.user.getUserProfile.useQuery(
     {
       username: router.query.username as string,
@@ -62,7 +58,7 @@ const UserProfilePage = () => {
     }
   );
   const [objectImage, setObjectImage] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const userRoute = trpc.useContext().user;
   const uploadAvatar = trpc.user.uploadAvatar.useMutation({
     onSuccess: () => {
@@ -98,10 +94,7 @@ const UserProfilePage = () => {
       };
     }
   };
-  const [isFollowModalOpen, setIsFollowModalOpen] = useState({
-    isOpen: false,
-    modalType: 'followers',
-  });
+
   const followers = trpc.user.getAllFollowers.useQuery(
     {
       userId: userProfile?.data?.id as string,
@@ -146,9 +139,7 @@ const UserProfilePage = () => {
       postRoute.getReadingList.invalidate();
     },
   });
-
   const { bookmarks, toggleBookmark } = useBookmarkStore();
-
   const handleBookmarkToggle = useCallback(
     (postId: string) => {
       toggleBookmark(postId);

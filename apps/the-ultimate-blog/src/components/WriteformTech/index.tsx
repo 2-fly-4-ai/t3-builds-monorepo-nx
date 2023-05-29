@@ -361,7 +361,6 @@ export default function WriteFormModalTech() {
           </div>
         </div>
 
-        <p>{errors.text?.message}</p>
         <div className="flex w-full justify-end">
           <button
             type="submit"

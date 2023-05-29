@@ -129,8 +129,8 @@ export default function Header() {
 
   return (
     <header
-      className={`top-0 z-10 grid w-full grid-cols-12 flex-row items-center  px-8 py-2 backdrop-blur-md ${
-        headerColor ? 'dark:bg-opacity-0' : 'dark:bg-opacity-80'
+      className={`top-0 z-10 grid w-full grid-cols-12 flex-row items-center border-b  px-8 py-2 backdrop-blur-md  ${
+        headerColor ? 'dark:bg-opacity-0' : 'dark:bg-opacity-100'
       }`}
     >
       <div className="col-span-8 flex items-center justify-center ">

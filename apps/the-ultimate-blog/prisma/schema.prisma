@@ -55,13 +55,17 @@ model User {
   id            String         @id @default(cuid())
   username      String         @unique
   name          String?
+  shortDescription String?
   email         String?        @unique
   emailVerified DateTime?
   image         String?
+  portfolioUrl         String?
+  githubUrl        String?
+  LinkedInUrl        String?
   tech          Tech[]
   accounts      Account[]
   sessions      Session[]
-   role           String             @default("user")
+  role           String             @default("user")
   bio            String?            @db.VarChar(160)
   posts         Post[]
   comments      Comment[]

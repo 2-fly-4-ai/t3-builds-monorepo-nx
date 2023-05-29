@@ -13,13 +13,24 @@ export const userRouter = router({
   getUserProfile: publicProcedure
     .input(
       z.object({
-        username: z.string(),
+        username: z.string().optional(),
+        id: z.string().optional(),
       })
     )
-    .query(async ({ ctx: { prisma, session }, input: { username } }) => {
+    .query(async ({ ctx: { prisma, session }, input: { username, id } }) => {
+      const targetUserId =
+        id ||
+        (username &&
+          (await prisma.user.findUnique({ where: { username } }))?.id) ||
+        session?.user?.id;
+
+      if (!targetUserId) {
+        throw new Error('No username or id provided.');
+      }
+
       return await prisma.user.findUnique({
         where: {
-          username: username,
+          id: targetUserId,
         },
         select: {
           name: true,
@@ -91,6 +102,60 @@ export const userRouter = router({
         },
       });
     }),
+
+  updateUserProfile: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        name: z.string().optional(),
+        image: z.string().optional(),
+        shortDescription: z.string().optional(),
+        bio: z.string().optional(),
+        portfolioUrl: z.string().optional(),
+        githubUrl: z.string().optional(),
+        LinkedInUrl: z.string().optional(),
+      })
+    )
+    .mutation(
+      async ({
+        ctx: { prisma },
+        input: {
+          userId,
+          name,
+          image,
+          shortDescription,
+          bio,
+          portfolioUrl,
+          githubUrl,
+          LinkedInUrl,
+        },
+      }) => {
+        const updatedData = {
+          name,
+          image,
+          shortDescription,
+          bio,
+          portfolioUrl,
+          githubUrl,
+          LinkedInUrl,
+        };
+
+        // Remove undefined fields from the updatedData object
+        const filteredData = Object.fromEntries(
+          Object.entries(updatedData).filter(
+            ([_, value]) => value !== undefined
+          )
+        );
+
+        // Update the user's profile
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: filteredData,
+        });
+      }
+    ),
 
   uploadAvatar: protectedProcedure
     .input(

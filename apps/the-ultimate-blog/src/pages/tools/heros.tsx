@@ -8,12 +8,72 @@ function heros() {
     <MainLayout>
       <div className="  h-screen snap-y  snap-mandatory overflow-y-scroll">
         {' '}
-        <section className="snap  flex h-full w-full snap-start items-center justify-center bg-gradient-to-r from-pink-600 via-red-500 to-red-600">
-          <section className="container grid max-w-6xl items-center  justify-center gap-6 px-8  md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
-            <div className="mx-auto my-auto flex flex-col  items-center justify-center gap-3 space-y-3 text-center">
+        <section className="flex h-[100vh] w-full snap-start items-center justify-center bg-yellow-200 dark:bg-gray-900">
+          <section className="container grid max-w-6xl items-center justify-center gap-6 px-8 md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
+            <div className="mx-auto my-auto flex flex-col items-center justify-center gap-3 space-y-3 text-center">
               <a
                 href="#_"
-                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white bg-red-500 p-4 px-6 py-3 font-bold text-white shadow-md transition duration-300 ease-out"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-blue-700 bg-yellow-300 p-4 px-6 py-3 font-bold text-blue-700 shadow-md transition duration-300 ease-out dark:border-blue-700 dark:bg-gray-700  dark:text-blue-200"
+              >
+                <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center text-blue-700 duration-300 group-hover:translate-x-0 dark:text-blue-200">
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 5l7 7-7 7"
+                    ></path>
+                  </svg>
+                </span>
+                <span className="ease absolute flex h-full w-full transform items-center justify-center transition-all duration-300 group-hover:translate-x-full dark:border-blue-700">
+                  Follow Us To Minion Land
+                </span>
+                <span className="invisible relative">
+                  Follow Us To Minion Land
+                </span>
+              </a>
+              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-blue-700 dark:text-blue-200 sm:text-6xl md:text-7xl 2xl:text-[100px]">
+                Dive Into the Minion Dominion: Fullstack Development Fun Zone
+              </h1>
+              <p className="mx-auto max-w-3xl text-lg leading-normal text-blue-700 dark:text-blue-200 sm:text-xl sm:leading-8">
+                Be part of our cheery community of tech enthusiasts. Enhance
+                your skills, Boost your brand, &nbsp;
+                <span className="text-yellow-400">Benefit galore.</span>
+              </p>
+              <div className="mx-auto flex justify-center gap-4">
+                <Link
+                  href="/login"
+                  className="rounded-md border border-transparent bg-yellow-400 px-8 py-3 text-base font-medium text-blue-700 hover:bg-yellow-500 dark:border-yellow-400 dark:bg-gray-900 dark:text-blue-200 dark:text-yellow-400 dark:hover:bg-yellow-600 md:px-10 md:py-4 md:text-lg"
+                >
+                  Join The Minion Squad
+                </Link>
+                <Link
+                  href=""
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-md border border-transparent bg-blue-700 px-8 py-3 text-base font-medium text-yellow-300 hover:bg-blue-800 dark:text-yellow-200 dark:hover:bg-blue-900 md:px-10 md:py-4 md:text-lg"
+                >
+                  Our Tricks on GitHub
+                </Link>
+              </div>
+              <div className="mx-auto max-w-5xl px-6 lg:px-8">
+                <div className="mx-auto mt-4 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5"></div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section className="snap flex h-full w-full snap-start items-center justify-center bg-gradient-to-r from-pink-600 via-red-500 to-red-600 dark:from-gray-900 dark:to-gray-900">
+          <section className="container grid max-w-6xl items-center justify-center gap-6 px-8 md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
+            <div className="mx-auto my-auto flex flex-col items-center justify-center gap-3 space-y-3 text-center">
+              <a
+                href="#_"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white bg-red-500 p-4 px-6 py-3 font-bold text-white shadow-md transition duration-300 ease-out dark:border-red-400 dark:bg-red-700 dark:text-red-200"
               >
                 <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center text-white duration-300 group-hover:translate-x-0">
                   <svg
@@ -24,9 +84,9 @@ function heros() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M9 5l7 7-7 7"
                     ></path>
                   </svg>
@@ -38,18 +98,18 @@ function heros() {
                   Connect With Us on Social Media
                 </span>
               </a>
-              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-white sm:text-6xl md:text-7xl 2xl:text-[100px]">
+              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-white dark:text-gray-200 sm:text-6xl md:text-7xl 2xl:text-[100px]">
                 Ignite Your Creativity with Strawberry Pop Design
               </h1>
-              <p className="mx-auto max-w-3xl text-lg leading-normal text-white sm:text-xl sm:leading-8">
+              <p className="mx-auto max-w-3xl text-lg leading-normal text-white dark:text-gray-300 sm:text-xl sm:leading-8">
                 Engage in the Strawberry Pop Design Community. Unleash your
-                creativity, Establish your brand, &nbsp;
+                creativity, Establish your brand,&nbsp;
                 <span className="text-yellow-300">Earn while you learn.</span>
               </p>
               <div className="mx-auto flex justify-center gap-4">
                 <Link
                   href="/login"
-                  className="rounded-md border border-transparent bg-red-600 px-8 py-3 text-base font-medium text-white hover:bg-red-700 md:px-10 md:py-4 md:text-lg"
+                  className="rounded-md border border-transparent bg-red-600 px-8 py-3 text-base font-medium text-white hover:bg-red-700 dark:border-red-400 dark:bg-red-700 dark:text-red-200 dark:hover:bg-red-800 md:px-10 md:py-4 md:text-lg"
                 >
                   Join the Revolution
                 </Link>
@@ -57,7 +117,7 @@ function heros() {
                   href=""
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-red-700 hover:bg-gray-100 md:px-10 md:py-4 md:text-lg"
+                  className="rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-red-700 hover:bg-gray-100 dark:border-red-500 dark:bg-gray-800 dark:text-red-200 dark:hover:bg-gray-100 md:px-10 md:py-4 md:text-lg"
                 >
                   Source Code on GitHub
                 </Link>
@@ -68,12 +128,12 @@ function heros() {
             </div>
           </section>
         </section>
-        <section className=" flex h-[100vh] w-full snap-start items-center justify-center bg-gradient-to-r from-green-500 via-green-600 to-green-700">
-          <section className="container grid max-w-6xl items-center  justify-center gap-6 px-8  md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
-            <div className="mx-auto my-auto flex flex-col  items-center justify-center gap-3 space-y-3 text-center">
+        <section className="flex h-[100vh] w-full snap-start items-center justify-center bg-gradient-to-r from-green-500 via-green-600 to-green-700 dark:from-gray-900 ">
+          <section className="container grid max-w-6xl items-center justify-center gap-6 px-8 md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
+            <div className="mx-auto my-auto flex flex-col items-center justify-center gap-3 space-y-3 text-center">
               <a
                 href="#_"
-                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white bg-green-700 p-4 px-6 py-3 font-bold text-white shadow-md transition duration-300 ease-out"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white bg-green-700 p-4 px-6 py-3 font-bold text-white shadow-md transition duration-300 ease-out dark:border-green-400 dark:bg-green-800 dark:text-green-200"
               >
                 <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center text-white duration-300 group-hover:translate-x-0">
                   <svg
@@ -84,9 +144,9 @@ function heros() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M9 5l7 7-7 7"
                     ></path>
                   </svg>
@@ -98,10 +158,10 @@ function heros() {
                   Engage With Us on Social Media
                 </span>
               </a>
-              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-white sm:text-6xl md:text-7xl 2xl:text-[100px]">
+              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-white dark:text-gray-200 sm:text-6xl md:text-7xl 2xl:text-[100px]">
                 Discover the Freshness of Crisp Green Apple Design
               </h1>
-              <p className="mx-auto max-w-3xl text-lg leading-normal text-white sm:text-xl sm:leading-8">
+              <p className="mx-auto max-w-3xl text-lg leading-normal text-white dark:text-gray-300 sm:text-xl sm:leading-8">
                 Experience the Crisp Green Apple Design Community. Boost your
                 creativity, Manifest your brand, &nbsp;
                 <span className="text-yellow-300">Earn while you evolve.</span>
@@ -109,7 +169,7 @@ function heros() {
               <div className="mx-auto flex justify-center gap-4">
                 <Link
                   href="/login"
-                  className="rounded-md border border-transparent bg-green-800 px-8 py-3 text-base font-medium text-white hover:bg-green-900 md:px-10 md:py-4 md:text-lg"
+                  className="rounded-md border border-transparent bg-green-800 px-8 py-3 text-base font-medium text-white hover:bg-green-900 dark:border-green-400 dark:bg-green-900 dark:text-green-200 dark:hover:bg-green-800 md:px-10 md:py-4 md:text-lg"
                 >
                   Begin Your Journey
                 </Link>
@@ -117,7 +177,7 @@ function heros() {
                   href=""
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-green-700 hover:bg-gray-100 md:px-10 md:py-4 md:text-lg"
+                  className="rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-green-700 hover:bg-gray-100 dark:border-green-500 dark:bg-gray-800 dark:text-green-200 dark:hover:bg-gray-100 md:px-10 md:py-4 md:text-lg"
                 >
                   Code Repository on GitHub
                 </Link>
@@ -740,14 +800,14 @@ function heros() {
             </div>
           </section>
         </section>
-        <section className="flex h-screen w-full snap-start items-center justify-center bg-pink-100">
+        <section className="flex h-screen w-full snap-start items-center justify-center bg-pink-100 dark:bg-gray-900">
           <section className="container grid max-w-6xl items-center justify-center gap-6 px-8 md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
             <div className="mx-auto my-auto flex flex-col items-center justify-center gap-3 space-y-3 text-center">
               <a
                 href="#_"
-                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-pink-500 bg-white p-4 px-6 py-3 font-bold text-pink-500 shadow-md transition duration-300 ease-out"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-pink-500 bg-white p-4 px-6 py-3 font-bold text-pink-500 shadow-md transition duration-300 ease-out dark:bg-gray-900 dark:text-pink-500"
               >
-                <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center text-pink-500 duration-300 group-hover:translate-x-0">
+                <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center text-pink-500 duration-300 group-hover:translate-x-0 dark:text-pink-500">
                   <svg
                     className="h-6 w-6"
                     fill="none"
@@ -770,20 +830,20 @@ function heros() {
                   Follow Us To Legally Blonde
                 </span>
               </a>
-              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-pink-800 sm:text-6xl md:text-7xl 2xl:text-[100px]">
+              <h1 className="max-w-6xl space-y-4 text-5xl font-bold leading-[1.1] tracking-tighter text-pink-800 dark:text-white sm:text-6xl md:text-7xl 2xl:text-[100px]">
                 Dive Into the Legally Blonde: Fullstack Development Fun Zone
               </h1>
-              <p className="mx-auto max-w-3xl text-lg leading-normal text-pink-800 sm:text-xl sm:leading-8">
+              <p className="mx-auto max-w-3xl text-lg leading-normal text-pink-800 dark:text-white sm:text-xl sm:leading-8">
                 Be part of our pink and beautiful community of tech enthusiasts.
                 Enhance your skills, boost your brand,&nbsp;
-                <span className="text-pink-600">
+                <span className="text-pink-600 dark:text-pink-500">
                   and enjoy the journey with style.
                 </span>
               </p>
               <div className="mx-auto flex justify-center gap-4">
                 <Link
                   href="/login"
-                  className="rounded-md border border-pink-500 bg-white px-8 py-3 text-base font-medium text-pink-500 hover:bg-pink-500 hover:text-white md:px-10 md:py-4 md:text-lg"
+                  className="rounded-md border border-pink-500 bg-white px-8 py-3 text-base font-medium text-pink-500 hover:bg-pink-500 hover:text-white dark:bg-gray-900 dark:text-pink-500 md:px-10 md:py-4 md:text-lg"
                 >
                   Join The Legally Blonde Squad
                 </Link>
@@ -791,7 +851,7 @@ function heros() {
                   href=""
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-md border border-transparent bg-pink-800 px-8 py-3 text-base font-medium text-white hover:bg-pink-900 md:px-10 md:py-4 md:text-lg"
+                  className="rounded-md border border-transparent bg-pink-800 px-8 py-3 text-base font-medium text-white hover:bg-pink-900 dark:bg-pink-800 dark:text-white md:px-10 md:py-4 md:text-lg"
                 >
                   Explore Secrets on GitHub
                 </Link>
@@ -2109,7 +2169,7 @@ function heros() {
           </section>
         </section>
         <section></section>
-        <section className="bg-strawberry-50 mx-auto grid min-h-screen max-w-7xl justify-center gap-6 bg-gradient-to-r from-pink-600 via-red-500 to-red-600 px-8 py-8 text-center  md:py-12 lg:py-24">
+        {/* <section className="bg-strawberry-50 mx-auto grid min-h-screen max-w-7xl justify-center gap-6 bg-gradient-to-r from-pink-600 via-red-500 to-red-600 px-8 py-8 text-center  md:py-12 lg:py-24">
           <div className="mx-auto flex flex-col items-center gap-4">
             <h2 className="text-strawberry-800 text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
               Features
@@ -2230,303 +2290,7 @@ function heros() {
               site built using Contentlayer and MDX.
             </p>
           </div>
-        </section>
-        <section className="bg-strawberry-50 mx-auto grid min-h-screen max-w-7xl justify-center gap-6 bg-gradient-to-r from-pink-600 via-red-500 to-red-600 px-8 py-8 text-center  md:py-12 lg:py-24">
-          <div className="mx-auto flex flex-col items-center gap-4">
-            <h2 className="text-strawberry-800 text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-              Features
-            </h2>
-            <p className="text-strawberry-700 dark:text-strawberry-200 max-w-[85%] leading-normal sm:text-lg sm:leading-7">
-              DevSpace is a community website built for devs by devs. It's a
-              place where you can connect with other developers, share your
-              projects, learn new skills, and get feedback. Whether you're a
-              beginner or an expert, you'll find something for you here.
-            </p>
-          </div>
-          <div className="grid justify-center gap-4 sm:grid-cols-2  md:grid-cols-4">
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">123</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">
-                    Tech Discussions
-                  </h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Discussing the latest trends in technology with fellow devs.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">456</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">
-                    Create Posts
-                  </h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Demonstrate your expertise, document your learning journey
-                    and achievements.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">789</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">TechStack</h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Choose your stack and have a quick reference to all your
-                    docs
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">987</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">Boilerplate</h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Get the best starter templates for modern web development
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">654</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">Profiles</h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Build up your profile and create authority for prospective
-                    employers
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">321</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">
-                    Subscriptions
-                  </h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Free and paid subscriptions using Stripe.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">654</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">
-                    Subscriptions
-                  </h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Free and paid subscriptions using Stripe.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-              <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-                <span className="text-5xl font-bold">987</span>
-                <div className="space-y-2">
-                  <h3 className="text-strawberry-100 font-bold">
-                    Subscriptions
-                  </h3>
-                  <p className="text-strawberry-100 text-sm">
-                    Free and paid subscriptions using Stripe.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mx-auto flex flex-col items-center gap-4 md:max-w-[52rem]">
-            <p className="text-strawberry-700 dark:text-strawberry-200 max-w-[85%] leading-normal sm:text-lg sm:leading-7">
-              Taxonomy also includes a blog and a full-featured documentation
-              site built using Contentlayer and MDX.
-            </p>
-          </div>
-        </section>
-        ``
-        {/* <section className="dark:via-trueGray flex h-[100vh] w-full items-center justify-center  bg-gradient-to-r from-pink-600 via-red-500 to-red-600 dark:from-gray-900 dark:to-[rgb(18,18,18)]">
-        <section className="container grid max-w-6xl items-center  justify-center gap-6 px-8  md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
-          <div className="mx-auto my-auto flex flex-col  items-center justify-center gap-3 text-center space-y-3 first-letter:flex">
-            <a
-              href="#_"
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-white p-4 px-6 py-3 font-medium  shadow-md transition duration-300 ease-out"
-            >
-              <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center text-white duration-300 group-hover:translate-x-0">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
-              </span>
-              <span className="ease absolute flex h-full w-full transform items-center justify-center font-bold transition-all duration-300 group-hover:translate-x-full">
-                Connect With Us on Social Media
-              </span>
-              <span className="invisible relative">
-                Connect With Us on Social Media
-              </span>
-            </a>
-            <h1 className="max-w-6xl space-y-4 text-4xl font-bold leading-[1.1] tracking-tighter text-white sm:text-5xl md:text-6xl 2xl:text-[90px]">
-              Ignite Your Creativity with Strawberry Pop Design
-            </h1>
-            <p className="mx-auto max-w-3xl leading-normal text-white sm:text-xl sm:leading-8">
-              Engage in the Strawberry Pop Design Community. Unleash your
-              creativity, Establish your brand, &nbsp;
-              <span className="text-yellow-500">Earn while you learn.</span>
-            </p>
-            <div className="mx-auto flex justify-center gap-4">
-              <Link
-                href="/login"
-                className="text-gray-800 rounded-md border border-transparent bg-yellow-400 px-8 py-3 text-base font-medium hover:bg-yellow-500 md:px-10 md:py-4 md:text-lg"
-              >
-                Join The Squadd
-              </Link>
-              <Link
-                href=""
-                target="_blank"
-                rel="noreferrer"
-                className="bg-brown-800 hover:bg-brown-900 rounded-md border border-transparent px-8 py-3 text-base font-medium text-yellow-400 md:px-10 md:py-4 md:text-lg"
-              >
-                Explore our Forest on GitHub
-              </Link>
-            </div>
-            <div className="mx-auto max-w-5xl px-6 lg:px-8">
-              <div className="mx-auto mt-4 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5"></div>
-            </div>
-          </div>
-        </section>
-      </section> */}
-        {/* <section className="bg-strawberry-50 mx-auto grid min-h-screen max-w-6xl justify-center gap-6 bg-gradient-to-r from-pink-600 via-red-500 to-red-600 px-8 py-8 text-center  md:py-12 lg:py-24">
-        <div className="mx-auto flex flex-col items-center gap-4">
-          <h2 className="text-strawberry-800 text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-            Features
-          </h2>
-          <p className="text-strawberry-700 dark:text-strawberry-200 max-w-[85%] leading-normal sm:text-lg sm:leading-7">
-            DevSpace is a community website built for devs by devs. It's a place
-            where you can connect with other developers, share your projects,
-            learn new skills, and get feedback. Whether you're a beginner or an
-            expert, you'll find something for you here.
-          </p>
-        </div>
-        <div className="grid justify-center gap-4 sm:grid-cols-2  md:grid-cols-4">
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">123</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">
-                  Tech Discussions
-                </h3>
-                <p className="text-strawberry-100 text-sm">
-                  Discussing the latest trends in technology with fellow devs.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">456</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">Create Posts</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Demonstrate your expertise, document your learning journey and
-                  achievements.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">789</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">TechStack</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Choose your stack and have a quick reference to all your docs
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">987</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">Boilerplate</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Get the best starter templates for modern web development
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">654</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">Profiles</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Build up your profile and create authority for prospective
-                  employers
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">321</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">Subscriptions</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Free and paid subscriptions using Stripe.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">654</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">Subscriptions</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Free and paid subscriptions using Stripe.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-strawberry-200 relative overflow-hidden rounded-lg border bg-white p-2 shadow-2xl">
-            <div className="bg-strawberry-800 text-strawberry-200 flex h-[180px] flex-col justify-between rounded-md p-6">
-              <span className="text-5xl font-bold">987</span>
-              <div className="space-y-2">
-                <h3 className="text-strawberry-100 font-bold">Subscriptions</h3>
-                <p className="text-strawberry-100 text-sm">
-                  Free and paid subscriptions using Stripe.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mx-auto flex flex-col items-center gap-4 md:max-w-[52rem]">
-          <p className="text-strawberry-700 dark:text-strawberry-200 max-w-[85%] leading-normal sm:text-lg sm:leading-7">
-            Taxonomy also includes a blog and a full-featured documentation site
-            built using Contentlayer and MDX.
-          </p>
-        </div>
-      </section> */}
+        </section> */}
       </div>
     </MainLayout>
   );

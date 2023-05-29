@@ -44,13 +44,13 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
       profile(profile) {
-        const givenName = profile.name ?? '';
+        const givenName = profile.name ?? 'User';
         return {
           id: profile.id.toString(),
           name: profile.name ?? profile.login,
           email: profile.email,
           image: profile.avatar_url,
-          username: generateUsername(profile.name),
+          username: generateUsername(givenName),
         };
       },
     }),
