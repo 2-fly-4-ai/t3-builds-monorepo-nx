@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
+import { serialize } from 'next-mdx-remote/serialize';
 
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
@@ -67,7 +68,7 @@ export const WriteFormSchema = z.object({
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const { tableOfContentsResult, slug, postsByTag } = props;
+  const { tableOfContentsResult, postsByTag, slug } = props;
 
   const {
     register,
@@ -93,13 +94,11 @@ export default function PostPage(
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const postRoute = trpc.useContext().post;
-  const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
+  const getPost = trpc.post.getCoursePost.useQuery({ slug: slug.toString() });
   // console.warn(getPost.data);
-  // const postsByTag = trpc.post.getPostsWithTag.useQuery({
+  // const postsByTag = trpc.post.getCoursePostsWithTag.useQuery({
   //   tags: getPost?.data?.tags.map((tag) => tag.name),
   // });
-
-  // console.warn('POOPI', postsByTag?.data);
 
   // props?.tags?.[0]?.name,
   interface Item {
@@ -567,8 +566,8 @@ export async function getStaticProps(
 
   const slug = context.params?.slug; // Access the first element of the slug array
 
-  const postData = await helpers.post.getPost.fetch({ slug });
-  const tagData = await helpers.post.getPostsWithTag.fetch({
+  const postData = await helpers.post.getCoursePost.fetch({ slug });
+  const tagData = await helpers.post.getCoursePostsWithTag.fetch({
     tags: postData?.tags.map((tag) => tag.name),
   });
 
@@ -578,12 +577,13 @@ export async function getStaticProps(
     tableOfContentsResult = await getTableOfContentsHTML(postData.html);
   }
 
+  // Convert createdAt to a serializable format
   const postsByTag = tagData.map((post) => ({
     ...post,
     createdAt: post.createdAt.toISOString(),
   }));
 
-  console.warn(postsByTag);
+  // console.warn(postsByTag);
 
   return {
     props: {

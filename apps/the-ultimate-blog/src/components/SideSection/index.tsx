@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
-  const readingList = trpc.post.getReadingList.useQuery();
+  const readingList = trpc.post.getReadingList.useQuery({ itemType: 'post' });
   const suggestions = trpc.user.getSuggestions.useQuery();
   const user = useSession();
   const [mainClass, setMainClass] = useState('');

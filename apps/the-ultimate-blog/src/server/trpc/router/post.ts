@@ -52,7 +52,6 @@ export const postRouter = router({
       console.warn(data.path);
       return data?.path || '';
     }),
-
   createPost: protectedProcedure
     .input(
       WriteFormSchema.and(
@@ -71,7 +70,7 @@ export const postRouter = router({
     .mutation(
       async ({
         ctx: { prisma, session },
-        input: { title, description, text, tagsIds, html, featuredImage },
+        input: { title, description, tagsIds, html, featuredImage },
       }) => {
         // create a function that checks whether the post with this title exists
 
@@ -79,7 +78,6 @@ export const postRouter = router({
           data: {
             title,
             description,
-            text,
             html,
             slug: slugify(title, { lower: true }),
             author: {
@@ -173,9 +171,8 @@ export const postRouter = router({
         ctx: { prisma, session },
         input: {
           title,
-          techDescription,
+          description,
           shortDescription,
-          text,
           tagsIds,
           html,
           featuredImage,
@@ -190,7 +187,7 @@ export const postRouter = router({
         const post = await prisma.tech.create({
           data: {
             title,
-            techDescription,
+            description,
             shortDescription,
             docsUrl,
             webUrl,
@@ -225,7 +222,7 @@ export const postRouter = router({
         id: z.string(),
         title: z.string().optional(),
         shortDescription: z.string().optional(),
-        techDescription: z.string().optional(),
+        description: z.string().optional(),
         docsUrl: z.string().optional(),
         webUrl: z.string().optional(),
         githubUrl: z.string().optional(),
@@ -246,7 +243,7 @@ export const postRouter = router({
         input: {
           id,
           title,
-          techDescription,
+          description,
           shortDescription,
           docsUrl,
           webUrl,
@@ -271,7 +268,7 @@ export const postRouter = router({
           },
           data: {
             title,
-            techDescription,
+            description,
             shortDescription,
             docsUrl,
             webUrl,
@@ -348,6 +345,190 @@ export const postRouter = router({
           title: true,
           text: true,
           html: true,
+          tags: true,
+          createdAt: true,
+          authorId: true,
+          author: {
+            select: {
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+          slug: true,
+          featuredImage: true,
+          likes: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : false,
+        },
+      });
+
+      return post;
+    }),
+
+  createCoursePost: protectedProcedure
+    .input(
+      WriteFormSchema.and(
+        z.object({
+          tagsIds: z
+            .array(
+              z.object({
+                id: z.string(),
+              })
+            )
+            .optional(),
+          featuredImage: z.string().url().optional(),
+        })
+      )
+    )
+    .mutation(
+      async ({
+        ctx: { prisma, session },
+        input: { title, description, tagsIds, html, featuredImage },
+      }) => {
+        // create a function that checks whether the post with this title exists
+
+        const post = await prisma.course.create({
+          data: {
+            title,
+            description,
+            html,
+            slug: slugify(title, { lower: true }),
+            author: {
+              connect: {
+                id: session.user.id,
+              },
+            },
+            tags: {
+              connect: tagsIds,
+            },
+            featuredImage: featuredImage,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return post;
+      }
+    ),
+
+  editCoursePost: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        html: z.string().optional(),
+        tagsIds: z
+          .array(
+            z.object({
+              id: z.string(),
+            })
+          )
+          .optional(),
+      })
+    )
+    .mutation(
+      async ({
+        ctx: { prisma },
+        input: { id, title, description, tagsIds, html },
+      }) => {
+        const post = await prisma.course.findUnique({ where: { id } });
+
+        if (!post) {
+          throw new Error('Post not found');
+        }
+
+        // check if slug is already set for the post
+        const slug = post.slug || slugify(title);
+
+        const updatedPost = await prisma.course.update({
+          where: {
+            id,
+          },
+          data: {
+            title,
+            description,
+            html,
+            tags: {
+              set: tagsIds,
+            },
+            slug, // use existing slug or new slug based on title
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return updatedPost;
+      }
+    ),
+
+  getCoursePosts: publicProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      const posts = await prisma.course.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          featuredImage: true,
+          author: {
+            select: {
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+          bookmarks: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : false,
+          tags: {
+            select: {
+              name: true,
+              id: true,
+              slug: true,
+            },
+          },
+          likes: true, // include likes count
+        },
+      });
+      return posts;
+    }
+  ),
+
+  getCoursePost: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input: { slug } }) => {
+      const post = await prisma.course.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          id: true,
+          description: true,
+          title: true,
+          text: true,
+          html: true,
+          tags: true,
+          createdAt: true,
           authorId: true,
           author: {
             select: {
@@ -381,7 +562,7 @@ export const postRouter = router({
         slug: true,
         title: true,
         shortDescription: true,
-        techDescription: true,
+        description: true,
         docsUrl: true,
         webUrl: true,
         githubUrl: true,
@@ -416,26 +597,108 @@ export const postRouter = router({
     return posts;
   }),
 
-  getTechPostsByTag: publicProcedure
+  createProductPost: protectedProcedure
     .input(
-      z.object({
-        tag: z.string().optional(),
-      })
+      WriteFormSchema.and(
+        z.object({
+          tagsIds: z
+            .array(
+              z.object({
+                id: z.string(),
+              })
+            )
+            .optional(),
+          featuredImage: z.string().url().optional(),
+        })
+      )
     )
-    .query(async ({ ctx: { prisma, session }, input }) => {
-      const { tag } = input;
+    .mutation(
+      async ({
+        ctx: { prisma, session },
+        input: { title, description, tagsIds, html, featuredImage },
+      }) => {
+        // create a function that checks whether the post with this title exists
 
-      const where = tag
-        ? {
-            tags: {
-              some: {
-                name: tag,
+        const post = await prisma.product.create({
+          data: {
+            title,
+            description,
+            html,
+            slug: slugify(title, { lower: true }),
+            author: {
+              connect: {
+                id: session.user.id,
               },
             },
-          }
-        : {};
+            tags: {
+              connect: tagsIds,
+            },
+            featuredImage: featuredImage,
+          },
+          select: {
+            id: true,
+          },
+        });
 
-      const posts = await prisma.tech.findMany({
+        return post;
+      }
+    ),
+
+  editProductPost: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        html: z.string().optional(),
+        tagsIds: z
+          .array(
+            z.object({
+              id: z.string(),
+            })
+          )
+          .optional(),
+      })
+    )
+    .mutation(
+      async ({
+        ctx: { prisma },
+        input: { id, title, description, tagsIds, html },
+      }) => {
+        const post = await prisma.product.findUnique({ where: { id } });
+
+        if (!post) {
+          throw new Error('Post not found');
+        }
+
+        // check if slug is already set for the post
+        const slug = post.slug || slugify(title);
+
+        const updatedPost = await prisma.course.update({
+          where: {
+            id,
+          },
+          data: {
+            title,
+            description,
+            html,
+            tags: {
+              set: tagsIds,
+            },
+            slug, // use existing slug or new slug based on title
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        return updatedPost;
+      }
+    ),
+
+  getProductPosts: publicProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      const posts = await prisma.product.findMany({
         orderBy: {
           createdAt: 'desc',
         },
@@ -443,14 +706,8 @@ export const postRouter = router({
           id: true,
           slug: true,
           title: true,
-          shortDescription: true,
-          techDescription: true,
-          docsUrl: true,
-          webUrl: true,
-          githubUrl: true,
-          pricingUrl: true,
+          description: true,
           createdAt: true,
-          html: true,
           featuredImage: true,
           author: {
             select: {
@@ -459,6 +716,13 @@ export const postRouter = router({
               username: true,
             },
           },
+          bookmarks: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : false,
           tags: {
             select: {
               name: true,
@@ -466,10 +730,285 @@ export const postRouter = router({
               slug: true,
             },
           },
+          likes: true, // include likes count
+        },
+      });
+      return posts;
+    }
+  ),
+
+  getProductPost: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input: { slug } }) => {
+      const post = await prisma.product.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          id: true,
+          description: true,
+          title: true,
+          text: true,
+          html: true,
+          tags: true,
+          createdAt: true,
+          authorId: true,
+          author: {
+            select: {
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+          slug: true,
+          featuredImage: true,
+          likes: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : false,
+        },
+      });
+
+      return post;
+    }),
+
+  //working version
+  // getPostsWithTag: publicProcedure
+  //   .input(
+  //     z.object({
+  //       tag: z.string().optional(),
+  //     })
+  //   )
+  //   .query(async ({ ctx: { prisma, session }, input }) => {
+  //     const { tag } = input;
+
+  //     const where = tag
+  //       ? {
+  //           tags: {
+  //             some: {
+  //               name: tag,
+  //             },
+  //           },
+  //         }
+  //       : {};
+
+  //     const posts = await prisma.post.findMany({
+  //       orderBy: {
+  //         createdAt: 'desc',
+  //       },
+  //       select: {
+  //         id: true,
+  //         slug: true,
+  //         title: true,
+  //         description: true,
+  //         createdAt: true,
+  //         featuredImage: true,
+  //         // author: {
+  //         //   select: {
+  //         //     name: true,
+  //         //     image: true,
+  //         //     username: true,
+  //         //   },
+  //         // },
+  //         // tags: {
+  //         //   select: {
+  //         //     name: true,
+  //         //     id: true,
+  //         //     slug: true,
+  //         //   },
+  //         // },
+  //         likes: true,
+  //       },
+  //       where,
+  //     });
+
+  //     return posts;
+  //   }),
+
+  getPostsWithTag: publicProcedure
+    .input(
+      z.object({
+        tags: z.array(z.string()).optional(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const { tags } = input;
+
+      const where = tags
+        ? {
+            tags: {
+              some: {
+                name: {
+                  in: tags,
+                },
+              },
+            },
+          }
+        : {};
+
+      const posts = await prisma.post.findMany({
+        orderBy: [
+          {
+            likes: {
+              _count: 'desc', // use _count to order by the number of likes
+            },
+          },
+        ],
+        take: 20,
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          featuredImage: true,
           likes: true,
         },
         where,
       });
+
+      return posts;
+    }),
+
+  getTechPostsByTag: publicProcedure
+    .input(
+      z.object({
+        tags: z.array(z.string()).optional(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const { tags } = input;
+
+      const where = tags
+        ? {
+            tags: {
+              some: {
+                name: {
+                  in: tags,
+                },
+              },
+            },
+          }
+        : {};
+
+      const posts = await prisma.tech.findMany({
+        orderBy: [
+          {
+            likes: {
+              _count: 'desc', // use _count to order by the number of likes
+            },
+          },
+        ],
+        take: 20,
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          featuredImage: true,
+          likes: true,
+        },
+        where,
+      });
+
+      return posts;
+    }),
+
+  getCoursePostsWithTag: publicProcedure
+    .input(
+      z.object({
+        tags: z.array(z.string()).optional(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const { tags } = input;
+
+      const where = tags
+        ? {
+            tags: {
+              some: {
+                name: {
+                  in: tags,
+                },
+              },
+            },
+          }
+        : {};
+
+      const posts = await prisma.course.findMany({
+        orderBy: [
+          {
+            likes: {
+              _count: 'desc', // use _count to order by the number of likes
+            },
+          },
+        ],
+        take: 20,
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          featuredImage: true,
+          likes: true,
+        },
+        where,
+      });
+
+      return posts;
+    }),
+
+  getProductPostsWithTag: publicProcedure
+    .input(
+      z.object({
+        tags: z.array(z.string()).optional(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const { tags } = input;
+
+      const where = tags
+        ? {
+            tags: {
+              some: {
+                name: {
+                  in: tags,
+                },
+              },
+            },
+          }
+        : {};
+
+      const posts = await prisma.product.findMany({
+        orderBy: [
+          {
+            likes: {
+              _count: 'desc', // use _count to order by the number of likes
+            },
+          },
+        ],
+        take: 20,
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          featuredImage: true,
+          likes: true,
+        },
+        where,
+      });
+
       return posts;
     }),
 
@@ -487,7 +1026,7 @@ export const postRouter = router({
         select: {
           id: true,
           shortDescription: true,
-          techDescription: true,
+          description: true,
           docsUrl: true,
           webUrl: true,
           githubUrl: true,
@@ -587,77 +1126,211 @@ export const postRouter = router({
         },
       });
     }),
-  bookmarkPost: protectedProcedure
+
+  bookmarkItem: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
+        itemId: z.string(),
+        itemType: z
+          .string()
+          .refine((value) => ['post', 'tech', 'course'].includes(value), {
+            message: "Item type must be either 'post', 'tech', or 'course'",
+          }),
       })
     )
-
-    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
-      await prisma.bookMark.create({
-        data: {
-          userId: session.user.id,
-          postId,
-        },
-      });
-    }),
-
-  bookmarkTech: protectedProcedure
-    .input(
-      z.object({
-        techId: z.string(),
-      })
-    )
-
-    .mutation(async ({ ctx: { prisma, session }, input: { techId } }) => {
-      await prisma.techBookMark.create({
-        data: {
-          userId: session.user.id,
-          techId,
-        },
-      });
-    }),
+    .mutation(
+      async ({ ctx: { prisma, session }, input: { itemId, itemType } }) => {
+        switch (itemType) {
+          case 'post':
+            await prisma.bookMark.create({
+              data: {
+                userId: session.user.id,
+                postId: itemId,
+              },
+            });
+            break;
+          case 'tech':
+            await prisma.techBookMark.create({
+              data: {
+                userId: session.user.id,
+                techId: itemId,
+              },
+            });
+            break;
+          case 'course':
+            await prisma.courseBookMark.create({
+              data: {
+                userId: session.user.id,
+                courseId: itemId,
+              },
+            });
+            break;
+          default:
+            throw new Error('Invalid item type');
+        }
+      }
+    ),
 
   removeBookmark: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
+        itemId: z.string(),
+        itemType: z
+          .string()
+          .refine((value) => ['post', 'tech', 'course'].includes(value), {
+            message: "Item type must be either 'post', 'tech', or 'course'",
+          }),
       })
     )
-    .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
-      await prisma.bookMark.delete({
-        where: {
-          userId_postId: {
-            postId: postId,
-            userId: session.user.id,
-          },
-        },
-      });
-    }),
+    .mutation(
+      async ({ ctx: { prisma, session }, input: { itemId, itemType } }) => {
+        switch (itemType) {
+          case 'post':
+            await prisma.bookMark.delete({
+              where: {
+                userId_postId: {
+                  postId: itemId,
+                  userId: session.user.id,
+                },
+              },
+            });
+            break;
+          case 'tech':
+            const techBookmark = await prisma.techBookMark.findFirst({
+              where: {
+                techId: itemId,
+                userId: session.user.id,
+              },
+            });
 
-  removeBookmarkTech: protectedProcedure
-    .input(
-      z.object({
-        techId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx: { prisma, session }, input: { techId } }) => {
-      const bookmark = await prisma.techBookMark.findFirst({
-        where: {
-          techId: techId,
-          userId: session.user.id,
-        },
-      });
-
-      if (bookmark) {
-        await prisma.techBookMark.delete({
-          where: {
-            id: bookmark.id,
-          },
-        });
+            if (techBookmark) {
+              await prisma.techBookMark.delete({
+                where: {
+                  id: techBookmark.id,
+                },
+              });
+            }
+            break;
+          case 'course':
+            await prisma.courseBookMark.delete({
+              where: {
+                userId_courseId: {
+                  courseId: itemId,
+                  userId: session.user.id,
+                },
+              },
+            });
+            break;
+          default:
+            throw new Error('Invalid item type');
+        }
       }
-    }),
+    ),
+
+  // bookmarkPost: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       postId: z.string(),
+  //     })
+  //   )
+
+  //   .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+  //     await prisma.bookMark.create({
+  //       data: {
+  //         userId: session.user.id,
+  //         postId,
+  //       },
+  //     });
+  //   }),
+
+  // bookmarkTech: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       techId: z.string(),
+  //     })
+  //   )
+
+  //   .mutation(async ({ ctx: { prisma, session }, input: { techId } }) => {
+  //     await prisma.techBookMark.create({
+  //       data: {
+  //         userId: session.user.id,
+  //         techId,
+  //       },
+  //     });
+  //   }),
+
+  // bookmarkCourse: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       courseId: z.string(),
+  //     })
+  //   )
+
+  //   .mutation(async ({ ctx: { prisma, session }, input: { courseId } }) => {
+  //     await prisma.courseBookMark.create({
+  //       data: {
+  //         userId: session.user.id,
+  //         courseId,
+  //       },
+  //     });
+  //   }),
+
+  // removeBookmark: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       postId: z.string(),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx: { prisma, session }, input: { postId } }) => {
+  //     await prisma.bookMark.delete({
+  //       where: {
+  //         userId_postId: {
+  //           postId: postId,
+  //           userId: session.user.id,
+  //         },
+  //       },
+  //     });
+  //   }),
+
+  // removeBookmarkCourse: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       courseId: z.string(),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx: { prisma, session }, input: { courseId } }) => {
+  //     await prisma.courseBookMark.delete({
+  //       where: {
+  //         userId_courseId: {
+  //           courseId: courseId,
+  //           userId: session.user.id,
+  //         },
+  //       },
+  //     });
+  //   }),
+
+  // removeBookmarkTech: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       techId: z.string(),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx: { prisma, session }, input: { techId } }) => {
+  //     const bookmark = await prisma.techBookMark.findFirst({
+  //       where: {
+  //         techId: techId,
+  //         userId: session.user.id,
+  //       },
+  //     });
+
+  //     if (bookmark) {
+  //       await prisma.techBookMark.delete({
+  //         where: {
+  //           id: bookmark.id,
+  //         },
+  //       });
+  //     }
+  //   }),
 
   submitComment: protectedProcedure
     .input(
@@ -666,14 +1339,28 @@ export const postRouter = router({
           text: z.string().min(3),
           postId: z.string().optional(),
           techId: z.string().optional(),
+          courseId: z.string().optional(),
         })
-        .refine((input) => input.postId || input.techId, {
-          message:
-            "Either 'postId' or 'techId' must be provided, but not both.",
-        })
+        .refine(
+          (input) => {
+            const { postId, techId, courseId } = input;
+            return (
+              (postId && !techId && !courseId) ||
+              (!postId && techId && !courseId) ||
+              (!postId && !techId && courseId)
+            );
+          },
+          {
+            message:
+              "Either 'postId', 'techId', or 'courseId' must be provided, but not multiple at the same time.",
+          }
+        )
     )
     .mutation(
-      async ({ ctx: { prisma, session }, input: { text, postId, techId } }) => {
+      async ({
+        ctx: { prisma, session },
+        input: { text, postId, techId, courseId },
+      }) => {
         const data = {
           text,
           user: {
@@ -683,6 +1370,7 @@ export const postRouter = router({
           },
           ...(postId && { post: { connect: { id: postId } } }),
           ...(techId && { tech: { connect: { id: techId } } }),
+          ...(courseId && { course: { connect: { id: courseId } } }),
         };
 
         await prisma.comment.create({
@@ -769,7 +1457,16 @@ export const postRouter = router({
           const postData = await prisma.post.findUnique({
             where: { id: postId },
           });
-          return techData ? 'tech' : postData ? 'post' : null;
+          const courseData = await prisma.course.findUnique({
+            where: { id: postId },
+          });
+          return techData
+            ? 'tech'
+            : postData
+            ? 'post'
+            : courseData
+            ? 'course'
+            : null;
         };
 
         const modelType = await getModelType();
@@ -953,77 +1650,208 @@ export const postRouter = router({
   //     }
   //   ),
 
-  getReadingList: protectedProcedure.query(
-    async ({ ctx: { prisma, session } }) => {
-      const allBookmarks = await prisma.bookMark.findMany({
-        where: {
-          userId: session.user.id,
-        },
-        take: 10,
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          post: {
+  getReadingList: protectedProcedure
+    .input(
+      z.object({
+        itemType: z
+          .string()
+          .refine((value) => ['post', 'tech', 'course'].includes(value), {
+            message: "Item type must be either 'post', 'tech', or 'course'",
+          })
+          .optional(),
+      })
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const { itemType } = input ?? {};
+      let allBookmarks;
+
+      switch (itemType) {
+        case 'post':
+          allBookmarks = await prisma.bookMark.findMany({
+            where: {
+              userId: session.user.id,
+            },
+            take: 10,
+            orderBy: {
+              createdAt: 'desc',
+            },
             select: {
               id: true,
-              title: true,
-              featuredImage: true,
-              description: true,
-              author: {
+              postId: true,
+              post: {
                 select: {
-                  name: true,
-                  image: true,
+                  id: true,
+                  title: true,
+                  featuredImage: true,
+                  description: true,
+                  author: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  createdAt: true,
+                  slug: true,
                 },
               },
-              createdAt: true,
-              slug: true,
             },
-          },
-        },
-      });
+          });
+          break;
+        case 'tech':
+          allBookmarks = await prisma.techBookMark.findMany({
+            where: {
+              userId: session.user.id,
+            },
+            take: 10,
+            orderBy: {
+              createdAt: 'desc',
+            },
+            select: {
+              id: true,
+              techId: true,
+              tech: {
+                select: {
+                  id: true,
+                  title: true,
+                  featuredImage: true,
+                  description: true,
+                  author: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  createdAt: true,
+                  slug: true,
+                },
+              },
+            },
+          });
+          break;
+        case 'course':
+          allBookmarks = await prisma.courseBookMark.findMany({
+            where: {
+              userId: session.user.id,
+            },
+            take: 10,
+            orderBy: {
+              createdAt: 'desc',
+            },
+            select: {
+              id: true,
+              courseId: true,
+              course: {
+                select: {
+                  id: true,
+                  title: true,
+                  featuredImage: true,
+                  description: true,
+                  author: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  createdAt: true,
+                  slug: true,
+                },
+              },
+            },
+          });
+          break;
+        default:
+          // Return all bookmarks if no itemType or unsupported itemType is provided
+          const postBookmarks = await prisma.bookMark.findMany({
+            where: { userId: session.user.id },
+          });
+          const techBookmarks = await prisma.techBookMark.findMany({
+            where: { userId: session.user.id },
+          });
+          const courseBookmarks = await prisma.courseBookMark.findMany({
+            where: { userId: session.user.id },
+          });
+          allBookmarks = [
+            ...postBookmarks,
+            ...techBookmarks,
+            ...courseBookmarks,
+          ];
+      }
 
       return allBookmarks;
-    }
-  ),
+    }),
 
-  getTechReadingList: protectedProcedure.query(
-    async ({ ctx: { prisma, session } }) => {
-      const allTechBookmarks = await prisma.techBookMark.findMany({
-        where: {
-          userId: session.user.id,
-        },
-        take: 10,
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          tech: {
-            select: {
-              id: true,
-              title: true,
-              featuredImage: true,
-              techDescription: true,
-              githubUrl: true,
-              webUrl: true,
-              docsUrl: true,
-              pricingUrl: true,
-              author: {
-                select: {
-                  name: true,
-                  image: true,
-                },
-              },
-              createdAt: true,
-              slug: true,
-            },
-          },
-        },
-      });
+  // getTechReadingList: protectedProcedure.query(
+  //   async ({ ctx: { prisma, session } }) => {
+  //     const allTechBookmarks = await prisma.techBookMark.findMany({
+  //       where: {
+  //         userId: session.user.id,
+  //       },
+  //       take: 10,
+  //       orderBy: {
+  //         createdAt: 'desc',
+  //       },
+  //       select: {
+  //         id: true,
+  //         tech: {
+  //           select: {
+  //             id: true,
+  //             title: true,
+  //             featuredImage: true,
+  //             description: true,
+  //             githubUrl: true,
+  //             webUrl: true,
+  //             docsUrl: true,
+  //             pricingUrl: true,
+  //             author: {
+  //               select: {
+  //                 name: true,
+  //                 image: true,
+  //               },
+  //             },
+  //             createdAt: true,
+  //             slug: true,
+  //           },
+  //         },
+  //       },
+  //     });
 
-      return allTechBookmarks;
-    }
-  ),
+  //     return allTechBookmarks;
+  //   }
+  // ),
+
+  //   getCoursesReadingList: protectedProcedure.query(
+  //     async ({ ctx: { prisma, session } }) => {
+  //       const allCourseBookmarks = await prisma.courseBookMark.findMany({
+  //         where: {
+  //           userId: session.user.id,
+  //         },
+  //         take: 10,
+  //         orderBy: {
+  //           createdAt: 'desc',
+  //         },
+  //         select: {
+  //           id: true,
+  //           course: {
+  //             select: {
+  //               id: true,
+  //               title: true,
+  //               featuredImage: true,
+  //               description: true,
+  //               html: true,
+  //               author: {
+  //                 select: {
+  //                   name: true,
+  //                   image: true,
+  //                 },
+  //               },
+  //               createdAt: true,
+  //               slug: true,
+  //             },
+  //           },
+  //         },
+  //       });
+
+  //       return allCourseBookmarks;
+  //     }
+  //   ),
 });

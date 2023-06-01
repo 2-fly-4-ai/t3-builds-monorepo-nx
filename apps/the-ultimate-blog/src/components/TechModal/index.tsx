@@ -49,7 +49,7 @@ const Editor = dynamic(() => import('../../components/Ckeditor'), {
 
 type ModalProps = {
   title: string;
-  techDescription: string;
+  description: string;
   html: string;
   post: any; // Replace 'any' with the appropriate type for 'post'
 };
@@ -59,7 +59,7 @@ type TechFormModalProps = {
     id: string;
     title: string;
     shortDescription: string;
-    techDescription: string;
+    description: string;
     text: string;
     html: string;
     slug: string;
@@ -75,7 +75,7 @@ type TechFormModalProps = {
 
 export const WriteFormSchema = z.object({
   title: z.string().min(1),
-  techDescription: z.string().min(10).optional(),
+  description: z.string().min(10).optional(),
   text: z.string().min(100).optional(),
   html: z.string().min(100).optional(),
   featuredImage: z.string().optional(),
@@ -109,7 +109,7 @@ export default function TechModal({ post }: TechFormModalProps) {
     githubUrl,
     docsUrl,
     pricingUrl,
-    techDescription,
+    description,
   } = post;
 
   const test = true;
@@ -141,7 +141,7 @@ export default function TechModal({ post }: TechFormModalProps) {
   const [showEditor, setShowEditor] = useState<boolean>(false);
 
   const postsByTag = trpc.post.getTechPostsByTag.useQuery({
-    tag: post?.tags?.[0]?.name,
+    tags: post?.tags.map((tag) => tag.name),
   });
 
   const handleEditPost = trpc.post.editTechpost.useMutation({
@@ -160,7 +160,7 @@ export default function TechModal({ post }: TechFormModalProps) {
       const result = await handleEditPost.mutateAsync({
         id: id,
         title: formData.title,
-        techDescription: formData.techDescription,
+        description: formData.description,
         html: formData.html,
       });
     } catch (error) {
@@ -181,7 +181,7 @@ export default function TechModal({ post }: TechFormModalProps) {
   useEffect(() => {
     let defaultValues = {} as ModalProps;
     defaultValues.title = title; // Replace 'Example Title' with your actual title value
-    defaultValues.techDescription = techDescription; // Replace 'Example Tech Description' with your actual tech description value
+    defaultValues.description = description; // Replace 'Example Tech Description' with your actual tech description value
     defaultValues.html = html; // Replace 'Example HTML' with your actual HTML value
     reset({ ...defaultValues });
 
@@ -323,15 +323,15 @@ export default function TechModal({ post }: TechFormModalProps) {
                         }  relative  max-h-min  overflow-hidden  text-base dark:text-gray-200`}
                       >
                         {!isDescriptionEditorOpen ? (
-                          techDescription
+                          description
                         ) : (
                           <div>
                             <TextareaAutosize
                               rows={8}
-                              id="techDescription"
+                              id="description"
                               className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
                               // defaultValue={description}
-                              {...register('techDescription')}
+                              {...register('description')}
                             />
                             {!isSubmitting && (
                               <div className="flex gap-2 py-2">
@@ -355,8 +355,8 @@ export default function TechModal({ post }: TechFormModalProps) {
                                 </button>
                               </div>
                             )}
-                            {errors.techDescription && (
-                              <p>{errors.techDescription.message}</p>
+                            {errors.description && (
+                              <p>{errors.description.message}</p>
                             )}
                           </div>
                         )}

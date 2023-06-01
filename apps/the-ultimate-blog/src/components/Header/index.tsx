@@ -8,7 +8,7 @@ import { FiLogOut } from '../../icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useGlobalContextStore } from '@front-end-nx/shared/ui';
-import Link from 'next/link';
+import { useGlobalContextCourseStore } from '@front-end-nx/shared/ui';
 import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
 import { ThemeToggle } from 'libs/shared/next13-ui/src/shadnui/components/theme-toggle/theme-toggle';
 
@@ -18,6 +18,8 @@ import { useRouter } from 'next/router';
 import { usePathname } from 'next/navigation';
 import { MainNav } from '@front-end-nx/shared/ui';
 import { useEffect } from 'react';
+import Link from 'next/link';
+import { trpc } from '../../utils/trpc';
 
 // const NavigationMenuDemo = dynamic(
 //   () => import('libs/shared/ui/src/layouts/nav-menu/nav-menu'),
@@ -27,11 +29,22 @@ import { useEffect } from 'react';
 export default function Header() {
   const router = useRouter();
   const path = usePathname();
-  console.warn('path', path);
 
   //why is this undefined
 
   const { data: sessionData, status } = useSession();
+
+  const userProfile = trpc.user.getUserProfile.useQuery(
+    {
+      username: sessionData?.user?.id,
+    },
+    {
+      enabled: !!sessionData?.user?.id,
+    }
+  );
+
+  const username = userProfile?.data?.username;
+
   const [headerColor, setHeaderColor] = useState(false);
 
   useEffect(() => {
@@ -121,6 +134,7 @@ export default function Header() {
   const { setIsWriteModalOpen } = useGlobalContextStore();
   const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
     useGlobalContextTechStore();
+  // const { setIsWriteCourseModalOpen } = useGlobalContextCourseStore();
   const [segment, setSegment] = React.useState('');
 
   React.useEffect(() => {
@@ -147,13 +161,15 @@ export default function Header() {
           <div>
             <div className="h-9 w-9 rounded-full bg-gray-600">
               {' '}
-              <Image
-                src={sessionData.user.image}
-                alt={sessionData.user.name}
-                className="h-9 w-9 rounded-full border-2"
-                width={40}
-                height={40}
-              />
+              <Link href={`/user/${username}`}>
+                <Image
+                  src={sessionData.user.image}
+                  alt={sessionData.user.name}
+                  className="h-9 w-9 rounded-full border-2"
+                  width={40}
+                  height={40}
+                />
+              </Link>
             </div>
           </div>
 
@@ -175,6 +191,16 @@ export default function Header() {
               >
                 <AiOutlineEdit />
                 Add Tech
+              </button>
+            </div>
+          ) : path === '/courses' ? (
+            <div>
+              <button
+                onClick={() => setIsWriteModalOpen(true)}
+                className="dark flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+              >
+                <AiOutlineEdit />
+                Write Course
               </button>
             </div>
           ) : null}

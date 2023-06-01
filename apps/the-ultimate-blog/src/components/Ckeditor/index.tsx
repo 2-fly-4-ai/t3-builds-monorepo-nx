@@ -15,7 +15,7 @@ interface CKeditorProps {
 
 const Editor = ({ onChange, value }: CKeditorProps) => {
   const { supabase, error } = useSupabase();
-  const debouncedValue = useDebounce(value, 300);
+  const debouncedValue = useDebounce(value, 500);
   const [showEditor, setShowEditor] = useState<boolean>(false);
 
   if (typeof window !== 'undefined') {

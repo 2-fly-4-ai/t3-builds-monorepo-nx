@@ -35,6 +35,12 @@ export const userRouter = router({
         select: {
           name: true,
           image: true,
+          shortDescription: true,
+          bio: true,
+          portfolioUrl: true,
+          LinkedInUrl: true,
+
+          githubUrl: true,
           id: true,
           username: true,
           _count: {

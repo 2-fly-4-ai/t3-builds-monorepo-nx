@@ -127,7 +127,7 @@ function test() {
             <div className="mx-auto my-auto flex flex-col items-center justify-center gap-3 space-y-3 text-center">
               <a
                 href="#_"
-                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-pink-500 bg-white p-4 px-6 py-3 font-bold  text-pink-600 shadow-md transition duration-300 ease-out dark:bg-gray-900 dark:text-pink-500"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-pink-500 bg-white p-4 px-6 py-3 font-bold  text-pink-600  transition duration-300 ease-out dark:bg-gray-900 dark:text-pink-500"
               >
                 <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center  text-pink-600 duration-300 group-hover:translate-x-0 dark:text-pink-500">
                   <svg
@@ -183,25 +183,19 @@ function test() {
               <div class="mx-auto max-w-screen-xl px-4 py-8 text-center lg:px-6 lg:py-8">
                 <dl class="mx-auto grid max-w-screen-md gap-8 text-pink-800 dark:text-white sm:grid-cols-3">
                   <div class="flex flex-col items-center justify-center">
-                    <dt class="mb-2 text-3xl font-extrabold md:text-4xl">
-                      73M+
-                    </dt>
+                    <dt class="mb-2 text-3xl font-medium md:text-4xl">73M+</dt>
                     <dd class="font-light text-pink-800 dark:text-pink-500">
                       developers
                     </dd>
                   </div>
                   <div class="flex flex-col items-center justify-center">
-                    <dt class="mb-2 text-3xl font-extrabold md:text-4xl">
-                      1B+
-                    </dt>
+                    <dt class="mb-2 text-3xl font-medium md:text-4xl">1B+</dt>
                     <dd class="font-light text-pink-800 dark:text-pink-500">
                       contributors
                     </dd>
                   </div>
                   <div class="flex flex-col items-center justify-center">
-                    <dt class="mb-2 text-3xl font-extrabold md:text-4xl">
-                      4M+
-                    </dt>
+                    <dt class="mb-2 text-3xl font-medium md:text-4xl">4M+</dt>
                     <dd class="font-light text-pink-800 dark:text-pink-500">
                       organizations
                     </dd>
@@ -214,7 +208,7 @@ function test() {
 
         <div className=" flex  w-full flex-wrap gap-4   gap-y-8 p-16 font-sans">
           <div className="flex flex-col gap-4">
-            <div class="flex h-min w-min cursor-pointer items-center justify-between rounded-lg border border-pink-500 bg-pink-100 p-4 shadow hover:border-pink-500 active:bg-gray-50 dark:bg-pink-700">
+            <div class="flex h-min w-min cursor-pointer items-center justify-between rounded-lg border border-pink-500 bg-pink-100 p-4  hover:border-pink-500 active:bg-gray-50 dark:bg-pink-700">
               <div class="flex items-center">
                 <input id="input1" type="checkbox" class="mr-4" />
                 <div class="mr-4">
@@ -301,7 +295,7 @@ function test() {
           </div>
           {/* PEOPLE */}
           <div className="flex flex-wrap gap-4">
-            <div class="h-min max-w-sm items-center rounded-lg bg-gray-50 px-6 shadow dark:border-gray-700 dark:bg-gray-800 sm:flex">
+            <div class="h-min max-w-sm items-center rounded-lg border border-pink-500 bg-pink-100 px-6 dark:bg-pink-700 sm:flex">
               <a href="#">
                 <img
                   class="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
@@ -310,11 +304,11 @@ function test() {
                 />
               </a>
               <div class="p-5">
-                <h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <h3 class="text-xl font-bold tracking-tight text-pink-800 dark:text-white">
                   <a href="#">Jese Leos</a>
                 </h3>
-                <span class="text-gray-500 dark:text-gray-400">CTO</span>
-                <p class="mb-4 mt-3 font-light text-gray-500 dark:text-gray-400">
+                <span class="text-pink-600 dark:text-pink-200">CTO</span>
+                <p class="mb-4 mt-3 font-light text-pink-600 dark:text-pink-200">
                   Jese drives the technical strategy of the flowbite platform
                   and brand.
                 </p>
@@ -322,7 +316,7 @@ function test() {
                   <li>
                     <a
                       href="#"
-                      class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                      class="text-pink-600 hover:text-pink-900 dark:hover:text-white"
                     >
                       <svg
                         class="h-5 w-5"
@@ -341,7 +335,7 @@ function test() {
                   <li>
                     <a
                       href="#"
-                      class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                      class="text-pink-600 hover:text-pink-900 dark:hover:text-white"
                     >
                       <svg
                         class="h-5 w-5"
@@ -356,7 +350,7 @@ function test() {
                   <li>
                     <a
                       href="#"
-                      class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                      class="text-pink-600 hover:text-pink-900 dark:hover:text-white"
                     >
                       <svg
                         class="h-5 w-5"
@@ -372,32 +366,13 @@ function test() {
                       </svg>
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                    >
-                      <svg
-                        class="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
                 </ul>
               </div>
             </div>
 
             {/* ROBERT */}
 
-            <div class="fkex h-min w-80 cursor-pointer flex-col rounded-lg border border-pink-500 bg-pink-100 shadow dark:bg-pink-700">
+            <div class="fkex h-min w-80 cursor-pointer flex-col rounded-lg border border-pink-500 bg-pink-100  dark:bg-pink-700">
               <div class="checker-bg flex h-48 w-full items-center justify-center p-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -440,7 +415,7 @@ function test() {
               </div>
             </div>
 
-            <div class="flex h-min w-80 cursor-pointer flex-col rounded-lg border border-pink-500 bg-pink-100 shadow dark:bg-pink-700">
+            <div class="flex h-min w-80 cursor-pointer flex-col rounded-lg border border-pink-500 bg-pink-100  dark:bg-pink-700">
               <div class="checker-bg flex h-48 w-full items-center justify-center p-4 text-blue-500">
                 <div class="h-32 w-32 rounded-full bg-gray-100 bg-[url('https://images.pexels.com/photos/774731/pexels-photo-774731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')] bg-cover bg-center dark:bg-gray-800"></div>
               </div>
@@ -472,7 +447,7 @@ function test() {
               </div>
             </div>
 
-            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 shadow dark:border-pink-400 dark:bg-pink-700">
+            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100  dark:border-pink-400 dark:bg-pink-700">
               <div class="flex justify-end px-4 pt-4">
                 <button
                   id="dropdownButton"
@@ -494,7 +469,7 @@ function test() {
 
                 <div
                   id="dropdown"
-                  class="z-10 hidden w-44 list-none divide-y divide-pink-500 rounded-lg bg-pink-100 text-base shadow dark:bg-pink-700"
+                  class="z-10 hidden w-44 list-none divide-y divide-pink-500 rounded-lg bg-pink-100 text-base  dark:bg-pink-700"
                 >
                   <ul class="py-2" aria-labelledby="dropdownButton">
                     <li>
@@ -527,7 +502,7 @@ function test() {
 
               <div class="flex flex-col items-center pb-10">
                 <img
-                  class="mb-3 h-24 w-24 rounded-full bg-cover object-cover shadow-lg"
+                  class="mb-3 h-24 w-24 rounded-full bg-cover object-cover "
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb_eeiyO4Lulwmr0gHH365C2acJyyB_bEzHQ&usqp=CAU"
                   alt="Bonnie image"
                 />
@@ -554,9 +529,9 @@ function test() {
               </div>
             </div>
 
-            <div class="h-min max-w-xs rounded-lg border border-pink-500 bg-pink-100 p-6 text-center font-semibold shadow-lg dark:bg-pink-700 dark:text-white">
+            <div class="h-min max-w-xs rounded-lg border border-pink-500 bg-pink-100 p-6 text-center font-semibold  dark:bg-pink-700 dark:text-white">
               <img
-                class="mx-auto mb-3 h-32 w-32 rounded-full shadow-lg"
+                class="mx-auto mb-3 h-32 w-32 rounded-full "
                 src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
                 alt="product designer"
               />
@@ -570,7 +545,7 @@ function test() {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
               <button
-                class="mt-8 rounded-lg bg-pink-800 px-5 py-2 font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-pink-600 dark:bg-pink-400 dark:hover:bg-pink-800"
+                class="mt-8 rounded-lg bg-pink-800 px-5 py-2 font-semibold uppercase tracking-wider text-white  hover:bg-pink-600 dark:bg-pink-400 dark:hover:bg-pink-800"
                 type="button"
                 aria-label="Hire Me"
               >
@@ -578,7 +553,7 @@ function test() {
               </button>
             </div>
 
-            <div class="  h-min max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-5 shadow-md dark:border-pink-400 dark:bg-pink-700">
+            <div class="  h-min max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-5  dark:border-pink-400 dark:bg-pink-700">
               <img
                 class="mx-auto h-32 w-32 rounded-full"
                 src="https://picsum.photos/200"
@@ -622,8 +597,8 @@ function test() {
               </div>
             </div>
 
-            <div className="h-min max-w-xs rounded-lg border border-pink-500 bg-pink-100 p-6 text-center font-semibold  dark:bg-pink-700 dark:text-white">
-              <div class="group relative overflow-hidden rounded-lg">
+            <div className="h-min max-w-xs rounded-lg border border-pink-500 bg-pink-100 text-center font-semibold  dark:bg-pink-700 dark:text-white">
+              <div class="group relative overflow-hidden ">
                 <img
                   class="h-[320px] w-full scale-100 object-cover duration-300 ease-in group-hover:scale-125 lg:h-auto"
                   src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/team/member-1.png"
@@ -639,27 +614,29 @@ function test() {
                 </div>
               </div>
               <div className="p-6 ">
-                <span className=" text-base font-normal text-slate-700">
+                <span className=" text-base font-normal text-slate-700 dark:text-pink-200">
                   John is a software engineer with over 10 years of experience
                   in developing web and mobile applications.
                 </span>
               </div>
             </div>
 
-            <div class="h-min max-w-sm rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <a href="#">
+            <div class="h-min max-w-sm overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:border-gray-700 dark:bg-pink-800">
+              <div class="overflow-hidden">
                 <img
-                  class="w-full rounded-lg p-4"
+                  class="w-full "
                   src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
                   alt="Bonnie Green"
                 />
-              </a>
-              <div class="px-5 pb-5">
-                <h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-bold tracking-tight text-pink-800 dark:text-white">
                   <a href="#">Bonnie Green</a>
                 </h3>
-                <span class="text-gray-500">CTO & Co Founder</span>
-                <p class="mb-4 mt-3 font-light text-gray-500 dark:text-gray-400">
+                <span class="text-pink-600 dark:text-pink-200">
+                  CTO & Co Founder
+                </span>
+                <p class="mb-4 mt-3 font-light text-slate-700 dark:text-pink-200 ">
                   Bonnie drives the technical strategy of the themesberg
                   platform and brand.
                 </p>
@@ -742,34 +719,8 @@ function test() {
           </div>
 
           {/* JUST TEXT */}
-          <div className="flex gap-4">
-            <div class="flex h-min flex-col rounded-lg border border-pink-500 bg-pink-100 text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-pink-700">
-              <div class="border-b-2 border-pink-500 px-6 py-3 text-pink-800 dark:border-pink-400 dark:text-white">
-                Featured
-              </div>
-              <div class="p-6">
-                <h5 class="mb-2 text-2xl font-medium leading-tight text-pink-800 dark:text-white dark:hover:bg-pink-500">
-                  Special title treatment
-                </h5>
-                <p class="mb-4 text-base  text-slate-700  dark:text-pink-200">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-                <button
-                  type="button"
-                  class="inline-block rounded bg-pink-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white  transition duration-150 ease-in-out hover:bg-pink-600 "
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-                >
-                  Button
-                </button>
-              </div>
-              <div class="border-t-2 border-pink-500 px-6 py-3 text-pink-800 dark:border-pink-400 dark:text-white">
-                2 days ago
-              </div>
-            </div>
-
-            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-6 shadow dark:border-pink-400  dark:bg-pink-700">
+          <div className="flex flex-wrap gap-4">
+            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-6  dark:border-pink-400  dark:bg-pink-700">
               <a href="#">
                 <h5 class="mb-2 text-2xl font-medium tracking-tight text-pink-800 dark:text-white">
                   Introducing the legally blond theme 2023
@@ -800,41 +751,7 @@ function test() {
               </a>
             </div>
 
-            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-6 shadow dark:border-pink-400 dark:bg-pink-700">
-              <a href="#" class="block text-center">
-                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-pink-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="h-12 w-12 text-white"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                    />
-                  </svg>
-                </div>
-                <h5 class="mb-2 text-2xl font-medium tracking-tight text-pink-800 dark:text-white">
-                  Introducing the legally blond theme 2023
-                </h5>
-              </a>
-              <p class="font-base mb-3 text-center font-sans  text-slate-700  dark:text-pink-300">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-              <a
-                href="#"
-                class="mt-4 block w-full rounded-lg bg-pink-800 py-2 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-600"
-              >
-                Read more
-              </a>
-            </div>
-
-            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-6 shadow dark:border-pink-400 dark:bg-pink-700">
+            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-6  dark:border-pink-400 dark:bg-pink-700">
               <a href="#">
                 <div class="flex items-center justify-center">
                   <svg
@@ -863,6 +780,66 @@ function test() {
               <a
                 href="#"
                 class="inline-flex items-center rounded-lg bg-pink-800 px-4 py-2 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-600"
+              >
+                Read more
+              </a>
+            </div>
+
+            <div class=" h-min   rounded-lg   border border-pink-500 bg-pink-100 text-center  dark:bg-pink-700">
+              <div class="border-b-2 border-pink-500 px-6 py-3 text-pink-800 dark:border-pink-400 dark:text-white">
+                Featured
+              </div>
+              <div class="p-6">
+                <h5 class="mb-2 text-2xl font-medium leading-tight text-pink-800 dark:text-white dark:hover:bg-pink-500">
+                  Special title treatment
+                </h5>
+                <p class="mb-4 text-base  text-slate-700  dark:text-pink-200">
+                  With supporting text below as a natural lead-in to additional
+                  content.
+                </p>
+                <button
+                  type="button"
+                  class="inline-block rounded bg-pink-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white  transition duration-150 ease-in-out hover:bg-pink-600 "
+                  data-te-ripple-init
+                  data-te-ripple-color="light"
+                >
+                  Button
+                </button>
+              </div>
+              <div class="border-t-2 border-pink-500 px-6 py-3 text-pink-800 dark:border-pink-400 dark:text-white">
+                2 days ago
+              </div>
+            </div>
+
+            <div class="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 p-6  dark:border-pink-400 dark:bg-pink-700">
+              <a href="#" class="block text-center">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-pink-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-12 w-12 text-white"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    />
+                  </svg>
+                </div>
+                <h5 class="mb-2 text-2xl font-medium tracking-tight text-pink-800 dark:text-white">
+                  Introducing the legally blond theme 2023
+                </h5>
+              </a>
+              <p class="font-base mb-3 text-center font-sans  text-slate-700  dark:text-pink-300">
+                Here are the biggest enterprise technology acquisitions of 2021
+                so far, in reverse chronological order.
+              </p>
+              <a
+                href="#"
+                class="mt-4 block w-full rounded-lg bg-pink-800 py-2 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-600"
               >
                 Read more
               </a>
@@ -1241,84 +1218,31 @@ function test() {
             </button>
           </div>
 
-          {/* PRODUCT CARDS */}
+          {/* POST CARDS */}
 
-          <div class="h-min max-w-sm  rounded-lg border border-pink-500 bg-white shadow dark:border-pink-500 dark:bg-pink-700">
-            <a
-              href="#"
-              className="flex rounded-lg bg-pink-100 p-6 dark:bg-pink-700"
-            >
+          <div class=" h-min max-w-xs overflow-hidden rounded-lg border border-pink-500  bg-pink-100  dark:bg-pink-700">
+            <div class="relative ">
               <img
-                class="mx-auto max-h-56 rounded-t-lg"
+                class="h-40 w-full  object-cover  dark:bg-pink-700"
                 src="https://images.unsplash.com/photo-1553702446-4a0cfb5781f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
-                alt=""
+                alt="Product Image"
               />
-            </a>
-            <div class="rounded-b-lg bg-pink-100 p-5 dark:bg-pink-700">
-              <a href="#">
-                <h5 class="mb-2 text-2xl font-medium tracking-tight text-pink-800 dark:text-white">
-                  Noteworthy technology acquisitions 2021
-                </h5>
-              </a>
-              <p class="font-base mb-3  text-slate-700  dark:text-pink-200">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
+            </div>
+            <div class="p-3">
               <a
                 href="#"
-                class="inline-flex items-center rounded-lg bg-pink-800 px-3 py-2 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300  dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-800"
+                class="text-sm font-medium text-pink-800 dark:text-white"
               >
-                Read more
-                <svg
-                  aria-hidden="true"
-                  class="-mr-1 ml-2 h-4 w-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
+                Beautiful Summer
               </a>
-            </div>
-          </div>
-
-          <div class="h-min max-w-sm overflow-hidden rounded-lg border border-pink-500 bg-pink-100 shadow-lg dark:bg-pink-700">
-            <img
-              class="w-full"
-              src="https://images.unsplash.com/photo-1553702446-4a0cfb5781f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
-              alt="Sunset in the mountains"
-            />
-            <div class="px-6 py-4">
-              <div class="mb-2 text-2xl font-medium text-pink-800 dark:text-white">
-                The Coldest Sunset
-              </div>
-              <p class="font-base  text-slate-700   dark:text-pink-200">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
+              <p class="mt-1 text-xs text-slate-700 dark:text-pink-200">
+                UV protection and trendy design.
               </p>
-            </div>
-            <div class="px-6 pb-2 pt-4">
-              <a href="">
-                <span class="dark:text-pink- mb-2 mr-2 inline-block rounded-full bg-pink-800 px-3 py-1 text-sm font-semibold  text-white dark:bg-pink-400 dark:hover:bg-pink-500">
-                  #winter
-                </span>
-              </a>
-              <a href="">
-                <span class="dark:text-pink- mb-2 mr-2 inline-block rounded-full bg-pink-800 px-3 py-1 text-sm font-semibold text-white dark:bg-pink-400 dark:hover:bg-pink-500">
-                  #winter
-                </span>
-              </a>
-              <a href="">
-                <span class="dark:text-pink- mb-2 mr-2 inline-block rounded-full bg-pink-800 px-3 py-1 text-sm font-semibold text-white dark:bg-pink-400 dark:hover:bg-pink-500">
-                  #winter
-                </span>
-              </a>
+              <div class="mt-3 flex justify-start">
+                <button class="rounded bg-pink-800 px-3 py-1 text-xs font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-800">
+                  Read post
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1364,38 +1288,92 @@ function test() {
             </div>
           </div>
 
-          {/*  */}
-          <div class=" h-min max-w-xs overflow-hidden rounded-lg border border-pink-500  bg-pink-100 shadow-md dark:bg-pink-700">
-            <div class="relative ">
-              <img
-                class="h-40 w-full bg-white object-cover p-2 dark:bg-pink-700"
-                src="https://images.unsplash.com/photo-1553702446-4a0cfb5781f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
-                alt="Product Image"
-              />
-            </div>
-            <div class="p-3">
-              <a
-                href="#"
-                class="text-sm font-medium text-pink-800 dark:text-white"
-              >
-                Beautiful Summer
-              </a>
-              <p class="mt-1 text-xs text-slate-700 dark:text-pink-200">
-                UV protection and trendy design.
-              </p>
-              <div class="mt-3 flex justify-start">
-                <button class="rounded bg-pink-800 px-3 py-1 text-xs font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300 dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-800">
-                  Read post
-                </button>
+          <div class="h-min max-w-sm overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:bg-pink-700">
+            <img
+              class="w-full"
+              src="https://images.unsplash.com/photo-1553702446-4a0cfb5781f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
+              alt="Sunset in the mountains"
+            />
+            <div class="px-6 py-4">
+              <div class="mb-2 text-2xl font-medium text-pink-800 dark:text-white">
+                The Coldest Sunset
               </div>
+              <p class="font-base  text-slate-700   dark:text-pink-200">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Voluptatibus quia, nulla! Maiores et perferendis eaque,
+                exercitationem praesentium nihil.
+              </p>
+            </div>
+            <div class="px-6 pb-2 pt-4">
+              <a href="">
+                <span class="dark:text-pink- mb-2 mr-2 inline-block rounded-full bg-pink-800 px-3 py-1 text-sm font-semibold  text-white dark:bg-pink-400 dark:hover:bg-pink-500">
+                  #winter
+                </span>
+              </a>
+              <a href="">
+                <span class="dark:text-pink- mb-2 mr-2 inline-block rounded-full bg-pink-800 px-3 py-1 text-sm font-semibold text-white dark:bg-pink-400 dark:hover:bg-pink-500">
+                  #winter
+                </span>
+              </a>
+              <a href="">
+                <span class="dark:text-pink- mb-2 mr-2 inline-block rounded-full bg-pink-800 px-3 py-1 text-sm font-semibold text-white dark:bg-pink-400 dark:hover:bg-pink-500">
+                  #winter
+                </span>
+              </a>
             </div>
           </div>
+
+          <div class="h-min max-w-sm  rounded-lg border border-pink-500 bg-white  dark:border-pink-500 dark:bg-pink-700">
+            <a
+              href="#"
+              className="flex rounded-lg bg-pink-100  dark:bg-pink-700"
+            >
+              <img
+                class="mx-auto rounded-t-lg"
+                src="https://images.unsplash.com/photo-1553702446-4a0cfb5781f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
+                alt=""
+              />
+            </a>
+            <div class="rounded-b-lg bg-pink-100 p-5 dark:bg-pink-700">
+              <a href="#">
+                <h5 class="mb-2 text-2xl font-medium tracking-tight text-pink-800 dark:text-white">
+                  Noteworthy technology acquisitions 2021
+                </h5>
+              </a>
+              <p class="font-base mb-3  text-slate-700  dark:text-pink-200">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Voluptatibus quia, nulla! Maiores et perferendis eaque,
+                exercitationem praesentium nihil.
+              </p>
+              <a
+                href="#"
+                class="inline-flex items-center rounded-lg bg-pink-800 px-3 py-2 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300  dark:bg-pink-400 dark:hover:bg-pink-500 dark:focus:ring-pink-800"
+              >
+                Read more
+                <svg
+                  aria-hidden="true"
+                  class="-mr-1 ml-2 h-4 w-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/*  */}
 
           {/* START PRODUCTS */}
           <div className="flex flex-wrap gap-4">
             <div className="flex gap-4">
               <div class="h-min ">
-                <div class="flex max-w-md overflow-hidden rounded-lg border border-pink-500 bg-white shadow-lg dark:border-pink-500 dark:bg-pink-700">
+                <div class="flex max-w-md overflow-hidden rounded-lg border border-pink-500 bg-white  dark:border-pink-500 dark:bg-pink-700">
                   <div class="w-2/5 bg-white bg-[url('https://m.media-amazon.com/images/I/81OlgDF1wqL._AC_UY695_.jpg')] bg-contain bg-center bg-no-repeat"></div>
                   <div class="w-3/5 bg-pink-100 p-4 dark:bg-pink-700">
                     <h3 class="text-2xl font-medium text-pink-800 dark:text-white">
@@ -1448,7 +1426,7 @@ function test() {
                   </div>
                 </div>
               </div>
-              <div class=" h-min max-w-xs overflow-hidden rounded-lg border border-pink-500  bg-pink-100 shadow-md dark:bg-pink-700">
+              <div class=" h-min max-w-xs overflow-hidden rounded-lg border border-pink-500  bg-pink-100  dark:bg-pink-700">
                 <div class="relative">
                   <img
                     class="h-40 w-full bg-white object-cover p-2"
@@ -1480,7 +1458,7 @@ function test() {
                 </div>
               </div>
             </div>
-            <div class="h-min w-80 overflow-hidden rounded-lg border border-pink-500 bg-pink-100 shadow dark:bg-pink-700">
+            <div class="h-min w-80 overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:bg-pink-700">
               <div class="flex h-48 w-full flex-col justify-between bg-pink-200 bg-[url('https://images.pexels.com/photos/7989741/pexels-photo-7989741.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')] bg-cover bg-center p-4 dark:bg-pink-700">
                 <div class="flex justify-between">
                   <input type="checkbox" />
@@ -1570,7 +1548,7 @@ function test() {
                 </button>
               </div>
             </div>
-            <div class="w-80 overflow-hidden rounded-lg border border-pink-500 bg-pink-100 shadow dark:bg-pink-700">
+            <div class="w-80 overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:bg-pink-700">
               <div class="flex h-48 w-full flex-col justify-between bg-gray-200 bg-[url('https://images.pexels.com/photos/7989741/pexels-photo-7989741.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')] bg-cover bg-center p-4 dark:bg-pink-700">
                 <div class="flex justify-between">
                   <button class="text-white hover:text-blue-500 dark:text-white dark:hover:text-blue-500">
@@ -1696,13 +1674,13 @@ function test() {
                 </div>
               </div>
             </div>
-            <div class="relative  flex h-min w-full max-w-xs flex-col overflow-hidden rounded-lg border border-pink-500 bg-pink-100 shadow-md dark:border-pink-500 dark:bg-pink-700">
+            <div class="relative  flex h-min w-full max-w-xs flex-col overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:border-pink-500 dark:bg-pink-700">
               <a
-                class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-lg bg-white p-6"
+                class="relative  flex h-60 overflow-hidden  bg-white p-6"
                 href="#"
               >
                 <img
-                  class="rounded-lg object-contain"
+                  class=" object-contain"
                   src="https://m.media-amazon.com/images/I/81OlgDF1wqL._AC_UY695_.jpg"
                   alt="product image"
                 />
@@ -1783,7 +1761,7 @@ function test() {
                 </a>
               </div>
             </div>
-            <div class=" h-min max-w-md overflow-hidden rounded-lg border border-pink-500 bg-pink-100  shadow-md dark:bg-pink-700">
+            <div class=" h-min max-w-md overflow-hidden rounded-lg border border-pink-500 bg-pink-100   dark:bg-pink-700">
               <div class="relative bg-white p-6 ">
                 <img
                   class="h-56 w-full object-cover"
@@ -1819,7 +1797,7 @@ function test() {
                 </div>
               </div>
             </div>
-            <div class=" h-min max-w-md overflow-hidden rounded-lg border border-pink-500 bg-pink-100 shadow-md dark:bg-pink-700">
+            <div class=" h-min max-w-md overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:bg-pink-700">
               <div class="relative bg-white p-6">
                 <img
                   class="h-56 w-full object-cover"
@@ -1884,7 +1862,7 @@ function test() {
                 </div>
               </div>
             </div>
-            <div className="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100 shadow dark:border-pink-400 dark:bg-pink-700">
+            <div className="h-min w-full max-w-sm rounded-lg border border-pink-500 bg-pink-100  dark:border-pink-400 dark:bg-pink-700">
               <a href="#" className="flex w-full rounded-t-lg bg-white p-6">
                 <img
                   className="max-h-60 rounded-t-lg"
@@ -1947,84 +1925,9 @@ function test() {
                 </div>
               </div>
             </div>
-
-            <div class="flex h-min w-full max-w-md flex-col space-y-4 rounded-lg border border-pink-500 bg-pink-100 p-4 shadow dark:border-pink-400 dark:bg-pink-700 sm:p-8">
-              <div class="h-56 bg-[url(https://img.freepik.com/free-photo/pasta-spaghetti-with-shrimps-sauce_1220-5072.jpg?w=2000&t=st=1678041911~exp=1678042511~hmac=e4aa55e70f8c231d4d23832a611004f86eeb3b6ca067b3fa0c374ac78fe7aba6)] bg-contain"></div>
-
-              <h5 class="mb-4 text-2xl font-medium text-pink-800 dark:text-white">
-                Spagetti with shrimp sauce
-              </h5>
-              <div class="flex items-baseline text-pink-800 dark:text-white">
-                <span class="text-3xl font-semibold">$</span>
-                <span class="text-5xl font-extrabold tracking-tight">700</span>
-                <span class="font-base ml-1 text-2xl  text-slate-700  dark:text-pink-200">
-                  MVR
-                </span>
-              </div>
-              <p class="my-6q text-base font-normal leading-tight text-slate-700 dark:text-pink-200">
-                Our shrimp sauce is made with mozzarella, a creamy taste of
-                shrimp with an extra kick of spices.
-              </p>
-              <div className="flex flex-col gap-2">
-                <a
-                  target="_blank"
-                  href="foodiesapp://food/1001"
-                  class="inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
-                >
-                  View on foodies
-                </a>
-                <a
-                  target="_blank"
-                  href="https://apps.apple.com/us/app/id1493631471"
-                  class="mt-1.5 inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
-                >
-                  Download app
-                </a>
-              </div>
-            </div>
-            <div class="h-min w-full max-w-sm space-y-4  rounded-lg border border-pink-500 bg-pink-100 p-4 shadow dark:border-pink-400 dark:bg-pink-700 sm:p-8">
-              <div className="flex w-full items-center bg-white">
-                <img
-                  alt="Unpretentious Baker"
-                  class="h-60 w-auto object-scale-down"
-                  src="https://m.media-amazon.com/images/I/819CSxjb+AL._SL1500_.jpg"
-                />
-              </div>
-              <h5 class="text-2xl font-medium text-pink-800 dark:text-white">
-                Everything Bagel Seasoning
-              </h5>
-              <p class="text-base font-normal leading-tight text-slate-700 dark:text-pink-200">
-                Everything Bagel Seasoning, 2 cup Shaker Jar, Add Texture &
-                Flavor to Any Recipe, Mix of Sesame Seeds, Poppy Seeds, Garlic,
-                Onion & Salt, Convenient Shaker Jar
-              </p>
-              <div class="flex items-center   text-pink-800 dark:text-white">
-                <span class="text-3xl font-semibold">$</span>
-                <span class="text-5xl font-extrabold tracking-tight">300</span>
-                <span class="font-base ml-1 text-2xl  text-slate-700  dark:text-pink-200">
-                  56
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <button
-                  type="button"
-                  class=" inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
-                >
-                  Subscribe & Save
-                </button>
-                <button
-                  type="button"
-                  class="inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-
-            <div class="relative   flex h-min flex-wrap justify-center rounded-lg border border-pink-500 bg-pink-100 p-6 dark:bg-pink-700">
-              <div class="group flex min-w-[340px] flex-col">
-                <div class="relative mb-3 flex h-48 w-full items-center justify-center overflow-hidden border-2 border-pink-500 bg-pink-100 text-base text-pink-800 shadow-lg dark:bg-pink-700 dark:text-white md:mb-5 md:h-56 lg:h-[24rem]">
+            <div class="relative flex  h-min max-w-lg flex-wrap justify-center overflow-hidden rounded-lg border border-pink-500 bg-pink-100 dark:bg-pink-700">
+              <div class="group flex  flex-col">
+                <div class="relative flex h-48 w-full items-center justify-center overflow-hidden  bg-pink-100 text-base text-pink-800  dark:bg-pink-700 dark:text-white  md:h-56 lg:h-[24rem]">
                   <img
                     src="https://pixahive.com/wp-content/uploads/2020/10/Gym-shoes-153180-pixahive.jpg"
                     class="duration-400 h-full w-full scale-100 object-cover transition-all group-hover:scale-110"
@@ -2032,31 +1935,112 @@ function test() {
                   />
                   <div class="invisible absolute z-10 h-[95%] w-[95%] border-4 border-pink-500 opacity-0 transition-all duration-500 group-hover:visible group-hover:scale-90 group-hover:opacity-100"></div>
                 </div>
-                <a
-                  href="./single_post.html"
-                  class="mb-1 block text-center text-lg text-pink-800 transition-colors duration-150 hover:text-pink-500 dark:text-white md:text-xl"
-                >
-                  Wild West Hoodie
-                </a>
-                <p class="mb-4 text-center text-sm font-medium text-pink-600 dark:text-pink-300 md:text-sm">
-                  A awesome pair of pink shoes for you to wear.
-                </p>
-                <div class="flex justify-center gap-x-3">
+
+                <div className="p-6">
                   <a
-                    href="/track_order.html"
-                    class="rounded-lg  bg-white px-4 py-2 text-sm tracking-wider text-pink-800 shadow-sm hover:bg-gray-100 dark:bg-pink-400 dark:text-white"
-                    type="button"
-                    aria-label="Add"
+                    href="./single_post.html"
+                    class="mb-1 block text-center text-lg text-pink-800 transition-colors duration-150 hover:text-pink-500 dark:text-white md:text-xl"
                   >
-                    Add
+                    Wild West Hoodie
+                  </a>
+                  <p class="mb-4 text-center text-sm font-medium text-pink-600 dark:text-pink-300 md:text-sm">
+                    A awesome pair of pink shoes for you to wear.
+                  </p>
+                  <div class="flex justify-center gap-x-3">
+                    <a
+                      href="/track_order.html"
+                      class="rounded-lg  bg-white px-4 py-2 text-sm tracking-wider text-pink-800  hover:bg-gray-100 dark:bg-pink-400 dark:text-white"
+                      type="button"
+                      aria-label="Add"
+                    >
+                      Add
+                    </a>
+                    <a
+                      href="/track_order.html"
+                      class="rounded-lg border bg-pink-800 px-4 py-2 text-sm  tracking-wider text-white  hover:bg-pink-600 dark:border-pink-200 dark:bg-pink-700 dark:hover:bg-pink-800"
+                      type="button"
+                      aria-label="View"
+                    >
+                      View
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="h-min w-full max-w-sm overflow-hidden rounded-lg border border-pink-500 bg-pink-100   dark:border-pink-400 dark:bg-pink-700 ">
+              <div className="flex w-full items-center bg-white">
+                <img
+                  alt="Unpretentious Baker"
+                  class="h-60 w-auto object-scale-down"
+                  src="https://m.media-amazon.com/images/I/819CSxjb+AL._SL1500_.jpg"
+                />
+              </div>
+              <div class="space-y-4 p-6">
+                <h5 class="text-2xl font-medium text-pink-800 dark:text-white">
+                  Everything Bagel Seasoning
+                </h5>
+                <p class="text-base font-normal leading-tight text-slate-700 dark:text-pink-200">
+                  Everything Bagel Seasoning, 2 cup Shaker Jar, Add Texture &
+                  Flavor to Any Recipe, Mix of Sesame Seeds, Poppy Seeds,
+                  Garlic, Onion & Salt, Convenient Shaker Jar
+                </p>
+                <div class="flex items-center   text-pink-800 dark:text-white">
+                  <span class="text-3xl font-semibold">$</span>
+                  <span class="text-5xl font-medium tracking-tight">300</span>
+                  <span class="font-base ml-1 text-2xl  text-slate-700  dark:text-pink-200">
+                    56
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    class=" inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
+                  >
+                    Subscribe & Save
+                  </button>
+                  <button
+                    type="button"
+                    class="inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
+                  >
+                    Add to cart
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="flex h-min w-full max-w-md flex-col  overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:border-pink-400 dark:bg-pink-700 ">
+              <div className="flex">
+                <img src="https://img.freepik.com/free-photo/pasta-spaghetti-with-shrimps-sauce_1220-5072.jpg?w=2000&t=st=1678041911~exp=1678042511~hmac=e4aa55e70f8c231d4d23832a611004f86eeb3b6ca067b3fa0c374ac78fe7aba6" />
+              </div>
+
+              <div className="space-y-4 p-6">
+                <h5 class="text-2xl font-medium text-pink-800 dark:text-white">
+                  Spagetti with shrimp sauce
+                </h5>
+                <div class="flex items-baseline text-pink-800 dark:text-white">
+                  <span class="text-3xl font-semibold">$</span>
+                  <span class="text-5xl font-medium tracking-tight">700</span>
+                  <span class="font-base ml-1 text-2xl  text-slate-700  dark:text-pink-200">
+                    MVR
+                  </span>
+                </div>
+                <p class="my-6q text-base font-normal leading-tight text-slate-700 dark:text-pink-200">
+                  Our shrimp sauce is made with mozzarella, a creamy taste of
+                  shrimp with an extra kick of spices.
+                </p>
+                <div className="flex flex-col gap-2">
+                  <a
+                    target="_blank"
+                    href="foodiesapp://food/1001"
+                    class="inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
+                  >
+                    View on foodies
                   </a>
                   <a
-                    href="/track_order.html"
-                    class="rounded-lg border bg-pink-800 px-4 py-2 text-sm  tracking-wider text-white shadow-sm hover:bg-pink-600 dark:border-pink-200 dark:bg-pink-700 dark:hover:bg-pink-800"
-                    type="button"
-                    aria-label="View"
+                    target="_blank"
+                    href="https://apps.apple.com/us/app/id1493631471"
+                    class="mt-1.5 inline-flex w-full justify-center rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
                   >
-                    View
+                    Download app
                   </a>
                 </div>
               </div>
@@ -2067,14 +2051,14 @@ function test() {
 
           {/* Just Text card */}
 
-          <div className="flex gap-4 ">
-            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4 shadow dark:border-pink-400 dark:bg-pink-700 sm:p-8">
+          <div className="flex flex-wrap gap-4 ">
+            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4  dark:border-pink-400 dark:bg-pink-700 sm:p-8">
               <h5 class="mb-4 text-2xl font-medium text-pink-800 dark:text-white">
                 Standard plan
               </h5>
               <div class="flex items-baseline text-pink-800 dark:text-white">
                 <span class="text-3xl font-semibold">$</span>
-                <span class="text-5xl font-extrabold tracking-tight">49</span>
+                <span class="text-5xl font-medium tracking-tight">49</span>
                 <span class="font-base ml-1 text-2xl  text-pink-800  dark:text-pink-200">
                   /month
                 </span>
@@ -2128,7 +2112,7 @@ function test() {
                 Choose plan
               </button>
             </div>
-            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4 shadow dark:border-pink-400 dark:bg-pink-700 sm:p-8">
+            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4  dark:border-pink-400 dark:bg-pink-700 sm:p-8">
               <div id="starter-plan" class=" w-full self-center">
                 <div class="mb-4 text-2xl font-medium text-pink-800 dark:text-white">
                   Starter plan
@@ -2136,7 +2120,7 @@ function test() {
                 <div class="  font-medium text-pink-600 dark:text-pink-200">
                   Starts at
                 </div>
-                <div class="mb-4 text-5xl font-extrabold text-pink-800 dark:text-white">
+                <div class="mb-4 text-5xl font-medium text-pink-800 dark:text-white">
                   $49
                 </div>
                 <a
@@ -2172,7 +2156,7 @@ function test() {
               </div>
             </div>
 
-            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4 shadow dark:border-pink-400 dark:bg-pink-700 sm:p-8">
+            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4  dark:border-pink-400 dark:bg-pink-700 sm:p-8">
               <div class="items-center justify-between md:flex">
                 <div>
                   <div class="mb-2 flex justify-between">
@@ -2180,7 +2164,7 @@ function test() {
                       Pro Plan
                     </h3>
                     <div class="flex items-center md:hidden">
-                      <div class="mr-1 text-xl font-extrabold text-pink-800 dark:text-white lg:text-5xl">
+                      <div class="mr-1 text-xl font-medium text-pink-800 dark:text-white lg:text-5xl">
                         $599
                       </div>
                       <span class="text-pink-500 dark:text-pink-400">
@@ -2194,7 +2178,7 @@ function test() {
                   </p>
                 </div>
                 <div class="hidden md:block">
-                  <div class="text-2xl font-extrabold text-pink-800 dark:text-white lg:text-5xl">
+                  <div class="text-2xl font-medium text-pink-800 dark:text-white lg:text-5xl">
                     $599
                   </div>
                   <span class="font-medium text-pink-600 dark:text-pink-200">
@@ -2282,7 +2266,7 @@ function test() {
               </div>
             </div>
 
-            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4 shadow dark:border-pink-400 dark:bg-pink-700 sm:p-8">
+            <div class="flex h-min w-96 max-w-lg flex-col rounded-lg border border-pink-500 bg-pink-100 p-4  dark:border-pink-400 dark:bg-pink-700 sm:p-8">
               <h3 class="mb-4 text-2xl font-medium text-pink-800 dark:text-white">
                 Starter
               </h3>
@@ -2291,7 +2275,7 @@ function test() {
               </p>
               <div class="flex items-baseline text-pink-800 dark:text-white">
                 <span class="text-3xl font-semibold">$</span>
-                <span class="text-5xl font-extrabold tracking-tight">29</span>
+                <span class="text-5xl font-medium tracking-tight">29</span>
                 <span class="font-base ml-1 text-2xl text-pink-800 dark:text-pink-200">
                   /month
                 </span>
@@ -2400,9 +2384,717 @@ function test() {
                 Get started
               </a>
             </div>
+
+            <div class=" flex max-w-xl flex-col rounded-lg border border-pink-500 bg-pink-100 p-6 text-center  dark:border-pink-400 dark:bg-pink-700 xl:max-w-lg xl:p-8">
+              <h3 class="mb-4 text-2xl font-medium text-pink-800 dark:text-white">
+                Starter
+              </h3>
+              <span class="text-5xl font-medium text-pink-800 dark:text-white">
+                $29
+              </span>
+              <p class="mb-1 mt-4 text-slate-700 dark:text-pink-200">
+                $19 USD per month, paid annually
+              </p>
+              <a
+                href="#"
+                class="inline-flex items-center justify-center font-medium text-pink-800 hover:text-pink-900 dark:text-pink-200 dark:hover:text-pink-300"
+              >
+                Go to annual plan
+                <svg
+                  class="ml-2 h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 011.414-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="my-8 rounded-lg bg-pink-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-600 focus:ring-4 focus:ring-pink-300 dark:bg-pink-400 dark:focus:ring-pink-600"
+              >
+                Get started
+              </a>
+
+              <ul
+                role="list"
+                class="space-y-4 text-left text-slate-700 dark:text-pink-200"
+              >
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>All tools you need to manage payments</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>No setup, monthly, or hidden fees</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>Comprehensive security</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>Get hundreds of feature updates</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>Payouts to your bank account</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>Financial reconciliation and reporting</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>24×7 phone, chat, and email support</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    aria-hidden="true"
+                    class="h-5 w-5 flex-shrink-0 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Check icon</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>Robust developer platform</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div class="h-min w-full rounded-lg border border-pink-500 bg-pink-100 p-4 text-center shadow dark:border-pink-500 dark:bg-pink-700 sm:p-8">
+          {/* CRUD */}
+          <div className="flex gap-4">
+            <div class="w-sm h-min rounded-lg border border-pink-500 bg-pink-100 px-8 py-8 dark:border-pink-400 dark:bg-pink-700">
+              <form action="#" class="space-y-8">
+                <div>
+                  <label
+                    for="email"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Your email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-pink-500 focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-pink-500 dark:focus:ring-pink-500"
+                    placeholder="name@flowbite.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="subject"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    class="dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  focus:border-pink-500 focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-pink-500 dark:focus:ring-pink-500"
+                    placeholder="Let us know how we can help you"
+                    required
+                  />
+                </div>
+                <div class="sm:col-span-2">
+                  <label
+                    for="message"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-400"
+                  >
+                    Your message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="6"
+                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-pink-500 focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-pink-500 dark:focus:ring-pink-500"
+                    placeholder="Leave a comment..."
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  class="rounded-lg border bg-pink-700 px-5 py-3 text-center text-sm font-medium text-white hover:bg-pink-800 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800 sm:w-fit"
+                >
+                  Send message
+                </button>
+              </form>
+            </div>
+
+            <div className="h-min max-w-md rounded-lg border border-pink-500 bg-pink-100 px-8 py-8 dark:border-pink-400 dark:bg-pink-700">
+              <form
+                action="#"
+                class="mx-auto grid max-w-screen-md grid-cols-1 gap-8 sm:grid-cols-2"
+              >
+                <div>
+                  <label
+                    for="first-name"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="first-name"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="Bonnie"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="last-name"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    id="last-name"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="Green"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="email"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Your email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="name@flowbite.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="phone-number"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    type="number"
+                    id="phone-number"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="+12 345 6789"
+                    required
+                  />
+                </div>
+                <div class="sm:col-span-2">
+                  <label
+                    for="message"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-400"
+                  >
+                    Your message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="6"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="Leave a comment..."
+                  ></textarea>
+                  <p class="mt-4 text-sm text-gray-500 dark:text-pink-200">
+                    By submitting this form you agree to our{' '}
+                    <a
+                      href="#"
+                      class="text-primary-600 dark:text-primary-500 hover:underline"
+                    >
+                      terms and conditions
+                    </a>{' '}
+                    and our{' '}
+                    <a
+                      href="#"
+                      class="text-primary-600 dark:text-primary-500 hover:underline"
+                    >
+                      privacy policy
+                    </a>{' '}
+                    which explains how we may collect, use and disclose your
+                    personal information including to third parties.
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  class="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 rounded-lg px-5 py-3 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 sm:w-fit"
+                >
+                  Send message
+                </button>
+              </form>
+            </div>
+
+            <div class="max-md h-min rounded-lg border border-pink-500 bg-pink-100 px-8 py-8 dark:border-pink-400 dark:bg-pink-700">
+              <form
+                action="#"
+                class="mx-auto grid max-w-screen-md grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2"
+              >
+                <div>
+                  <label
+                    for="first-name"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    First name
+                  </label>
+                  <input
+                    type="text"
+                    id="first-name"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="Bonnie"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="last-name"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Last name
+                  </label>
+                  <input
+                    type="text"
+                    id="last-name"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="Green"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="email"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Your email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="name@flowbite.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="phone-number"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Phone number
+                  </label>
+                  <input
+                    type="number"
+                    id="phone-number"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder="+(12) 345 6789"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <div class="mb-2 flex items-center gap-1.5">
+                    <label
+                      for="country"
+                      class="block text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Country
+                    </label>
+                    <button
+                      type="button"
+                      data-popover-target="country-description"
+                      class="h-4 w-4"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      <span class="sr-only">Show information</span>
+                    </button>
+                    <div
+                      data-popover
+                      id="country-description"
+                      role="tooltip"
+                      class="invisible absolute z-10 inline-block w-72 rounded-lg border border-gray-200 bg-white text-sm font-light text-gray-500 opacity-0  transition-opacity duration-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                    >
+                      <div class="space-y-2 p-3">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                          Country based on fiscal residency
+                        </h3>
+                        <p>
+                          Report helps navigate cumulative growth of community
+                          activities. Ideally, the chart should have a growing
+                          trend, as stagnating chart signifies a significant
+                          decrease of community activity.
+                        </p>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                          Double citizenship
+                        </h3>
+                        <p>
+                          For each date bucket, the all-time volume of
+                          activities is calculated. This means that activities
+                          in period n contain all activities up to period n,
+                          plus the activities generated by your community in
+                          period.
+                        </p>
+                        <a
+                          href="#"
+                          class="text-primary-600 dark:text-primary-500 dark:hover:text-primary-600 hover:text-primary-700 flex items-center font-medium"
+                        >
+                          Read more{' '}
+                          <svg
+                            class="ml-1 h-4 w-4"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </a>
+                      </div>
+                      <div data-popper-arrow></div>
+                    </div>
+                  </div>
+                  <select
+                    id="country"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                  >
+                    <option>Select a country</option>
+                    <option value="US" selected>
+                      United States
+                    </option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="ES">Spain</option>
+                    <option value="CA">Canada</option>
+                    <option value="JP">Japan</option>
+                    <option value="CN">People's Republic of China</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="mb-2 flex items-center gap-1.5">
+                    <label
+                      for="language"
+                      class="block text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Language
+                    </label>
+                    <button
+                      type="button"
+                      data-popover-target="language-description"
+                      class="h-4 w-4"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      <span class="sr-only">Show information</span>
+                    </button>
+                    <div
+                      data-popover
+                      id="language-description"
+                      role="tooltip"
+                      class="invisible absolute z-10 inline-block w-72 rounded-lg border border-gray-200 bg-white text-sm font-light text-gray-500 opacity-0  transition-opacity duration-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                    >
+                      <div class="space-y-2 p-3">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                          Choosing an international language
+                        </h3>
+                        <p>
+                          Report helps navigate cumulative growth of community
+                          activities. Ideally, the chart should have a growing
+                          trend, as stagnating chart signifies a significant
+                          decrease of community activity.
+                        </p>
+                        <a
+                          href="#"
+                          class="text-primary-600 dark:text-primary-500 dark:hover:text-primary-600 hover:text-primary-700 flex items-center font-medium"
+                        >
+                          Read more{' '}
+                          <svg
+                            class="ml-1 h-4 w-4"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </a>
+                      </div>
+                      <div data-popper-arrow></div>
+                    </div>
+                  </div>
+                  <select
+                    id="language"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                  >
+                    <option>Select a language</option>
+                    <option value="US" selected>
+                      English (US)
+                    </option>
+                    <option value="DE">German</option>
+                    <option value="FR">French</option>
+                    <option value="ES">Spanish</option>
+                    <option value="JP">Japanese</option>
+                    <option value="NL">Dutch</option>
+                  </select>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label
+                    for="message"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-400"
+                  >
+                    Your message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="6"
+                    class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    placeholder=""
+                  ></textarea>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <div class="flex items-start">
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      value=""
+                      class="text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                    />
+                    <label
+                      for="terms"
+                      class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400"
+                    >
+                      I confirm that you have read and agreed to
+                      <a
+                        href="#"
+                        title=""
+                        class="font-medium text-gray-900 underline hover:no-underline dark:text-white"
+                      >
+                        Flowbite's Terms of Service
+                      </a>
+                      and
+                      <a
+                        href="#"
+                        title=""
+                        class="font-medium text-gray-900 underline hover:no-underline dark:text-white"
+                      >
+                        Privacy Statement
+                      </a>
+                      .
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  class="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 rounded-lg px-5 py-3 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 sm:w-fit"
+                >
+                  Send message
+                </button>
+              </form>
+            </div>
+
+            <div class="h-min max-w-sm rounded-lg border border-pink-500 bg-pink-100 px-8 py-8 dark:border-pink-400 dark:bg-pink-700">
+              <h2 class="mb-4 text-center text-2xl font-medium tracking-tight text-pink-800 dark:text-white">
+                Contact Us
+              </h2>
+              <p class="font-base mb-4 text-center text-slate-700 dark:text-gray-400 dark:text-pink-200 sm:text-lg ">
+                Got a technical issue? Want to send feedback about a beta
+                feature? Need details about our Business plan? Let us know.
+              </p>
+              <form action="#" class="space-y-8">
+                <div>
+                  <label
+                    for="email"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Your email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-pink-500 focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-pink-500 dark:focus:ring-pink-500"
+                    placeholder="name@flowbite.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="subject"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    class="dark:-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900  focus:border-pink-500 focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-pink-500 dark:focus:ring-pink-500"
+                    placeholder="Let us know how we can help you"
+                    required
+                  />
+                </div>
+                <div class="sm:col-span-2">
+                  <label
+                    for="message"
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-400"
+                  >
+                    Your message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="6"
+                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-pink-500 focus:ring-pink-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-pink-500 dark:focus:ring-pink-500"
+                    placeholder="Leave a comment..."
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  class="rounded-lg border bg-pink-700 px-5 py-3 text-center text-sm font-medium text-white hover:bg-pink-800 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800 sm:w-fit"
+                >
+                  Send message
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="h-min w-full rounded-lg border border-pink-500 bg-pink-100 p-4 text-center  dark:border-pink-500 dark:bg-pink-700 sm:p-8">
             <h5 class="mb-2 text-3xl font-medium text-pink-800 dark:text-white">
               Work fast from anywhere
             </h5>
@@ -2466,7 +3158,7 @@ function test() {
             </div>
           </div>
 
-          <div class="mb-8 grid overflow-hidden rounded-lg border-pink-500 bg-pink-100 shadow-md dark:border-pink-500 dark:bg-pink-700 md:mb-12 md:grid-cols-2">
+          <div class="grid overflow-hidden rounded-lg border border-pink-500 bg-pink-100  dark:border-pink-500 dark:bg-pink-700 md:mb-12 md:grid-cols-2">
             <figure class="flex flex-col items-center justify-center rounded-t-lg border-b border-pink-500 bg-pink-100 p-8 text-center dark:border-pink-500 dark:bg-pink-700 md:rounded-t-none md:rounded-tl-lg md:border-r">
               <blockquote class="mx-auto mb-4 max-w-2xl space-y-4  text-pink-800 dark:text-white lg:mb-8">
                 <h3 class="text-lg font-semibold text-pink-800 dark:text-white">
@@ -2612,7 +3304,7 @@ function test() {
             </div>
           </div>
 
-          <div class="h-min rounded-lg border border-pink-500 bg-pink-100 p-4 shadow-md dark:border-pink-400 dark:bg-pink-700">
+          <div class="h-min rounded-lg border border-pink-500 bg-pink-100 p-4  dark:border-pink-400 dark:bg-pink-700">
             <div class="flex-none lg:flex">
               <div class="mb-3 h-full w-full lg:mb-0 lg:h-48 lg:w-48">
                 <img
@@ -2675,7 +3367,7 @@ function test() {
                 </div>
                 <div class="flex space-x-3 text-sm font-medium">
                   <div class="flex flex-auto space-x-3">
-                    <button class="mb-2 inline-flex items-center space-x-2 rounded-lg border border-pink-500 bg-white px-4 py-2 tracking-wider text-pink-800 shadow-sm hover:bg-gray-100 hover:bg-pink-500 hover:text-white dark:bg-inherit dark:text-white md:mb-0">
+                    <button class="mb-2 inline-flex items-center space-x-2 rounded-lg border border-pink-500 bg-white px-4 py-2 tracking-wider text-pink-800  hover:bg-gray-100 hover:bg-pink-500 hover:text-white dark:bg-inherit dark:text-white md:mb-0">
                       <span>62 Products</span>
                     </button>
                   </div>

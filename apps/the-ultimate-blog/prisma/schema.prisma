@@ -63,6 +63,8 @@ model User {
   githubUrl        String?
   LinkedInUrl        String?
   tech          Tech[]
+  course         Course[]
+  product         Product[]
   accounts      Account[]
   sessions      Session[]
   role           String             @default("user")
@@ -72,6 +74,8 @@ model User {
   likes         Like[]
   bookmarks     BookMark[]
   techBookmarks TechBookMark[]
+  CourseBookMark CourseBookMark[]
+  ProductBookMark CourseBookMark[]
   followedBy    User[]     @relation("UserFollows")
   followings    User[]     @relation("UserFollows")
   notified Notification[] @relation(name: "NotifiedNotification")
@@ -83,6 +87,9 @@ model User {
 model Notification {
   id         String   @id @default(cuid())
   postId     String?
+  techId     String?
+  courseId   String?
+  course     Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId  String?
@@ -114,7 +121,6 @@ model Post {
   slug          String    @unique
   featuredImage String?
   html          String?   @db.Text
-  text          String?   @db.Text
   authorId      String?
   author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   createdAt     DateTime  @default(now())
@@ -127,15 +133,54 @@ model Post {
    @@index([authorId])
 }
 
+model Course {
+  id            String    @id @default(cuid())
+  title         String    @unique
+  description   String
+  slug          String    @unique
+  featuredImage String?
+  html          String?   @db.Text
+  authorId      String?
+  author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  comments      Comment[]
+  tags          CourseTag[]
+  likes         Like[]
+  bookmarks     CourseBookMark[]
+  notifications Notification[]
+  @@index([authorId])
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  title         String    @unique
+  description   String
+  slug          String    @unique
+  featuredImage String?
+  html          String?   @db.Text
+  authorId      String?
+  author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  comments      Comment[]
+  tags          productTag[]
+  likes         Like[]
+  bookmarks     ProductBookMark[]
+  notifications Notification[]
+   @@index([authorId])
+}
+// WORKING
+
 model Tech {
   id            String    @id @default(cuid())
   title         String    @unique
   shortDescription   String
-  techDescription String
+  description String
   slug          String    @unique
   featuredImage String?
   html          String?   @db.Text
-  text          String?   @db.Text
+
   authorId      String?
   docsUrl       String?
   webUrl        String?
@@ -157,10 +202,14 @@ model Comment {
   userId    String
   postId    String?
   text      String
-  techId    String?    
+  techId    String?  
+  courseId  String? 
+  productId  String?
+  product   Product[]
   user      User      @relation(fields: [userId], references: [id],onDelete: Cascade) 
   post      Post?      @relation(fields: [postId], references: [id],onDelete: Cascade)
   tech      Tech?      @relation(fields: [techId], references: [id],onDelete: Cascade) 
+  course     Course?      @relation(fields: [courseId], references: [id],onDelete: Cascade) 
   createdAt DateTime  @default(now())
   likes     Like[]    // new field
   notifications Notification[]
@@ -185,18 +234,41 @@ model TechTag {
   tech         Tech[]
 }
 
+model CourseTag {
+  id           String @id  @default(cuid())
+  name         String @unique
+  description  String?
+  slug         String
+  course       Course[]
+}
+
+model productTag {
+  id           String @id  @default(cuid())
+  name         String @unique
+  description  String?
+  slug         String
+  product       Product[]
+}
+
 model Like {
   id        String     @id @default(cuid())
   userId    String
   postId    String?
+  productId String?
   commentId String?
   techId    String?
+  courseId  String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   tech      Tech?      @relation(fields: [techId], references: [id], onDelete: Cascade)
+  course      Course?      @relation(fields: [courseId], references: [id], onDelete: Cascade)
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   post      Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
   comment   Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
   @@unique([userId, postId]) // unique constraint on post likes
-  @@unique([userId, commentId]) // unique constraint on comment likes
+  @@unique([userId, commentId])
+  @@unique([userId, productId])
+  @@unique([userId, techId])
+   // unique constraint on comment likes
   @@index([postId])
 }
 
@@ -212,7 +284,7 @@ model BookMark {
 }
 
 
-model TechBookMark {
+model TechBookMark {    
   id        String     @id @default(cuid())
   userId    String
   techId    String
@@ -221,6 +293,30 @@ model TechBookMark {
  
   @@unique([userId, techId])
    @@index([techId])
+  createdAt DateTime  @default(now())
+}
+
+model CourseBookMark {
+  id        String     @id @default(cuid())
+  userId    String
+  courseId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+ 
+  @@unique([userId, courseId])
+   @@index([courseId])
+  createdAt DateTime  @default(now())
+}
+
+model ProductBookMark {
+  id        String     @id @default(cuid())
+  userId    String
+  productId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+ 
+  @@unique([userId, productId])
+   @@index([productId])
   createdAt DateTime  @default(now())
 }
 //This is a Prisma schema file, which is used to define the data models and database schema for a Prisma client. It starts with a generator block that specifies the provider for the client library that Prisma will generate. The datasource block defines the database provider and connection URL for the database. Following that are several model blocks that define the data models for the application.The Example model defines an example data model with an id field, a createdAt field, and an updatedAt field.

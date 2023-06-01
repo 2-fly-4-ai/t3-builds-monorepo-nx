@@ -61,4 +61,60 @@ export const tagRouter = router({
   getTechTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
     return await prisma.techTag.findMany();
   }),
+
+  createCourseTag: protectedProcedure
+    .input(tagCreateSchema)
+    .mutation(async ({ ctx: { prisma }, input }) => {
+      const tag = await prisma.courseTag.findUnique({
+        where: {
+          name: input.name,
+        },
+      });
+
+      if (tag) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'tag already exists!',
+        });
+      }
+
+      await prisma.courseTag.create({
+        data: {
+          ...input,
+          slug: slugify(input.name),
+        },
+      });
+    }),
+
+  getCourseTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
+    return await prisma.product.findMany();
+  }),
+
+  createProductTag: protectedProcedure
+    .input(tagCreateSchema)
+    .mutation(async ({ ctx: { prisma }, input }) => {
+      const tag = await prisma.courseTag.findUnique({
+        where: {
+          name: input.name,
+        },
+      });
+
+      if (tag) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'tag already exists!',
+        });
+      }
+
+      await prisma.courseTag.create({
+        data: {
+          ...input,
+          slug: slugify(input.name),
+        },
+      });
+    }),
+
+  getProductTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
+    return await prisma.productTag.findMany();
+  }),
 });

@@ -34,7 +34,7 @@ type TechFormModalProps = {
   githubUrl: string;
   pricingUrl: string;
   docsUrl: string;
-  techDescription: string;
+  description: string;
 };
 
 // Validation schema for the WriteTechFormModal
@@ -47,7 +47,7 @@ export const WriteTechFormSchema = z.object({
   githubUrl: z.string().url().optional(),
   pricingUrl: z.string().url().optional(),
   docsUrl: z.string().url().optional(),
-  techDescription: z.string().min(10).optional(),
+  description: z.string().min(10).optional(),
 });
 
 export default function WriteFormModalTech() {
@@ -329,12 +329,12 @@ export default function WriteFormModalTech() {
               </label>
               <textarea
                 rows={3}
-                id="techDescription"
+                id="description"
                 className="h-full w-full  border border-gray-300 p-4 outline-none focus:border-gray-600 dark:border-gray-600 dark:bg-black dark:bg-opacity-60 dark:focus:border-white"
                 placeholder="Description of the tech...."
-                {...register('techDescription')}
+                {...register('description')}
               />
-              <p>{errors.techDescription?.message}</p>
+              <p>{errors.description?.message}</p>
             </div>
             <label
               htmlFor="docsUrl"

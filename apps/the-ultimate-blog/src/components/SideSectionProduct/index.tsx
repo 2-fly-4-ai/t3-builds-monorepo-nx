@@ -4,27 +4,31 @@ import { trpc } from '../../utils/trpc';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useEffect } from 'react';
+import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
-import { HiXMark } from 'react-icons/hi2';
-
 export default function SideSection({ showSidebar, toggleSidebar }) {
-  const readingList = trpc.post.getTechReadingList.useQuery({
-    itemType: 'tech',
-  });
+  const readingList = trpc.post.getReadingList.useQuery({ itemType: 'course' });
   const suggestions = trpc.user.getSuggestions.useQuery();
   const user = useSession();
-
   const [mainClass, setMainClass] = useState('');
 
   return (
     <aside
       className={`${mainClass} ${
         showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
-      } space-between transition-width relative flex flex-col space-y-4  border-l bg-gray-100   py-6    duration-500   dark:bg-inherit`}
+      } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
     >
+      <div className=" w-80 overflow-hidden px-4 py-1 text-xl">
+        <div className="">
+          Welcome Back{' '}
+          <span className="font-bold text-orange-400">
+            {user?.data?.user?.name}{' '}
+          </span>
+        </div>
+        {/* <Link href={user?.data?.user?.name}>PROFILE</Link> */}
+        {/* |<Link href={user?.data?.user?.id ?? ''}>BOOKMARKS</Link> */}
+      </div>
       <div className="w-80 overflow-hidden">
         <div className="flex flex-col ">
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
@@ -33,10 +37,10 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
           {suggestions.isSuccess &&
             suggestions.data.map((user) => (
               <Link href="/" key={10}>
-                <div className="flex w-full flex-row items-center space-x-4 p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                <div className="flex w-80 flex-row  items-center space-x-4 overflow-hidden p-4 py-3 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="h-12 w-12 flex-none rounded-full bg-gray-500"></div>
                   <div>
-                    <div className=" text-sm font-bold text-gray-500 dark:text-orange-400">
+                    <div className="text-sm font-bold text-gray-500 dark:text-orange-400">
                       {user?.name}
                     </div>
                     <div className="line-clamp-2 text-sm">
@@ -69,17 +73,17 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
           -
         </button>
         <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
-          Your tech stack:
+          Your reading list:
         </h3>
         <div className="flex flex-col ">
           {readingList.data &&
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
-                <div className="group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                  <div className="flex  aspect-video w-28 justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50 ">
-                    {bookmark?.tech?.featuredImage ? (
+                <div className="overflow-hidde group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                  <div className="flex  aspect-video  w-40  justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
+                    {bookmark?.course?.featuredImage ? (
                       <Image
-                        src={bookmark?.tech?.featuredImage ?? null}
+                        src={bookmark?.course.featuredImage ?? null}
                         width={220}
                         height={220}
                         className=" object-cover 2xl:max-h-40"
@@ -89,28 +93,28 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                         src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
                         width={200}
                         height={200}
-                        className="max-h-28 w-auto"
+                        className="aspect-video max-h-28 w-auto"
                       />
                     )}
                   </div>
                   <div className="flex w-3/5 flex-col space-y-2">
                     <div className=" line-clamp-3 font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
-                      {bookmark.tech.title}
+                      {bookmark?.course.title}
                     </div>
                     {/* <div className="text-sm line-clamp-2">
                       {bookmark.post.description}
                     </div> */}
-                    <div>
-                      <div className="hidden w-full items-center space-x-1 2xl:flex">
+                    {/* <div>
+                      <div className="hidden w-full items-center space-x-1  2xl:flex">
                         <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                         <div className="text-sm font-bold text-black dark:text-gray-500 dark:text-white">
-                          {bookmark.tech.author.name}
+                          {bookmark.post?.author?.name}
                         </div>
                         <div className="text-xs">
-                          {dayjs(bookmark.tech.createdAt).format('DD/MM/YYYY')}
+                          {dayjs(bookmark.post.createdAt).format('DD/MM/YYYY')}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </Link>

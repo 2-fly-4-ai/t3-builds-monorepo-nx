@@ -2,10 +2,12 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
-import BlogPageProse from 'libs/shared/ui/src/lib/blog-page-prose/blog-page-prose';
+import { serialize } from 'next-mdx-remote/serialize';
+
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
 import CommentSidebar from '../../components/CommentSidebar';
+import TextareaAutosize from 'react-textarea-autosize';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog } from '@headlessui/react';
@@ -22,9 +24,11 @@ import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
 import { prisma } from '../../utils/prisma';
 import { useLikeStore } from '@front-end-nx/shared/ui';
-import TextareaAutosize from 'react-textarea-autosize';
 import { getTableOfContentsHTML } from '@front-end-nx/shared/ui';
 import { DashboardTableOfContents } from '@front-end-nx/shared/ui';
+import NewsletterSubscribe from '../../components/NewsLetter/NewsletterSubscribe';
+import Link from 'next/link';
+
 import {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -37,10 +41,9 @@ import superjson from 'superjson';
 //Dynamic Imports
 const Editor = dynamic(() => import('../../components/Ckeditor'), {
   ssr: false,
-  loading: () => (
-    <div className="font-mono text-4xl font-bold">Loading editor...</div>
-  ),
+  loading: () => <div>Loading editor...</div>,
 });
+const dayjs = require('dayjs');
 
 //Typings
 type WriteFormModalProps = {
@@ -51,8 +54,7 @@ type WriteFormModalProps = {
   html: string;
   postId: string;
   slug: string;
-  // setIsUnsplashModalOpen: (isUnsplashModalOpen: boolean) => void;
-  // featuredImage: any;
+  createdAt: Date;
 };
 
 //Zod Schema
@@ -66,6 +68,8 @@ export const WriteFormSchema = z.object({
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
+  const { tableOfContentsResult, postsByTag, slug } = props;
+
   const {
     register,
     handleSubmit,
@@ -76,7 +80,6 @@ export default function PostPage(
     resolver: zodResolver(WriteFormSchema),
   });
 
-  const { slug } = props;
   const router = useRouter();
   const currentUser = useSession();
 
@@ -91,24 +94,28 @@ export default function PostPage(
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const postRoute = trpc.useContext().post;
-  const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
+  const getPost = trpc.post.getCoursePost.useQuery({ slug: slug.toString() });
+  // console.warn(getPost.data);
+  // const postsByTag = trpc.post.getCoursePostsWithTag.useQuery({
+  //   tags: getPost?.data?.tags.map((tag) => tag.name),
+  // });
 
-  const [toc, setToc] = useState<TableOfContentsHTML | null>(null);
-  const [modifiedHtml, setModifiedHtml] = useState<string>('');
-
-  if (getPost?.data?.html) {
-    getTableOfContentsHTML(getPost.data.html)
-      .then((result) => {
-        setToc(result.toc);
-        setModifiedHtml(result.html);
-      })
-      .catch((error) => {
-        console.error('Error generating Table of Contents:', error);
-        setToc(null); // Reset toc state in case of error
-      });
+  // props?.tags?.[0]?.name,
+  interface Item {
+    title: string;
+    url: string;
+    items?: Item[];
   }
 
-  // const { id } = getPost;
+  interface Items {
+    items?: Item[];
+  }
+
+  interface DefaultValues {
+    title?: string;
+    description?: string;
+    html?: string;
+  }
 
   const handleEditPost = trpc.post.editPost.useMutation({
     onSuccess: () => {
@@ -125,7 +132,6 @@ export default function PostPage(
   const onSubmit = async (formData) => {
     try {
       const _result = await handleEditPost.mutateAsync({
-        id: getPost.data.id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
@@ -146,8 +152,7 @@ export default function PostPage(
   };
 
   useEffect(() => {
-    let defaultValues = {};
-    defaultValues.id = getPost.data?.id;
+    let defaultValues: DefaultValues = {};
     defaultValues.title = getPost.data?.title;
     defaultValues.description = getPost.data?.description;
     defaultValues.html = getPost.data?.html;
@@ -156,7 +161,7 @@ export default function PostPage(
 
   return (
     <MainLayout>
-      <section className="flex justify-center gap-4">
+      <section className="flex justify-center">
         <section>
           {getPost.isSuccess && getPost.data && (
             <UnsplashGallery
@@ -186,8 +191,6 @@ export default function PostPage(
 
           {getPost.isSuccess && (
             <LikePost
-              isLiked={likedPosts.includes(getPost.data?.id)}
-              slug={slug}
               id={getPost.data?.id}
               setShowSidebar={() => setShowCommentSidebar(true)}
               showSidebar={showCommentSidebar}
@@ -195,25 +198,11 @@ export default function PostPage(
             />
           )}
 
-          {/* <BlogPageProse
-        title={title}
-        description={description}
-        setIsUnsplashModalOpen={() => setIsUnsplashModalOpen(true)}
-        html={
-          html?.replaceAll(
-            'href=',
-            'target="_blank" rel="nofollow noreferrer" href='
-          ) ?? null
-        }
-        featuredImage={
-          featuredImage ??
-          'https://images.unsplash.com/photo-1572062505547-912c49028cc5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
-        }
-      /> */}
-
           {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
-            <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl rounded-lg border   text-2xl">
-              <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
+            <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl items-center justify-center rounded-lg   text-2xl">
+              <p className=" rounded-l-lg border bg-gray-400 px-4">
+                MASTER EDITOR
+              </p>
               <div className=" flex ">
                 <button
                   onClick={handleSubmit((formData) => {
@@ -243,8 +232,8 @@ export default function PostPage(
           ) : null}
 
           <div>
-            <div className="relative  flex w-full items-center justify-center p-10">
-              <div className="w-full max-w-screen-md space-y-8">
+            <div className="relative  flex w-full items-center justify-center ">
+              <div className="mt-10 w-full max-w-screen-md space-y-8">
                 <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
                   {getPost.data?.featuredImage && (
                     <Image
@@ -343,8 +332,6 @@ export default function PostPage(
                     </div>
                   </div>
                 </div>
-
-                <div>TEST</div>
 
                 <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
                   {!isDescriptionEditorOpen ? (
@@ -452,15 +439,17 @@ export default function PostPage(
                   <div className="relative">
                     <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
                       {/* <Interweave
-                    content={
-                      html.replaceAll(
-                        'href=',
-                        'target="_blank" rel="nofollow noreferrer" href='
-                      ) ?? null
-                    }
-                  /> */}
+                  content={
+                    html.replaceAll(
+                      'href=',
+                      'target="_blank" rel="nofollow noreferrer" href='
+                    ) ?? null
+                  }
+                /> */}
                       <div
-                        dangerouslySetInnerHTML={{ __html: modifiedHtml }}
+                        dangerouslySetInnerHTML={{
+                          __html: tableOfContentsResult.html,
+                        }}
                       ></div>
                     </div>
 
@@ -489,39 +478,77 @@ export default function PostPage(
                 )}
               </div>
             </div>
+          </div>
 
-            <div className="modal-container mx-auto my-16 flex max-w-[800px] flex-col">
-              {/* <button
-            type="submit"
-            className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700"
-          >
-            Publish
-          </button> */}
-
-              {/* Uncomment the code below if you want to allow users to add tags to their post /}
-  {/ <Controller
-  name="tags"
-  control={control}
-  defaultValue={[]}
-  render={({ field }) => (
-  <Select
-  {...field}
-  isMulti
-  options={allTags.data}
-  getOptionLabel={(option) => option.name}
-  getOptionValue={(option) => option.id}
-  placeholder="Add tags"
-  />
-  )}
-  /> /}
-  {/ {errors.tags && <p>This field is required</p>} */}
+          <div>
+            <div className="my-6 mb-10 flex items-center justify-start gap-4 rounded-lg bg-black p-4">
+              {getPost?.data?.tags.map((tag) => (
+                <div className="flex flex-col gap-2 py-2">
+                  <Link href="">
+                    <button class="whitespace-no-wrap flex items-center justify-center rounded-full border-2 bg-opacity-90 px-4 py-2 text-base font-medium leading-6 text-gray-500 shadow-sm hover:border-white  hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none dark:bg-black">
+                      {tag?.name}
+                    </button>
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
         </section>
-        <div className="border px-6">
-          {/* <div className="sticky top-0 mt-10 h-max max-w-[300px] border bg-black  p-6 ">
-            <DashboardTableOfContents toc={toc} />
-          </div> */}
+
+        {/* SideSection */}
+        <div className="sticky top-0 my-10  w-96 px-6 ">
+          {/* Author Box */}
+          <div className="flex  h-max max-w-[300px] items-center justify-start gap-4 rounded-lg bg-black  p-6  py-3 ">
+            <div className="flex aspect-square h-16 w-16  ">
+              <Image
+                src={getPost?.data?.author?.image}
+                width={400}
+                height={400}
+                alt="test"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold">An Article By: </span>
+              <Link href={'test'} className="underline">
+                {getPost?.data?.author?.name}
+              </Link>
+              <span className="text-sm">
+                {dayjs(getPost?.data?.createdAt).format('DD/MM/YY')}
+              </span>
+            </div>
+          </div>
+
+          {/* TOC */}
+          <div className="sticky top-6 ">
+            <div className="mt-6 h-min  max-w-[300px]  rounded-lg  bg-black p-6">
+              <DashboardTableOfContents toc={tableOfContentsResult.toc} />
+            </div>
+
+            {/* Newsletter Subscribe */}
+            <div className=" mt-6 h-min max-w-[300px] rounded-lg   bg-black p-6 py-4   ">
+              <NewsletterSubscribe />
+            </div>
+
+            {/* Related Posts */}
+            <div className="sticky top-0 mt-6 flex  h-min max-w-[300px] flex-col gap-4 rounded-lg bg-black p-6    ">
+              <span className="text-lg font-bold">Related Posts</span>
+              <div className="flex flex-col gap-4">
+                {postsByTag.map((post) => (
+                  <div className="flex flex-col gap-2 border-b py-2">
+                    <Link href="test flex flex-col">
+                      <span className="font-bold">{post?.title}</span>
+                    </Link>
+                    {/* <span className="text-sm">{post?.description}</span> */}
+                    <Link href={`/post/${post?.slug}`}>
+                      <button className="border-l-4  border-red-500 px-2 ">
+                        Read More
+                      </button>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </MainLayout>
@@ -539,12 +566,31 @@ export async function getStaticProps(
 
   const slug = context.params?.slug; // Access the first element of the slug array
 
-  await helpers.post.getPost.prefetch({ slug });
+  const postData = await helpers.post.getCoursePost.fetch({ slug });
+  const tagData = await helpers.post.getCoursePostsWithTag.fetch({
+    tags: postData?.tags.map((tag) => tag.name),
+  });
+
+  // Check if the post has HTML content, if so generate the table of contents
+  let tableOfContentsResult: TableOfContentsHTML | null = null;
+  if (postData?.html) {
+    tableOfContentsResult = await getTableOfContentsHTML(postData.html);
+  }
+
+  // Convert createdAt to a serializable format
+  const postsByTag = tagData.map((post) => ({
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+  }));
+
+  // console.warn(postsByTag);
 
   return {
     props: {
       trpcState: helpers.dehydrate(),
       slug,
+      tableOfContentsResult,
+      postsByTag,
     },
     revalidate: 1,
   };

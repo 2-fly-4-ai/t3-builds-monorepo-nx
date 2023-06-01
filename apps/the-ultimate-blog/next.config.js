@@ -1,7 +1,7 @@
 const { withNx } = require('@nrwl/next/plugins/with-nx.js');
 
 const nextConfig = {
-  reactStrictMode: true,
+  // reactStrictMode: true,
   swcMinify: true,
   images: {
     domains: [

@@ -67,7 +67,8 @@ export const WriteFormSchema = z.object({
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const { tableOfContentsResult, slug, postsByTag } = props;
+  const { slug } = props;
+  const { tableOfContentsResult } = props;
 
   const {
     register,
@@ -95,11 +96,11 @@ export default function PostPage(
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
   // console.warn(getPost.data);
-  // const postsByTag = trpc.post.getPostsWithTag.useQuery({
-  //   tags: getPost?.data?.tags.map((tag) => tag.name),
-  // });
+  const postsByTag = trpc.post.getPostsWithTag.useQuery({
+    tags: getPost?.data?.tags.map((tag) => tag.name),
+  });
 
-  // console.warn('POOPI', postsByTag?.data);
+  console.warn('POOPI', postsByTag?.data);
 
   // props?.tags?.[0]?.name,
   interface Item {
@@ -534,7 +535,7 @@ export default function PostPage(
             <div className="sticky top-0 mt-6 flex  h-min max-w-[300px] flex-col gap-4 rounded-lg bg-black p-6    ">
               <span className="text-lg font-bold">Related Posts</span>
               <div className="flex flex-col gap-4">
-                {postsByTag.map((post) => (
+                {postsByTag?.data?.map((post) => (
                   <div className="flex flex-col gap-2 border-b py-2">
                     <Link href="test flex flex-col">
                       <span className="font-bold">{post?.title}</span>
@@ -568,9 +569,6 @@ export async function getStaticProps(
   const slug = context.params?.slug; // Access the first element of the slug array
 
   const postData = await helpers.post.getPost.fetch({ slug });
-  const tagData = await helpers.post.getPostsWithTag.fetch({
-    tags: postData?.tags.map((tag) => tag.name),
-  });
 
   // Check if the post has HTML content, if so generate the table of contents
   let tableOfContentsResult: TableOfContentsHTML | null = null;
@@ -578,19 +576,11 @@ export async function getStaticProps(
     tableOfContentsResult = await getTableOfContentsHTML(postData.html);
   }
 
-  const postsByTag = tagData.map((post) => ({
-    ...post,
-    createdAt: post.createdAt.toISOString(),
-  }));
-
-  console.warn(postsByTag);
-
   return {
     props: {
       trpcState: helpers.dehydrate(),
       slug,
       tableOfContentsResult,
-      postsByTag,
     },
     revalidate: 1,
   };
