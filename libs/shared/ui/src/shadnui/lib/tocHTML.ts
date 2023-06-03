@@ -37,15 +37,20 @@ export async function getTableOfContentsHTML(
     if (level === 1) {
       toc.items?.push(currentItem);
     } else {
-      let parentItems = toc.items;
+      let parentItems = toc?.items;
       for (let i = 2; i < level; i++) {
         const lastItem = parentItems?.[parentItems.length - 1];
-        if (!lastItem.items) {
+        if (lastItem && !lastItem.items) {
           lastItem.items = [];
         }
-        parentItems = lastItem.items;
+        parentItems = lastItem?.items;
       }
-      parentItems?.push(currentItem);
+      if (parentItems) {
+        parentItems.push(currentItem);
+      } else {
+        // Initialize parentItems if it's undefined
+        toc.items = [currentItem];
+      }
     }
   });
 

@@ -87,13 +87,13 @@ export const tagRouter = router({
     }),
 
   getCourseTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
-    return await prisma.product.findMany();
+    return await prisma.courseTag.findMany();
   }),
 
   createProductTag: protectedProcedure
     .input(tagCreateSchema)
     .mutation(async ({ ctx: { prisma }, input }) => {
-      const tag = await prisma.courseTag.findUnique({
+      const tag = await prisma.productTag.findUnique({
         where: {
           name: input.name,
         },
@@ -106,7 +106,7 @@ export const tagRouter = router({
         });
       }
 
-      await prisma.courseTag.create({
+      await prisma.productTag.create({
         data: {
           ...input,
           slug: slugify(input.name),

@@ -94,7 +94,8 @@ export default function PostPage(
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
-  // console.warn(getPost.data);
+
+  console.warn(getPost.data);
   // const postsByTag = trpc.post.getPostsWithTag.useQuery({
   //   tags: getPost?.data?.tags.map((tag) => tag.name),
   // });
@@ -133,6 +134,7 @@ export default function PostPage(
   const onSubmit = async (formData) => {
     try {
       const _result = await handleEditPost.mutateAsync({
+        id: getPost.data.id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
@@ -568,13 +570,15 @@ export async function getStaticProps(
   const slug = context.params?.slug; // Access the first element of the slug array
 
   const postData = await helpers.post.getPost.fetch({ slug });
+  console.warn('HELLOOOO', postData);
+
   const tagData = await helpers.post.getPostsWithTag.fetch({
     tags: postData?.tags.map((tag) => tag.name),
   });
 
   // Check if the post has HTML content, if so generate the table of contents
   let tableOfContentsResult: TableOfContentsHTML | null = null;
-  if (postData?.html) {
+  if (postData.html) {
     tableOfContentsResult = await getTableOfContentsHTML(postData.html);
   }
 
@@ -583,7 +587,7 @@ export async function getStaticProps(
     createdAt: post.createdAt.toISOString(),
   }));
 
-  console.warn(postsByTag);
+  // console.warn(postsByTag);
 
   return {
     props: {

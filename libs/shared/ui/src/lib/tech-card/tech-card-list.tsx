@@ -52,7 +52,7 @@ export function TechCardList(props: TechCardListProps) {
 
   const { data: sessionData, status } = useSession();
 
-  const bookmarkPost = trpc.post.bookmarkPost.useMutation({
+  const bookmarkPost = trpc.post.bookmarkItem.useMutation({
     onSuccess: () => {
       toast.success('Bookmark Added');
       postRoute.getReadingList.invalidate();
@@ -175,7 +175,8 @@ export function TechCardList(props: TechCardListProps) {
               <BiBookmarkMinus
                 onClick={() => {
                   removeBookmark.mutate({
-                    postId: id,
+                    itemId: id,
+                    itemType: 'tech',
                   });
                   // create a new state object with the opposite value of isBookmarked
                   setIsBookmarked((prevState) => !prevState);
@@ -187,7 +188,8 @@ export function TechCardList(props: TechCardListProps) {
                 // countLikes={props.countlikes?.length()}
                 onClick={() => {
                   bookmarkPost.mutate({
-                    postId: id,
+                    itemId: id,
+                    itemType: 'tech',
                   });
                   // create a new state object with the opposite value of isBookmarked
                   setIsBookmarked((prevState) => !prevState);

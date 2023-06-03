@@ -9,7 +9,7 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { z } from 'zod';
 import dynamic from 'next/dynamic';
 export type TAG = { id: string; name: string };
-import TagForm from '../TagFormCourse';
+import TagForm from '../TagFormProduct';
 import { FaTimes } from 'react-icons/fa';
 import TagsAutocompletion from '../TagsAutocompletion';
 import UnsplashGallery from '../UnsplashGallery/index-creation';
@@ -60,14 +60,14 @@ export default function WriteFormModal() {
 
   //Trpc Routes
   const postRoute = trpc.useContext().post;
-  const getTags = trpc?.tag?.getCourseTags.useQuery();
+  const getTags = trpc?.tag?.getProductTags.useQuery();
 
-  const createPost = trpc.post.createCoursePost.useMutation({
+  const createPost = trpc.post.createProductPost.useMutation({
     onSuccess: () => {
       toast.success('post created successfully');
       reset();
       setIsWriteModalOpen(false);
-      postRoute.getCoursePosts.invalidate();
+      postRoute.getProductPosts.invalidate();
       //Beautiful implementation of Toast
     },
     onError: () => {

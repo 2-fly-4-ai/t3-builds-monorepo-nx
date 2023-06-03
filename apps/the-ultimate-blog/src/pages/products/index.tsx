@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
-import MainSection from '../../components/MainSectionProducts';
-import SideSection from '../../components/SideSectionProducts';
-import WriteFormModal from '../../components/WriteformCourse';
+import MainSection from '../../components/MainSectionProduct';
+import SideSection from '../../components/SideSectionProduct';
+import WriteFormModal from '../../components/WriteformProducts';
 
 import Sidebar from '../../components/SidebarNav/side-bar';
 import { useNavStore } from '@front-end-nx/shared/ui';

@@ -3,8 +3,8 @@ import { trpc } from '../../utils/trpc';
 import { AiOutlineSearch } from '../../icons';
 import { BsChevronDown } from '../../icons';
 import { ImSpinner8 } from '../../icons';
-import PostCard from 'libs/shared/ui/src/lib/course-card/post-card';
-import PostCardList from 'libs/shared/ui/src/lib/course-card/post-list';
+import PostCard from 'libs/shared/ui/src/lib/product-card/post-card';
+import PostCardList from 'libs/shared/ui/src/lib/product-card/post-card-list';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
 import { RouterOutputs } from '../../utils/trpc';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ export default function MainSection({
     setAnimationSwitch(true);
   }, [showListView, showNavSidebar, showSidebar]);
   //Trpc
-  const getPosts = trpc.post.getCoursePosts.useQuery();
+  const getPosts = trpc.post.getProductPosts.useQuery();
 
   // useEffect(() => {
   //   const delay = setTimeout(() => {
@@ -78,7 +78,7 @@ export default function MainSection({
           </div>
         </div>
         <div className="flex w-full items-center justify-between py-2">
-          <div className="text-2xl font-bold">Courses</div>
+          <div className="text-2xl font-bold">Products</div>
           <div className="flex gap-2">
             <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 hover:border-black hover:bg-gray-200 hover:shadow-black dark:border-white dark:hover:bg-white  dark:hover:bg-opacity-60 dark:hover:text-white">
               <div className="text-sm font-semibold ">Following</div>

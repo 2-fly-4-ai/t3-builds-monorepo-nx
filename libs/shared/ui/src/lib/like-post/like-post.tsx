@@ -10,18 +10,13 @@ import { useEffect } from 'react';
 
 export interface LikePostProps {
   id: string;
-  slug: string;
-
-  //can you add these
-  //setShowSidebar={() => setShowCommentSidebar(true)}
-  //showSidebar={showCommentSidebar}
   setShowSidebar: (value: boolean) => void; // Added this prop
   showSidebar: boolean; // Added this prop
 }
 
 export function LikePost(props: LikePostProps) {
   const { likedPosts, addLikedPost, removeLikedPost } = useLikeStore();
-  const { id, setShowSidebar, slug } = props; // Destructured the props
+  const { id, setShowSidebar } = props; // Destructured the props
   const [shiftFix, setShiftFix] = useState(false);
 
   const postRoute = trpc.useContext().post;

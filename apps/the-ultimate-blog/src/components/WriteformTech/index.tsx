@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic';
 export type TAG = { id: string; name: string };
 import TagForm from '../TagFormTech';
 import { FaTimes } from 'react-icons/fa';
-import TagsAutocompletion from '../TagsAutocompletionTech';
+import TagsAutocompletion from '../TagsAutocompletion';
 import UnsplashGallery from '../UnsplashGallery/index-creation';
 
 // Dynamic import for the editor component

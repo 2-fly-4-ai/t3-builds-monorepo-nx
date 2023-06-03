@@ -14,8 +14,7 @@ export const postRouter = router({
   uploadImage: protectedProcedure
     .input(
       z.object({
-        file: z.any(),
-        // Modify the type of 'file' based on your requirements
+        file: z.string(), // The file is a base64 string
       })
     )
     .mutation(async ({ input: { file } }) => {
@@ -24,34 +23,62 @@ export const postRouter = router({
         throw new Error('Supabase is not ready.');
       }
 
-      // Read the uploaded file using sharp
-      const image = sharp(file);
+      if (file.startsWith('data:image')) {
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
 
-      // Define the maximum dimension for the resized image
-      const MAX_DIMENSION = 800; // Adjust the maximum dimension as desired
+        const imageBuffer = Buffer.from(
+          file.replace(/^data:image\/\w+;base64,/, ''),
+          'base64'
+        );
+        const image = sharp(imageBuffer);
+        const metadata = await image.metadata();
 
-      // Resize the image while maintaining the aspect ratio
-      const resizedImage = image.resize(MAX_DIMENSION, MAX_DIMENSION, {
-        fit: 'inside',
-        withoutEnlargement: true,
-      });
+        const { width, height } = metadata;
 
-      const resizedImageBuffer = await resizedImage.toBuffer();
+        let resizedImage = image;
 
-      const { data, error } = await supabase.storage
-        .from('public')
-        .upload(`postImages/${file.name}`, resizedImageBuffer, {
-          contentType: 'image/jpeg',
-          upsert: true,
-        });
+        if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+          resizedImage = image.resize(MAX_WIDTH, MAX_HEIGHT, {
+            fit: 'inside',
+          });
+        }
 
-      if (error) {
-        console.log('Error uploading image:', error, file);
-        return '';
+        resizedImage = resizedImage.jpeg({
+          quality: 80,
+          progressive: true,
+          strip: true,
+        }); // Optimize for JPEG with quality, progressive rendering, and strip metadata
+
+        const resizedImageBuffer = await resizedImage.toBuffer();
+
+        const timestamp = Date.now(); // Generate a unique timestamp
+        const randomString = Math.random().toString(36).substring(7); // Generate a random string
+        const uniqueFilename = `postImages_${timestamp}_${randomString}.jpeg`;
+
+        const { data, error } = await supabase.storage
+          .from('public')
+          .upload(`featuredImages/${uniqueFilename}`, resizedImageBuffer, {
+            contentType: 'image/jpeg',
+            upsert: true,
+          });
+
+        if (error) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Upload failed to Supabase',
+            data: { error },
+          });
+        }
+
+        const {
+          data: { publicUrl },
+        } = await supabase.storage.from('public').getPublicUrl(data?.path);
+
+        return publicUrl;
       }
-      console.warn(data.path);
-      return data?.path || '';
     }),
+
   createPost: protectedProcedure
     .input(
       WriteFormSchema.and(
@@ -193,7 +220,7 @@ export const postRouter = router({
             webUrl,
             githubUrl,
             pricingUrl,
-            text,
+
             html,
 
             slug: slugify(title, { lower: true }),
@@ -343,7 +370,7 @@ export const postRouter = router({
           id: true,
           description: true,
           title: true,
-          text: true,
+
           html: true,
           tags: true,
           createdAt: true,
@@ -525,7 +552,7 @@ export const postRouter = router({
           id: true,
           description: true,
           title: true,
-          text: true,
+
           html: true,
           tags: true,
           createdAt: true,
@@ -752,7 +779,7 @@ export const postRouter = router({
           id: true,
           description: true,
           title: true,
-          text: true,
+
           html: true,
           tags: true,
           createdAt: true,
@@ -1032,7 +1059,7 @@ export const postRouter = router({
           githubUrl: true,
           pricingUrl: true,
           title: true,
-          text: true,
+
           html: true,
           authorId: true,
           slug: true,
@@ -1133,9 +1160,12 @@ export const postRouter = router({
         itemId: z.string(),
         itemType: z
           .string()
-          .refine((value) => ['post', 'tech', 'course'].includes(value), {
-            message: "Item type must be either 'post', 'tech', or 'course'",
-          }),
+          .refine(
+            (value) => ['post', 'tech', 'course', 'product'].includes(value),
+            {
+              message: "Item type must be either 'post', 'tech', or 'course'",
+            }
+          ),
       })
     )
     .mutation(
@@ -1165,6 +1195,14 @@ export const postRouter = router({
               },
             });
             break;
+          case 'product':
+            await prisma.productBookMark.create({
+              data: {
+                userId: session.user.id,
+                productId: itemId,
+              },
+            });
+            break;
           default:
             throw new Error('Invalid item type');
         }
@@ -1177,9 +1215,12 @@ export const postRouter = router({
         itemId: z.string(),
         itemType: z
           .string()
-          .refine((value) => ['post', 'tech', 'course'].includes(value), {
-            message: "Item type must be either 'post', 'tech', or 'course'",
-          }),
+          .refine(
+            (value) => ['post', 'tech', 'course', 'product'].includes(value),
+            {
+              message: "Item type must be either 'post', 'tech', or 'course'",
+            }
+          ),
       })
     )
     .mutation(
@@ -1216,6 +1257,16 @@ export const postRouter = router({
               where: {
                 userId_courseId: {
                   courseId: itemId,
+                  userId: session.user.id,
+                },
+              },
+            });
+            break;
+          case 'product':
+            await prisma.productBookMark.delete({
+              where: {
+                userId_courseId: {
+                  productId: itemId,
                   userId: session.user.id,
                 },
               },
@@ -1655,9 +1706,13 @@ export const postRouter = router({
       z.object({
         itemType: z
           .string()
-          .refine((value) => ['post', 'tech', 'course'].includes(value), {
-            message: "Item type must be either 'post', 'tech', or 'course'",
-          })
+          .refine(
+            (value) => ['post', 'tech', 'course', 'product'].includes(value),
+            {
+              message:
+                "Item type must be either 'post', 'tech', 'course', or 'product'",
+            }
+          )
           .optional(),
       })
     )
@@ -1759,6 +1814,37 @@ export const postRouter = router({
             },
           });
           break;
+        case 'product':
+          allBookmarks = await prisma.productBookMark.findMany({
+            where: {
+              userId: session.user.id,
+            },
+            take: 10,
+            orderBy: {
+              createdAt: 'desc',
+            },
+            select: {
+              id: true,
+              productId: true,
+              product: {
+                select: {
+                  id: true,
+                  title: true,
+                  featuredImage: true,
+                  description: true,
+                  author: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  createdAt: true,
+                  slug: true,
+                },
+              },
+            },
+          });
+          break;
         default:
           // Return all bookmarks if no itemType or unsupported itemType is provided
           const postBookmarks = await prisma.bookMark.findMany({
@@ -1770,10 +1856,14 @@ export const postRouter = router({
           const courseBookmarks = await prisma.courseBookMark.findMany({
             where: { userId: session.user.id },
           });
+          const productBookmarks = await prisma.productBookMark.findMany({
+            where: { userId: session.user.id },
+          });
           allBookmarks = [
             ...postBookmarks,
             ...techBookmarks,
             ...courseBookmarks,
+            ...productBookmarks,
           ];
       }
 

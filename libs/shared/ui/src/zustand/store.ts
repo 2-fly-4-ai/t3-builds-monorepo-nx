@@ -11,6 +11,11 @@ type GlobalContextType = {
   setIsWriteModalOpen: (newValue: boolean) => void;
 };
 
+type GlobalContextCourseType = {
+  isWriteCourseModalOpen: boolean;
+  setIsWriteCourseModalOpen: (newValue: boolean) => void;
+};
+
 type GlobalContextTechType = {
   isWriteTechModalOpen: boolean;
   setIsWriteTechModalOpen: (newValue: boolean) => void;
@@ -45,6 +50,22 @@ export const useGlobalContextStore = create(
       },
     }),
     { name: 'global-context-store' }
+  )
+);
+
+export const useGlobalContextCourseStore = create(
+  persist(
+    (set): GlobalContextCourseType => ({
+      isWriteCourseModalOpen: false,
+      setIsWriteCourseModalOpen: (newValue) => {
+        // Close the modal when newValue is false
+        if (!newValue) {
+          // Perform any necessary cleanup here
+        }
+        set(() => ({ isWriteModalOpen: newValue }));
+      },
+    }),
+    { name: 'global-context-course-store' }
   )
 );
 

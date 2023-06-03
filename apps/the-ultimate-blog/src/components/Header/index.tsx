@@ -203,6 +203,16 @@ export default function Header() {
                 Write Course
               </button>
             </div>
+          ) : path === '/products' ? (
+            <div>
+              <button
+                onClick={() => setIsWriteModalOpen(true)}
+                className="dark flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+              >
+                <AiOutlineEdit />
+                Write Product
+              </button>
+            </div>
           ) : null}
 
           <button

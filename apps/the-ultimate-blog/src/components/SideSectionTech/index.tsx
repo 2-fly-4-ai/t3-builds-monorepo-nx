@@ -11,7 +11,7 @@ import { Fragment, useState } from 'react';
 import { HiXMark } from 'react-icons/hi2';
 
 export default function SideSection({ showSidebar, toggleSidebar }) {
-  const readingList = trpc.post.getTechReadingList.useQuery({
+  const readingList = trpc.post.getReadingList.useQuery({
     itemType: 'tech',
   });
   const suggestions = trpc.user.getSuggestions.useQuery();

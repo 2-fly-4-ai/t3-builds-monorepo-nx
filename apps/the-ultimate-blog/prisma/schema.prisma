@@ -74,8 +74,8 @@ model User {
   likes         Like[]
   bookmarks     BookMark[]
   techBookmarks TechBookMark[]
-  CourseBookMark CourseBookMark[]
-  ProductBookMark CourseBookMark[]
+  courseBookMark CourseBookMark[]
+  productBookMark ProductBookMark[]
   followedBy    User[]     @relation("UserFollows")
   followings    User[]     @relation("UserFollows")
   notified Notification[] @relation(name: "NotifiedNotification")
@@ -89,6 +89,8 @@ model Notification {
   postId     String?
   techId     String?
   courseId   String?
+  productId  String?
+  product    Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
   course     Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
