@@ -15,7 +15,7 @@ function index() {
   const stars = '';
   return (
     <MainLayout>
-      <section className="dark:via-trueGray flex h-[93vh] w-full items-center justify-center  bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] to-white dark:from-gray-900 dark:to-[rgb(18,18,18)]">
+      <section className="dark:via-trueGray flex min-h-[93vh] w-full items-center justify-center  bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] to-white dark:from-gray-900 dark:to-[rgb(18,18,18)]">
         <section className="container grid max-w-7xl items-center  justify-center gap-6   px-8  md:pb-12 md:pt-10 lg:pb-16 lg:pt-16">
           <div className="mx-auto my-auto flex flex-col  items-center justify-center gap-3 space-y-3 text-center first-letter:flex">
             <a
@@ -311,7 +311,7 @@ function index() {
           </div>
         </div>
       </div> */}
-      <div className="mx-auto min-h-screen max-w-7xl border px-8 py-8 md:py-12">
+      <div className="mx-auto min-h-screen max-w-7xl px-8 py-8 md:py-12">
         <SectionTitle
           pretitle="Testimonials"
           title="Here's what our customers said"

@@ -25,6 +25,7 @@ export interface PostCardProps {
     description: string;
     id: string;
     likes: string;
+    featuredImage: string;
   };
 }
 
@@ -37,7 +38,7 @@ export function PostCardList(props: PostCardProps) {
     Boolean(props?.post?.bookmarks?.length > 0)
   );
 
-  const bookmarkPost = trpc.post.bookmarkPost.useMutation({
+  const bookmarkPost = trpc.post.bookmarkItem.useMutation({
     onSuccess: () => {
       toast.success('Bookmark Added');
       postRoute.getReadingList.invalidate();
@@ -55,7 +56,7 @@ export function PostCardList(props: PostCardProps) {
       <div className="col-span-full flex items-center gap-3  py-1 ">
         <Link href={`/user/${props.post.author?.username}` ?? null}>
           <div
-            className=" flex cursor-pointer items-center gap-2 rounded-lg border-2 border-gray-200 p-2 shadow-sm hover:border-gray-400 hover:bg-gray-200 dark:hover:bg-white dark:hover:bg-opacity-40
+            className=" breakwords flex cursor-pointer items-center gap-2 rounded-lg border-2 border-gray-200 p-2 shadow-sm hover:border-gray-400 hover:bg-gray-200 dark:hover:bg-white dark:hover:bg-opacity-40
         "
           >
             <div className="h-10 w-10 rounded-full bg-gray-300 ">
@@ -85,7 +86,7 @@ export function PostCardList(props: PostCardProps) {
         </Link>
       </div>
 
-      <div className="col-span-8  space-y-4 border border-transparent">
+      <div className="breakwords col-span-8 space-y-4 border border-transparent">
         <Link href={`/posts/${props.post.slug}`}>
           <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 transition duration-200 hover:underline">
             {props.post.title}
@@ -158,7 +159,8 @@ export function PostCardList(props: PostCardProps) {
               <BiBookmarkMinus
                 onClick={() => {
                   removeBookmark.mutate({
-                    postId: props.post.id,
+                    itemId: props.post.id,
+                    itemType: 'post',
                   });
                   // create a new state object with the opposite value of isBookmarked
                   setIsBookmarked((prevState) => !prevState);
@@ -170,7 +172,8 @@ export function PostCardList(props: PostCardProps) {
                 // countLikes={props.countlikes?.length()}
                 onClick={() => {
                   bookmarkPost.mutate({
-                    postId: props.post.id,
+                    itemId: props.post.id,
+                    itemType: 'post',
                   });
                   // create a new state object with the opposite value of isBookmarked
                   setIsBookmarked((prevState) => !prevState);

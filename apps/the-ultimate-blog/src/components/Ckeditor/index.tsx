@@ -27,6 +27,15 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
     }
   }
 
+  useEffect(() => {
+    // Modify the content before setting it in the editor
+    const modifiedValue = value?.replace(
+      /<p>!<a href="(.*?)">(.*?)<\/a><\/p>/g,
+      '<img src="$1" alt="$2">'
+    );
+    onChange(modifiedValue);
+  }, [value, onChange]);
+
   const mutation = trpc.post.uploadImage.useMutation({
     onSuccess: () => {
       toast.success('Picture uploaded successfully');
@@ -43,7 +52,8 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
   return (
     <CKEditor
       editor={DecoupledEditor}
-      data={debouncedValue}
+      data={value}
+      // onReady={handleEditorReady}
       config={{
         extraPlugins: [
           createMyCustomUploadAdapterPlugin(mutation, uploadImage),
@@ -58,9 +68,23 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
         },
       }}
       onChange={(event: any, editor: any) => {
-        const data = editor.getData();
+        let data = editor.getData();
+
+        // Check if the data is a URL
+
+        // Check if the URL is an image
+        const isImageUrl = /\.(jpeg|jpg|gif|png)$/.test(data);
+
+        if (isImageUrl) {
+          console.warn('TRUE');
+          // If it's an image URL, replace the link with an image tag
+          data = `<img src="${data}" />`;
+        }
+
         onChange(data);
+        console.warn(data);
       }}
+      // ...
     />
   );
 };
@@ -107,15 +131,20 @@ class MyUploadAdapter {
             console.warn('Base64 Data: ', base64Data);
             const response = await this.mutation.mutateAsync({
               file: base64Data,
+              onSuccess: () => {
+                toast.success('Picture uploaded successfully');
+                resolve({ default: response });
+                // getPost.revalidate();
+              },
             });
             console.warn('Mutation response: ', response);
 
-            if (this.uploadImage && response) {
-              console.warn('TESTING12', response);
-              resolve({ default: response });
-            } else {
-              resolve({ default: response }); //HERE!!! Ballzack // Activate investiagtion
-            }
+            // if (this.uploadImage && response) {
+            //   console.warn('TESTING12', response);
+            //   resolve({ default: response });
+            // } else {
+            //   resolve({ default: response }); //HERE!!! Ballzack // Activate investiagtion
+            // }
           } catch (error) {
             console.error('File upload failed', error);
             reject(error);

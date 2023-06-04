@@ -93,8 +93,8 @@ export default function PostPage(
   const [isMASTEREditorOpen, setMASTEREditorOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const getPost = trpc.post.getProductPost.useQuery({ slug: slug.toString() });
   const postRoute = trpc.useContext().post;
-  const getPost = trpc.post.getCoursePost.useQuery({ slug: slug.toString() });
   // console.warn(getPost.data);
   // const postsByTag = trpc.post.getCoursePostsWithTag.useQuery({
   //   tags: getPost?.data?.tags.map((tag) => tag.name),
@@ -117,28 +117,31 @@ export default function PostPage(
     html?: string;
   }
 
-  const handleEditPost = trpc.post.editPost.useMutation({
+  function invalidateCurrentPostPage(postRoute, router) {
+    const { slug } = router.query;
+    postRoute.getPost.invalidate({ slug: slug });
+  }
+
+  const handleEditPost = trpc.post.editProductPost.useMutation({
     onSuccess: () => {
       toast.success('Post updated successfully');
-      invalidateCurrentPostPage();
+      invalidateCurrentPostPage(postRoute, router);
       // getPost.revalidate();
     },
   });
 
-  const invalidateCurrentPostPage = useCallback(() => {
-    postRoute.getPost.invalidate({ slug: router.query.slug as string });
-  }, [postRoute.getPost, router.query.slug]);
-
   const onSubmit = async (formData) => {
     try {
       const _result = await handleEditPost.mutateAsync({
+        id: getPost.data.id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
       });
 
       // Invalidate the getPost query so that it is re-fetched with the latest data
-      invalidateCurrentPostPage();
+      invalidateCurrentPostPage(postRoute, router);
+      router.replace(router.asPath, undefined, { scroll: false });
 
       // Return the result explicitly
       return _result;
@@ -295,7 +298,9 @@ export default function PostPage(
                       ) : null}
 
                       {!isTitleEditorOpen ? (
-                        <h3 className="text-4xl">{getPost.data?.title}</h3>
+                        <h3 className="break-words text-4xl">
+                          {getPost.data?.title}
+                        </h3>
                       ) : (
                         <div className="h-auto">
                           <TextareaAutosize
@@ -333,7 +338,7 @@ export default function PostPage(
                   </div>
                 </div>
 
-                <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
+                <div className="prose relative max-w-none break-words rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
                   {!isDescriptionEditorOpen ? (
                     getPost.data?.description
                   ) : (
@@ -508,7 +513,9 @@ export default function PostPage(
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold">An Article By: </span>
+              <span className="break-words text-lg font-bold">
+                An Article By:{' '}
+              </span>
               <Link href={'test'} className="underline">
                 {getPost?.data?.author?.name}
               </Link>
@@ -536,7 +543,7 @@ export default function PostPage(
                 {postsByTag.map((post) => (
                   <div className="flex flex-col gap-2 border-b py-2">
                     <Link href="test flex flex-col">
-                      <span className="font-bold">{post?.title}</span>
+                      <span className="font-bold ">{post?.title}</span>
                     </Link>
                     {/* <span className="text-sm">{post?.description}</span> */}
                     <Link href={`/post/${post?.slug}`}>
@@ -566,8 +573,8 @@ export async function getStaticProps(
 
   const slug = context.params?.slug; // Access the first element of the slug array
 
-  const postData = await helpers.post.getCoursePost.fetch({ slug });
-  const tagData = await helpers.post.getCoursePostsWithTag.fetch({
+  const postData = await helpers.post.getProductPost.fetch({ slug });
+  const tagData = await helpers.post.getProductPostsWithTag.fetch({
     tags: postData?.tags.map((tag) => tag.name),
   });
 

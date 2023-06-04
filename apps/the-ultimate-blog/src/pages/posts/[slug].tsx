@@ -95,14 +95,6 @@ export default function PostPage(
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
 
-  console.warn(getPost.data);
-  // const postsByTag = trpc.post.getPostsWithTag.useQuery({
-  //   tags: getPost?.data?.tags.map((tag) => tag.name),
-  // });
-
-  // console.warn('POOPI', postsByTag?.data);
-
-  // props?.tags?.[0]?.name,
   interface Item {
     title: string;
     url: string;
@@ -119,17 +111,18 @@ export default function PostPage(
     html?: string;
   }
 
+  function invalidateCurrentPostPage(postRoute, router) {
+    const { slug } = router.query;
+    postRoute.getPost.invalidate({ slug: slug });
+  }
+
   const handleEditPost = trpc.post.editPost.useMutation({
     onSuccess: () => {
       toast.success('Post updated successfully');
-      invalidateCurrentPostPage();
+      invalidateCurrentPostPage(postRoute, router);
       // getPost.revalidate();
     },
   });
-
-  const invalidateCurrentPostPage = useCallback(() => {
-    postRoute.getPost.invalidate({ slug: router.query.slug as string });
-  }, [postRoute.getPost, router.query.slug]);
 
   const onSubmit = async (formData) => {
     try {
@@ -140,9 +133,11 @@ export default function PostPage(
         html: formData.html,
       });
 
-      // Invalidate the getPost query so that it is re-fetched with the latest data
-      invalidateCurrentPostPage();
+      //remember this to get the fresh data
 
+      // Invalidate the getPost query so that it is re-fetched with the latest data
+      invalidateCurrentPostPage(postRoute, router);
+      router.replace(router.asPath, undefined, { scroll: false });
       // Return the result explicitly
       return _result;
 
@@ -298,7 +293,9 @@ export default function PostPage(
                       ) : null}
 
                       {!isTitleEditorOpen ? (
-                        <h3 className="text-4xl">{getPost.data?.title}</h3>
+                        <h3 className="break-words text-4xl">
+                          {getPost.data?.title}
+                        </h3>
                       ) : (
                         <div className="h-auto">
                           <TextareaAutosize
@@ -336,7 +333,7 @@ export default function PostPage(
                   </div>
                 </div>
 
-                <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
+                <div className="prose relative max-w-none break-words rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
                   {!isDescriptionEditorOpen ? (
                     getPost.data?.description
                   ) : (
@@ -570,7 +567,6 @@ export async function getStaticProps(
   const slug = context.params?.slug; // Access the first element of the slug array
 
   const postData = await helpers.post.getPost.fetch({ slug });
-  console.warn('HELLOOOO', postData);
 
   const tagData = await helpers.post.getPostsWithTag.fetch({
     tags: postData?.tags.map((tag) => tag.name),

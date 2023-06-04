@@ -63,7 +63,7 @@ export function PostCard(props: PostCardProps) {
       <div className="relative col-span-full  rounded-none">
         <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black group-hover:bg-opacity-20">
           <Link
-            href={`/posts/${props.post.slug}`}
+            href={`/products/${props.post.slug}`}
             className="mx-auto my-auto mt-4"
           >
             <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-200 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
@@ -82,7 +82,7 @@ export function PostCard(props: PostCardProps) {
             </button>
           </Link>
         </div>
-        <Link href={`/posts/${props.post.slug}`} className="">
+        <Link href={`/products/${props.post.slug}`} className="">
           <div className="h-56 overflow-hidden">
             <Image
               src={
@@ -98,7 +98,7 @@ export function PostCard(props: PostCardProps) {
         </Link>
       </div>
 
-      <div className="col-span-full grid p-4 pt-0">
+      <div className="breakwords col-span-full grid p-4 pt-0">
         <div className="group  col-span-full items-center gap-3  py-1 transition-all duration-500  hover:bg-gray-200 ">
           <Link href={`/user/${props.post.author?.username}` ?? null}>
             <div
@@ -133,9 +133,9 @@ export function PostCard(props: PostCardProps) {
         </div>
 
         <div className="col-span-full  mb-3  h-20">
-          <Link href={`/posts/${props.post.slug}`}>
+          <Link href={`/products/${props.post.slug}`}>
             <div className="col-span-4 "></div>
-            <h3 className=" line-clamp-3  cursor-pointer  text-lg font-bold decoration-gray-300 ">
+            <h3 className=" line-clamp-3 cursor-pointer overflow-hidden break-words  text-lg font-bold decoration-gray-300 ">
               {props.post.title}
             </h3>
           </Link>
@@ -173,7 +173,7 @@ export function PostCard(props: PostCardProps) {
                   onClick={() => {
                     removeBookmark.mutate({
                       itemId: props.post.id,
-                      itemType: 'post',
+                      itemType: 'product',
                     });
                     // use the toggleBookmark function from the store and pass the post id
                     handleBookmarkToggle();
@@ -186,7 +186,7 @@ export function PostCard(props: PostCardProps) {
                   onClick={() => {
                     bookmarkPost.mutate({
                       itemId: props.post.id,
-                      itemType: 'post',
+                      itemType: 'product',
                     });
                     // use the toggleBookmark function from the store and pass the post id
                     handleBookmarkToggle();

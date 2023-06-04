@@ -45,6 +45,7 @@ import TableCaption from '@ckeditor/ckeditor5-table/src/tablecaption.js';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js';
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js';
 import WordCount from '@ckeditor/ckeditor5-word-count/src/wordcount.js';
+import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar.js';
 
 class Editor extends InlineEditor {}
 
@@ -52,7 +53,7 @@ class Editor extends InlineEditor {}
 Editor.builtinPlugins = [
   Alignment,
   AutoImage,
-  AutoLink,
+
   BlockQuote,
   Bold,
   Code,
@@ -69,6 +70,7 @@ Editor.builtinPlugins = [
   ImageCaption,
   ImageInsert,
   ImageUpload,
+  ImageToolbar,
   Indent,
   Italic,
   Link,
@@ -92,6 +94,7 @@ Editor.builtinPlugins = [
   TableToolbar,
   Underline,
   WordCount,
+  AutoLink,
 ];
 
 // Editor configuration.

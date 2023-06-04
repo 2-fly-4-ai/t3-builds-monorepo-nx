@@ -95,7 +95,7 @@ export default function PostPage(
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getCoursePost.useQuery({ slug: slug.toString() });
-  // console.warn(getPost.data);
+  console.warn('courseContent', getPost.data);
   // const postsByTag = trpc.post.getCoursePostsWithTag.useQuery({
   //   tags: getPost?.data?.tags.map((tag) => tag.name),
   // });
@@ -117,29 +117,31 @@ export default function PostPage(
     html?: string;
   }
 
-  const handleEditPost = trpc.post.editPost.useMutation({
+  function invalidateCurrentPostPage(postRoute, router) {
+    const { slug } = router.query;
+    postRoute.getCoursePost.invalidate({ slug: slug });
+  }
+
+  const handleEditPost = trpc.post.editCoursePost.useMutation({
     onSuccess: () => {
       toast.success('Post updated successfully');
-      invalidateCurrentPostPage();
+      invalidateCurrentPostPage(postRoute, router);
       // getPost.revalidate();
     },
   });
 
-  const invalidateCurrentPostPage = useCallback(() => {
-    postRoute.getPost.invalidate({ slug: router.query.slug as string });
-  }, [postRoute.getPost, router.query.slug]);
-
   const onSubmit = async (formData) => {
     try {
       const _result = await handleEditPost.mutateAsync({
+        id: getPost.data.id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
       });
 
       // Invalidate the getPost query so that it is re-fetched with the latest data
-      invalidateCurrentPostPage();
-
+      invalidateCurrentPostPage(postRoute, router);
+      router.replace(router.asPath, undefined, { scroll: false });
       // Return the result explicitly
       return _result;
 
@@ -153,6 +155,7 @@ export default function PostPage(
 
   useEffect(() => {
     let defaultValues: DefaultValues = {};
+
     defaultValues.title = getPost.data?.title;
     defaultValues.description = getPost.data?.description;
     defaultValues.html = getPost.data?.html;
@@ -295,7 +298,9 @@ export default function PostPage(
                       ) : null}
 
                       {!isTitleEditorOpen ? (
-                        <h3 className="text-4xl">{getPost.data?.title}</h3>
+                        <h3 className="break-words text-4xl">
+                          {getPost.data?.title}
+                        </h3>
                       ) : (
                         <div className="h-auto">
                           <TextareaAutosize
@@ -333,7 +338,7 @@ export default function PostPage(
                   </div>
                 </div>
 
-                <div className="prose relative max-w-none  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
+                <div className="prose relative max-w-none break-words  rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
                   {!isDescriptionEditorOpen ? (
                     getPost.data?.description
                   ) : (

@@ -31,12 +31,12 @@ h6 {
 .ck.ck-editor__editable_inline {
   border: none !important;
 }
-.ck.ck-balloon-panel {
+/* .ck.ck-balloon-panel {
   visibility: hidden;
 }
 .ck.ck-responsive-form {
   visibility: visible;
-}
+} */
 
 .ck.ck-balloon-rotator__content {
   background: white;

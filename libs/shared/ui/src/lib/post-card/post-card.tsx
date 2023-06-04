@@ -99,7 +99,7 @@ export function PostCard(props: PostCardProps) {
       </div>
 
       <div className="col-span-full grid p-4 pt-0">
-        <div className="group  col-span-full items-center gap-3  py-1 transition-all duration-500  hover:bg-gray-200 ">
+        <div className="group col-span-full items-center gap-3 break-words  py-1 transition-all duration-500  hover:bg-gray-200 ">
           <Link href={`/user/${props.post.author?.username}` ?? null}>
             <div
               className=" flex cursor-pointer items-center gap-2    border-gray-200 p-1 shadow-sm
@@ -132,10 +132,9 @@ export function PostCard(props: PostCardProps) {
           </Link>
         </div>
 
-        <div className="col-span-full  mb-3  h-20">
+        <div className="col-span-full mb-3  h-20 overflow-hidden  break-words">
           <Link href={`/posts/${props.post.slug}`}>
-            <div className="col-span-4 "></div>
-            <h3 className=" line-clamp-3  cursor-pointer  text-lg font-bold decoration-gray-300 ">
+            <h3 className="overflow-al  line-clamp-3 cursor-pointer break-words border text-lg font-bold decoration-gray-300">
               {props.post.title}
             </h3>
           </Link>

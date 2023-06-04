@@ -7,6 +7,7 @@ import { useCallback, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
 import toast, { Toaster } from 'react-hot-toast';
+import { useBookmarkStore } from '../../zustand/store';
 const dayjs = require('dayjs');
 
 /* eslint-disable-next-line */
@@ -25,6 +26,7 @@ export interface PostCardProps {
     description: string;
     id: string;
     likes: string;
+    featuredImage: string;
   };
 }
 
@@ -33,11 +35,9 @@ export function PostCardList(props: PostCardProps) {
   const postRoute = trpc.useContext().post;
 
   //state Handlers
-  const [isBookmarked, setIsBookmarked] = useState(
-    Boolean(props?.post?.bookmarks?.length > 0)
-  );
-
-  const bookmarkPost = trpc.post.bookmarkPost.useMutation({
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
+  const isBookmarked = bookmarks.includes(props.post.id);
+  const bookmarkPost = trpc.post.bookmarkItem.useMutation({
     onSuccess: () => {
       toast.success('Bookmark Added');
       postRoute.getReadingList.invalidate();
@@ -49,6 +49,10 @@ export function PostCardList(props: PostCardProps) {
       postRoute.getReadingList.invalidate();
     },
   });
+
+  const handleBookmarkToggle = useCallback(() => {
+    toggleBookmark(props.post.id);
+  }, [props.post.id, isBookmarked, toggleBookmark]);
 
   return (
     <div className="grid min-h-[10rem] w-full grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6 py-4  shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:bg-white dark:bg-opacity-10">
@@ -87,7 +91,7 @@ export function PostCardList(props: PostCardProps) {
 
       <div className="col-span-8  space-y-4 border border-transparent">
         <Link href={`/posts/${props.post.slug}`}>
-          <h3 className="cursor-pointer text-2xl font-bold decoration-gray-300 decoration-4 transition duration-200 hover:underline">
+          <h3 className="cursor-pointer overflow-hidden break-words text-2xl font-bold decoration-gray-300 decoration-4 transition duration-200 hover:underline">
             {props.post.title}
           </h3>
         </Link>
@@ -158,10 +162,11 @@ export function PostCardList(props: PostCardProps) {
               <BiBookmarkMinus
                 onClick={() => {
                   removeBookmark.mutate({
-                    postId: props.post.id,
+                    itemId: props.post.id,
+                    itemType: 'product',
                   });
                   // create a new state object with the opposite value of isBookmarked
-                  setIsBookmarked((prevState) => !prevState);
+                  handleBookmarkToggle();
                 }}
                 className="cursor-pointer"
               />
@@ -170,10 +175,11 @@ export function PostCardList(props: PostCardProps) {
                 // countLikes={props.countlikes?.length()}
                 onClick={() => {
                   bookmarkPost.mutate({
-                    postId: props.post.id,
+                    itemId: props.post.id,
+                    itemType: 'product',
                   });
                   // create a new state object with the opposite value of isBookmarked
-                  setIsBookmarked((prevState) => !prevState);
+                  handleBookmarkToggle();
                 }}
                 className="cursor-pointer"
               />
