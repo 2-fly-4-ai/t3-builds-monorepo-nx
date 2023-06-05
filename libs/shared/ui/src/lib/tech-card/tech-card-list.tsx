@@ -7,6 +7,7 @@ import { useCallback, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
 import toast, { Toaster } from 'react-hot-toast';
+import { useGlobalContextTechModalStore } from '../../zustand/store';
 const dayjs = require('dayjs');
 
 /* eslint-disable-next-line */
@@ -22,7 +23,7 @@ export interface TechCardListProps {
     bookmarks: string;
     slug: string;
     title: string;
-    techDescription: string;
+    description: string;
     likes: string;
     githubUrl: string;
     featuredImage: string;
@@ -39,7 +40,7 @@ export function TechCardList(props: TechCardListProps) {
     slug,
     title,
     author,
-    techDescription,
+    description,
     githubUrl,
     docsUrl,
     pricingUrl,
@@ -51,6 +52,7 @@ export function TechCardList(props: TechCardListProps) {
   } = props.post;
 
   const { data: sessionData, status } = useSession();
+  const { togglePosts } = useGlobalContextTechModalStore();
 
   const bookmarkPost = trpc.post.bookmarkItem.useMutation({
     onSuccess: () => {
@@ -69,6 +71,9 @@ export function TechCardList(props: TechCardListProps) {
   const [isBookmarked, setIsBookmarked] = useState(
     Boolean(props?.post?.bookmarks?.length > 0)
   );
+  const handlePostsModalToggle = () => {
+    togglePosts(id);
+  };
 
   return (
     <div className="grid min-h-[10rem] w-full  grid-cols-12 gap-x-8 gap-y-2 rounded-xl p-6  py-4 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] transition duration-500 dark:bg-white dark:bg-opacity-10">
@@ -79,15 +84,23 @@ export function TechCardList(props: TechCardListProps) {
         "
           >
             <div className="h-10 w-10 rounded-full bg-gray-300 ">
-              {author.image && author.image ? (
-                <Image
-                  src={author.image ?? ''}
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                  alt={author.name ?? ''}
-                />
-              ) : null}
+              <Link
+                href={`/techstack`}
+                scroll={false} //Remember for future
+                as={`/techstack/${slug}`}
+                className="mx-auto mt-4"
+                onClick={handlePostsModalToggle}
+              >
+                {author.image && author.image ? (
+                  <Image
+                    src={author.image ?? ''}
+                    width={50}
+                    height={50}
+                    className="rounded-full"
+                    alt={author.name ?? ''}
+                  />
+                ) : null}
+              </Link>
             </div>
             <div className="">
               <div className="flex items-center gap-2 ">
@@ -112,12 +125,18 @@ export function TechCardList(props: TechCardListProps) {
           </h3>
         </Link>
         <div className="text-md line-clamp-8 line-clamp-6 w-full break-words font-sans text-gray-500 dark:text-gray-400 dark:text-opacity-70">
-          {techDescription}
+          {description}
         </div>
       </div>
       <div className="relative col-span-4">
         <div className="group absolute flex h-60 w-full transition duration-500 hover:bg-black hover:bg-opacity-20">
-          <Link href={`/${slug}`} className="mx-auto my-auto mt-4">
+          <Link
+            href={`/techstack`}
+            scroll={false} //Remember for future
+            as={`/techstack/${slug}`}
+            className="mx-auto mt-4"
+            onClick={handlePostsModalToggle}
+          >
             <button className="mx-auto hidden items-center justify-center  gap-2  rounded-lg border-4  px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50">
               VIEW ARTICLE
               <svg

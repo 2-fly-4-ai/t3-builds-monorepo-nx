@@ -109,7 +109,7 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
 
   return (
     <div className=" relative  w-full border-l shadow-md">
-      <div className=" z-10 flex h-full w-full flex-col  border p-8">
+      <div className=" z-10 flex h-full w-full flex-col  px-6">
         <div className="  flex items-center justify-between  text-xl">
           <h2 className=" font-medium">
             Responses ({getComments.data?.length})
@@ -147,12 +147,12 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
           {getComments.isSuccess &&
             getComments.data.map((comment) => (
               <div
-                className="flex w-full flex-col space-y-2 rounded-lg  border  p-4"
+                className="flex w-full flex-col space-y-2 border-b border-b-gray-300 pb-4 last:border-none"
                 key={comment.id}
               >
-                <div className="flex w-full items-center space-x-2  text-xs">
-                  <div className="relative h-8 w-8 overflow-hidden rounded-full bg-gray-400">
-                    <Image src={comment.user.image} fill alt="" />
+                <div className="flex w-full items-center space-x-2 space-y-2 text-xs">
+                  <div className="relative h-8 w-8 rounded-full bg-gray-400">
+                    <Image src="" alt="" />
                   </div>
                   <div>
                     <p className="font-mono text-base font-bold dark:text-orange-400">

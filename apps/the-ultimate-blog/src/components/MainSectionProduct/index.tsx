@@ -142,7 +142,7 @@ export default function MainSection({
         </div>
       </div>
       <div
-        className={`mx-auto my-8 grid max-w-max gap-6 ${
+        className={`mx-auto my-8 grid w-full gap-6 ${
           showListView
             ? 'grid-cols-1 2xl:grid-cols-1'
             : showNavSidebar && showSidebar

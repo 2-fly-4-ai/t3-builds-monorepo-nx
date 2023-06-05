@@ -41,14 +41,6 @@ import {
   TabsList,
   TabsTrigger,
 } from 'libs/shared/ui/src/shadnui/ui/tabs';
-import {
-  BiBookBookmark,
-  BiCloset,
-  BiComment,
-  BiShare,
-  BiUpvote,
-} from 'react-icons/bi';
-import { CgClose } from 'react-icons/cg';
 
 const Editor = dynamic(() => import('../../components/Ckeditor'), {
   ssr: false,
@@ -78,7 +70,6 @@ type TechFormModalProps = {
     webUrl: string;
     pricingUrl: string;
     tagsIds?: { id?: string }[];
-    likes: string;
   };
 };
 
@@ -91,7 +82,6 @@ export const WriteFormSchema = z.object({
 });
 
 export default function TechModal({ post }: TechFormModalProps) {
-  console.warn('TEST1 TECHMODAL', post);
   const router = useRouter();
   const [shouldReload, setShouldReload] = useState(false);
   // generateMetadata({ post });
@@ -131,8 +121,6 @@ export default function TechModal({ post }: TechFormModalProps) {
 
   // State Initializers
 
-  const [isOpenComments, setIsOpenComments] = useState(false);
-
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
@@ -169,14 +157,12 @@ export default function TechModal({ post }: TechFormModalProps) {
 
   const onSubmit = async (formData) => {
     try {
-      const _result = await handleEditPost.mutateAsync({
+      const result = await handleEditPost.mutateAsync({
         id: id,
         title: formData.title,
         description: formData.description,
         html: formData.html,
       });
-
-      return _result;
     } catch (error) {
       console.error('Failed to update post:', error);
     } finally {
@@ -293,6 +279,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                         </svg>
                       </button>
                     ) : null}
+
                     {!isTitleEditorOpen ? (
                       <h3 className="text-4xl">{title}</h3>
                     ) : (
@@ -328,11 +315,12 @@ export default function TechModal({ post }: TechFormModalProps) {
                         )}
                       </div>
                     )}
-                    <div className="prose max-w-none border">
+
+                    <div className="prose max-w-none">
                       <blockquote
                         className={`${
                           isReadMoreOpen ? '' : 'line-clamp-5'
-                        }  min-h  relative  overflow-hidden  text-base dark:text-gray-200`}
+                        }  relative  max-h-min  overflow-hidden  text-base dark:text-gray-200`}
                       >
                         {!isDescriptionEditorOpen ? (
                           description
@@ -394,11 +382,10 @@ export default function TechModal({ post }: TechFormModalProps) {
                           </button>
                         ) : null}
                       </blockquote>
-
                       {!isReadMoreOpen ? (
                         <button
                           onClick={() => setIsReadMoreOpen(true)}
-                          className="group relative  inline-flex items-center justify-start overflow-hidden rounded-full border px-5 py-1 font-bold"
+                          className="group relative  inline-flex items-center justify-start overflow-hidden rounded-full px-5 py-1 font-bold"
                         >
                           <span className="absolute left-0 top-0 h-32 w-32 -translate-y-2 translate-x-12 rotate-45 bg-white opacity-[3%]"></span>
                           <span className="absolute left-0 top-0 -mt-1 h-48 w-48 -translate-x-56 -translate-y-24 rotate-45 bg-white opacity-100 transition-all duration-500 ease-in-out group-hover:-translate-x-8"></span>
@@ -410,7 +397,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                       ) : (
                         <button
                           onClick={() => setIsReadMoreOpen(false)}
-                          className="group relative inline-flex items-center justify-start overflow-hidden rounded-full px-5 py-1 font-bold"
+                          className="group relative  inline-flex items-center justify-start overflow-hidden rounded-full px-5 py-1 font-bold"
                         >
                           <span className="absolute left-0 top-0 h-32 w-32 -translate-y-2 translate-x-12 rotate-45 bg-white opacity-[3%]"></span>
                           <span className="absolute left-0 top-0 -mt-1 h-48 w-48 -translate-x-56 -translate-y-24 rotate-45 bg-white opacity-100 transition-all duration-500 ease-in-out group-hover:-translate-x-8"></span>
@@ -421,24 +408,14 @@ export default function TechModal({ post }: TechFormModalProps) {
                         </button>
                       )}
                     </div>
-                    <div className="border">
-                      <ul className="flex list-outside gap-2  p-0 px-4">
-                        {tags?.map((tag) => {
-                          return (
-                            <li className="m-0 list-outside list-none ">
-                              #{tag.name}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                    <div className="relative flex   justify-start ">
+
+                    <div className="relative flex   justify-center border bg-white">
                       <Image
                         src={featuredImage ?? ''}
                         width={400}
                         height={400}
                         alt="test"
-                        className="max-h-72 w-3/4 overflow-hidden bg-white object-contain "
+                        className="h-[300px] w-auto"
                       />
                       <div className="border">
                         {' '}
@@ -469,31 +446,19 @@ export default function TechModal({ post }: TechFormModalProps) {
                         </svg>
                       </button>
                     </div>
-                    <div className="w-full  rounded-xl border p-8 ">
-                      <div className="flex w-full justify-between">
-                        <button className=" flex items-center  gap-2 text-lg font-medium">
-                          <BiUpvote />
-                          Upvote
-                        </button>
-
-                        <button
-                          onClick={() => setIsOpenComments(true)}
-                          className="flex items-center  gap-2 text-lg font-medium"
-                        >
-                          <BiComment />
-                          Comment
-                        </button>
-                        <button className="flex items-center  gap-2 text-lg font-medium">
-                          <BiBookBookmark />
-                          BookMark
-                        </button>
-                        <button className="flex items-center  gap-2 text-lg font-medium">
-                          <BiShare />
-                          Share
-                        </button>
-                      </div>
+                    <div>
+                      <ul className="flex">
+                        {tags?.map((tag) => {
+                          return (
+                            <li className="flex cursor-pointer items-center rounded-lg  border-2  border-gray-300   bg-gray-200 to-white px-4 py-0  font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:text-gray-900  hover:shadow-black dark:border-white dark:bg-black dark:bg-opacity-50 dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white">
+                              {tag.name}
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </div>
-                    {/* <div>
+
+                    <div>
                       <LikePost
                         post={post}
 
@@ -502,19 +467,10 @@ export default function TechModal({ post }: TechFormModalProps) {
 
                         // you can replace this with your own logic for commenting
                       />
-                    </div> */}
+                    </div>
                     {/* <div className="border bg-red-500">
                     {post?.tags[0]?.name ?? 'NOT SHOWING'}
                   </div> */}
-                  </div>
-                  <div className={`${isOpenComments ? '' : 'hidden'} relative`}>
-                    <button
-                      onClick={() => setIsOpenComments(false)}
-                      className="absolute right-5 top-5 z-10 border p-2"
-                    >
-                      <CgClose />
-                    </button>
-                    <CommentSidebar techId={id} />{' '}
                   </div>
                 </div>
               </TabsContent>
@@ -618,13 +574,15 @@ export default function TechModal({ post }: TechFormModalProps) {
                   </div> */}
                 </div>
               </TabsContent>
-              <TabsContent value="Comments"></TabsContent>
+              <TabsContent value="Comments">
+                <CommentSidebar techId={id} />
+              </TabsContent>
             </Tabs>{' '}
             {/* <Image src={featuredImage} fill /> */}
           </div>
-          <div className="col-span-4 border-l p-2 px-4">
-            <div className="flex flex-col gap-6 p-2">
-              <div className="col-span-2 flex flex-col gap-4 space-y-2  ">
+          <div className="col-span-4 border-l p-2">
+            <div className="flex flex-col gap-6">
+              <div className="col-span-2 flex flex-col gap-4 space-y-2  p-2">
                 <BookmarkTech post={post} />
                 {/* <<div className="flex items-center gap-2 space-x-2 font-mono text-xl">
                   <Switch id="airplane-mode" />
@@ -839,8 +797,8 @@ export default function TechModal({ post }: TechFormModalProps) {
                   )}
                 </div>
               </div>
-              <div className="flex flex-col gap-2 rounded-lg border ">
-                <h3 className="rounded-t-lg border p-2 px-4 font-mono text-xl font-bold">
+              <div className="flex flex-col gap-2">
+                <h3 className="px-2 font-mono text-xl font-bold">
                   Related Tech
                 </h3>
                 <ul>
@@ -858,7 +816,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                           togglePosts(post?.id);
                         }}
                       >
-                        <div className="group flex items-center space-x-5 px-4  py-2  hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                        <div className="group flex items-center space-x-5 px-3  py-2  hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
                           <div className="flex  aspect-video w-20  justify-center bg-gray-300 dark:bg-white  ">
                             {post?.featuredImage ? (
                               <Image
@@ -887,9 +845,6 @@ export default function TechModal({ post }: TechFormModalProps) {
                   })}
                   <li></li>
                 </ul>
-                <div className="rounded-b-lg border p-2 px-4">
-                  See All Posts
-                </div>
               </div>
             </div>
           </div>

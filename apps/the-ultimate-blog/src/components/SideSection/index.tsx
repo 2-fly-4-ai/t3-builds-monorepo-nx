@@ -16,21 +16,19 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
   return (
     <aside
       className={`${mainClass} ${
-        showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
+        showSidebar ? 'w-96 px-4' : '   overflow-none w-0  opacity-50'
       } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
     >
-      <div className=" w-80 overflow-hidden px-4 py-1 text-xl">
+      {/* <div className=" w-80 overflow-hidden px-4 py-1 text-xl">
         <div className="">
           Welcome Back{' '}
           <span className="font-bold text-orange-400">
             {user?.data?.user?.name}{' '}
           </span>
         </div>
-        {/* <Link href={user?.data?.user?.name}>PROFILE</Link> */}
-        {/* |<Link href={user?.data?.user?.id ?? ''}>BOOKMARKS</Link> */}
         TECH-STACK
-      </div>
-      <div className="w-80 overflow-hidden">
+      </div> */}
+      <div className={`${showSidebar ? '' : 'hidden'}  w-80 overflow-hidden`}>
         <div className="flex flex-col ">
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
             People you might be interested in:
@@ -66,13 +64,13 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
             ))}
         </div>
       </div>
-      <div>
-        <button
-          className="absolute -left-5 top-96 mr-2 h-10 w-10 rounded-full border-2  border-gray-400 bg-gray-100 font-bold text-gray-500 transition-transform duration-500 ease-out  hover:animate-pulse hover:bg-gray-200 dark:border-white  dark:bg-black  dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60"
-          onClick={toggleSidebar}
-        >
-          -
-        </button>
+      <button
+        className="absolute -left-5 top-96 mr-2  rounded-full border-2  border-gray-400 bg-gray-100 font-bold text-gray-500 transition-transform duration-500 ease-out  hover:animate-pulse hover:bg-gray-200 dark:border-white  dark:bg-black  dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60"
+        onClick={toggleSidebar}
+      >
+        -
+      </button>
+      <div className={`${showSidebar ? '' : 'hidden'}`}>
         <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
           Your reading list:
         </h3>

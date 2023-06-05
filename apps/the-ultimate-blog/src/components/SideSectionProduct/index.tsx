@@ -21,7 +21,11 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         showSidebar ? 'w-96 px-4' : '   w-0   opacity-50'
       } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
     >
-      <div className=" w-80 overflow-hidden px-4 py-1 text-xl">
+      <div
+        className={`${
+          showSidebar ? '' : 'hidden'
+        } w-80 overflow-hidden px-4 py-1 text-xl`}
+      >
         <div className="">
           Welcome Back{' '}
           <span className="font-bold text-orange-400">
@@ -31,7 +35,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         {/* <Link href={user?.data?.user?.name}>PROFILE</Link> */}
         {/* |<Link href={user?.data?.user?.id ?? ''}>BOOKMARKS</Link> */}
       </div>
-      <div className="w-80 overflow-hidden">
+      <div className={`${showSidebar ? '' : 'hidden'} w-80 overflow-hidden`}>
         <div className="flex flex-col ">
           <h3 className="mb-2 px-4 py-1 text-lg   font-bold">
             People you might be interested in:
@@ -69,44 +73,45 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
       </div>
       <div>
         <button
-          className="absolute -left-5 top-96 mr-2 h-10 w-10 rounded-full border-2  border-gray-400 bg-gray-100 font-bold text-gray-500 transition-transform duration-500 ease-out  hover:animate-pulse hover:bg-gray-200 dark:border-white  dark:bg-black  dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60"
+          className="absolute -left-5 top-96 mr-2  rounded-full border-2  border-gray-400 bg-gray-100 font-bold text-gray-500 transition-transform duration-500 ease-out  hover:animate-pulse hover:bg-gray-200 dark:border-white  dark:bg-black  dark:text-white dark:hover:bg-white dark:hover:bg-opacity-60"
           onClick={toggleSidebar}
         >
           -
         </button>
-        <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
-          Your reading list:
-        </h3>
-        <div className="flex flex-col ">
-          {readingList.data &&
-            readingList.data.map((bookmark, i) => (
-              <Link href="/" key={i}>
-                <div className="overflow-hidde group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                  <div className="flex  aspect-video  w-40  justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
-                    {bookmark?.course?.featuredImage ? (
-                      <Image
-                        src={bookmark?.course.featuredImage ?? null}
-                        width={220}
-                        height={220}
-                        className=" object-cover 2xl:max-h-40"
-                      />
-                    ) : (
-                      <Image
-                        src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
-                        width={200}
-                        height={200}
-                        className="aspect-video max-h-28 w-auto"
-                      />
-                    )}
-                  </div>
-                  <div className="flex w-3/5 flex-col space-y-2">
-                    <div className=" line-clamp-3 font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
-                      {bookmark?.course.title}
+        <div className={`${showSidebar ? '' : 'hidden'}`}>
+          <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
+            Your reading list:
+          </h3>
+          <div className="flex flex-col ">
+            {readingList.data &&
+              readingList.data.map((bookmark, i) => (
+                <Link href="/" key={i}>
+                  <div className="overflow-hidde group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                    <div className="flex  aspect-video  w-40  justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
+                      {bookmark?.course?.featuredImage ? (
+                        <Image
+                          src={bookmark?.course.featuredImage ?? null}
+                          width={220}
+                          height={220}
+                          className=" object-cover 2xl:max-h-40"
+                        />
+                      ) : (
+                        <Image
+                          src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
+                          width={200}
+                          height={200}
+                          className="aspect-video max-h-28 w-auto"
+                        />
+                      )}
                     </div>
-                    {/* <div className="text-sm line-clamp-2">
+                    <div className="flex w-3/5 flex-col space-y-2">
+                      <div className=" line-clamp-3 font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
+                        {bookmark?.course.title}
+                      </div>
+                      {/* <div className="text-sm line-clamp-2">
                       {bookmark.post.description}
                     </div> */}
-                    {/* <div>
+                      {/* <div>
                       <div className="hidden w-full items-center space-x-1  2xl:flex">
                         <div className="h-5 w-5 flex-none rounded-full bg-gray-300"></div>
                         <div className="text-sm font-bold text-black dark:text-gray-500 dark:text-white">
@@ -117,10 +122,11 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                         </div>
                       </div>
                     </div> */}
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+          </div>
         </div>
       </div>
     </aside>

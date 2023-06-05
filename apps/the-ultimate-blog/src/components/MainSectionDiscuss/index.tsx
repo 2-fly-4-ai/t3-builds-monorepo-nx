@@ -3,57 +3,44 @@ import { trpc } from '../../utils/trpc';
 import { AiOutlineSearch } from '../../icons';
 import { BsChevronDown } from '../../icons';
 import { ImSpinner8 } from '../../icons';
-import PostCard from 'libs/shared/ui/src/lib/post-card/post-card';
+import { TechCard, TechCardList } from '@front-end-nx/shared/ui';
 import PostCardList from 'libs/shared/ui/src/lib/post-card/post-card-list';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
 import { RouterOutputs } from '../../utils/trpc';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useEffect } from 'react';
-import TechModal from '../DiscusModal';
+import TechModal from '../TechModal';
 import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function MainSection({
   showNavSidebar,
   showSidebar,
   toggleSidebar,
 }) {
-  //EffectHandlers
+  const getPosts = trpc.post.getTechPosts.useQuery();
   const [showListView, setListView] = useState(false);
   const handleListViewToggle = () => setListView((prev) => !prev);
-  const [gridClass, setGridClass] = useState('');
-  const [animationSwitch, setAnimationSwitch] = useState(false);
-  useEffect(() => {
-    setAnimationSwitch(true);
-  }, [showListView, showNavSidebar, showSidebar]);
-  //Trpc
-  const getPosts = trpc.post.getPosts.useQuery();
-  const { posts } = useGlobalContextTechModalStore();
+  const { togglePosts, posts, resetIsPostModalOpen } =
+    useGlobalContextTechModalStore();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   const delay = setTimeout(() => {
-  //     setGridClass(
-
-  //   }, 100); // Delay of 1000 milliseconds (1 second)
-
-  //   return () => clearTimeout(delay);
-  // }, [showNavSidebar, showSidebar]);
-
-  const [changeCounter, setChangeCounter] = useState(0);
+  const [shouldReload, setShouldReload] = useState(false);
 
   return (
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      } border-gray min-h-screen  w-full border-r border-gray-200   px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
+      }  min-h-screen w-full    px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
         showNavSidebar || showSidebar ? '2xl:px-10 ' : '2xl:px-10 '
       } `}
     >
-      <div className="mb-4 flex flex-col items-center border-b-2  py-4">
+      <div className=" mb-4 flex flex-col items-center border-b-2 py-4">
         <div className="flex w-full items-center justify-between space-x-4  py-2 ">
           <label
             htmlFor="search"
-            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 bg-opacity-90  p-1 px-2 font-medium dark:bg-black  "
+            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 bg-white p-1  px-2 font-medium dark:bg-black  "
           >
             <AiOutlineSearch />
             <input
@@ -81,7 +68,7 @@ export default function MainSection({
           </div>
         </div>
         <div className="flex w-full items-center justify-between py-2">
-          <div className="text-2xl font-bold">Articles</div>
+          <div className="text-2xl font-bold">Developer Resources</div>
           <div className="flex gap-2">
             <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 hover:border-black hover:bg-gray-200 hover:shadow-black dark:border-white dark:hover:bg-white  dark:hover:bg-opacity-60 dark:hover:text-white">
               <div className="text-sm font-semibold ">Following</div>
@@ -145,7 +132,7 @@ export default function MainSection({
         </div>
       </div>
       <div
-        className={`mx-auto my-8 grid max-w-max gap-6 ${
+        className={`mx-auto my-8 grid w-full  gap-6  ${
           showListView
             ? 'grid-cols-1 2xl:grid-cols-1'
             : showNavSidebar && showSidebar
@@ -164,18 +151,17 @@ export default function MainSection({
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
-            console.warn(post);
             return (
-              <>
-                <div key={post.id} className=" h-full">
-                  {showListView ? (
-                    <PostCardList post={post} />
-                  ) : (
-                    <PostCard post={post} />
-                  )}
-                  {posts[post.id] && <TechModal post={post} />}
-                </div>
-              </>
+              <div key={post.id} className="h-full ">
+                {showListView ? (
+                  <TechCardList post={post} />
+                ) : (
+                  <>
+                    <TechCard post={post} />
+                    {posts[post.id] && <TechModal post={post} />}
+                  </>
+                )}
+              </div>
             );
           })}
       </div>

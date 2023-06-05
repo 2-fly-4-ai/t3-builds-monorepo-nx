@@ -32,7 +32,7 @@ export default function MainSection({
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      }  min-h-screen   w-full overflow-hidden px-8  transition-all duration-500  ease-in-out xl:px-8 ${
+      }  min-h-screen w-full    px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
         showNavSidebar || showSidebar ? '2xl:px-10 ' : '2xl:px-10 '
       } `}
     >
@@ -132,7 +132,7 @@ export default function MainSection({
         </div>
       </div>
       <div
-        className={`mx-auto my-8 grid max-w-max gap-6  ${
+        className={`mx-auto my-8 grid w-full  gap-6  ${
           showListView
             ? 'grid-cols-1 2xl:grid-cols-1'
             : showNavSidebar && showSidebar
@@ -152,15 +152,15 @@ export default function MainSection({
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
             return (
-              <div key={post.id} className="h-full">
+              <div key={post.id} className="h-full ">
                 {showListView ? (
                   <TechCardList post={post} />
                 ) : (
                   <>
                     <TechCard post={post} />
-                    {posts[post.id] && <TechModal post={post} />}
                   </>
                 )}
+                {posts[post.id] && <TechModal post={post} />}
               </div>
             );
           })}

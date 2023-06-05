@@ -88,48 +88,62 @@ export function TechCard({ post }: TechCardProps) {
   };
 
   return (
-    <div className="group grid w-[320px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 bg-white bg-opacity-50 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]  transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:border-gray-300  dark:bg-white dark:bg-opacity-10   ">
+    <div className=" grid w-[320px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 bg-white bg-opacity-50 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]  transition duration-200 hover:shadow-[0px_0px_5px_5px_rgb(231,229,228)] dark:border-gray-300  dark:bg-white dark:bg-opacity-10   ">
       <div className="relative col-span-full  rounded-none">
-        <div className="group absolute flex h-full w-full transition duration-500 group-hover:bg-black group-hover:bg-opacity-20">
-          <Link
-            href={`/techstack`}
-            scroll={false} //Remember for future
-            as={`/techstack/${slug}`}
-            className="mx-auto mt-4"
-          >
-            <button
-              onClick={handlePostsModalToggle}
-              className=" mx-auto my-auto  hidden items-center justify-center gap-2 rounded-lg border-4 px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50"
+        <Link
+          href={`/techstack`}
+          scroll={false} //Remember for future
+          as={`/techstack/${slug}`}
+          className="mx-auto mt-4"
+          onClick={handlePostsModalToggle}
+        >
+          <div className="group absolute flex h-full w-full transition duration-500 group-hover:bg-black group-hover:bg-opacity-20">
+            <Link
+              href={`/techstack`}
+              scroll={false} //Remember for future
+              as={`/techstack/articleURL`}
+              className="mx-auto mt-4 flex h-min "
             >
-              VIEW ARTICLE
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                height="1.5em"
-                width="1.5em"
-                xmlns="http://www.w3.org/2000/svg"
+              <button
+                onClick={handlePostsModalToggle}
+                className=" mx-auto my-auto  hidden items-center justify-center gap-2 rounded-lg border-4 px-2 py-1 text-base font-bold antialiased backdrop-blur transition duration-500 group-hover:flex group-hover:bg-white  group-hover:bg-opacity-80 dark:group-hover:bg-black dark:group-hover:bg-opacity-50"
               >
-                <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"></path>
-              </svg>
-            </button>
-          </Link>
-        </div>
-        <Link href={`/${slug}`} className="">
-          <div className="h-56 overflow-hidden">
-            <Image
-              src={
-                featuredImage ??
-                'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s'
-              }
-              width={400}
-              height={400}
-              className="h-56 w-full rounded-t-lg object-cover"
-              alt={'' ?? ''}
-            />
+                VIEW ARTICLE
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  height="1.5em"
+                  width="1.5em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"></path>
+                </svg>
+              </button>
+            </Link>
           </div>
         </Link>
+        {/* <Link
+          href={`/techstack`}
+          scroll={false} //Remember for future
+          as={`/techstack/${slug}`}
+          className="mx-auto mt-4"
+          onClick={handlePostsModalToggle}
+        > */}
+        <div className="h-56 overflow-hidden">
+          <Image
+            src={
+              featuredImage ??
+              'https://images.unsplash.com/photo-1679678691328-54929d271c3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80s'
+            }
+            width={400}
+            height={400}
+            className="h-56 w-full rounded-t-lg object-cover"
+            alt={'' ?? ''}
+          />
+        </div>
+        {/* </Link> */}
       </div>
       <div className="col-span-full grid p-4 pt-0">
         <div className="col-span-full   h-24">
