@@ -7,8 +7,11 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
-export default function SideSection({ showSidebar, toggleSidebar }) {
-  const readingList = trpc.post.getReadingList.useQuery({ itemType: 'post' });
+export default function SideSection({
+  showSidebar,
+  toggleSidebar,
+  readingList,
+}) {
   const suggestions = trpc.user.getSuggestions.useQuery();
   const user = useSession();
   const [mainClass, setMainClass] = useState('');
@@ -16,8 +19,8 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
   return (
     <aside
       className={`${mainClass} ${
-        showSidebar ? 'w-96 px-4' : '   overflow-none w-0  opacity-50'
-      } space-between  transition-width relative flex h-full  flex-col space-y-4    py-6 duration-500  `}
+        showSidebar ? 'w-96 px-4' : '    w-0'
+      }  space-between  transition-width relative flex min-h-screen flex-col space-y-4 border-l-2 border-gray-300 bg-gray-200  py-6  backdrop-blur duration-500 dark:bg-inherit `}
     >
       {/* <div className=" w-80 overflow-hidden px-4 py-1 text-xl">
         <div className="">
@@ -74,11 +77,11 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
         <h3 className="my-4 w-80 overflow-hidden px-4 text-lg font-bold">
           Your reading list:
         </h3>
-        <div className="flex flex-col ">
+        <div className="flex flex-col  gap-2">
           {readingList.data &&
             readingList.data.map((bookmark, i) => (
               <Link href="/" key={i}>
-                <div className="overflow-hidde group flex w-80 items-center space-x-5 p-4 hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
+                <div className="overflow-hidde group flex w-80 items-center space-x-5 rounded-lg border-2 border-gray-300 bg-white p-4  hover:border-2 hover:border-gray-800 dark:bg-inherit dark:bg-white dark:bg-opacity-10 dark:hover:bg-white dark:hover:bg-opacity-10">
                   <div className="flex  aspect-video  w-40  justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50">
                     {bookmark?.post?.featuredImage ? (
                       <Image
@@ -86,6 +89,7 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                         width={220}
                         height={220}
                         className=" object-cover 2xl:max-h-40"
+                        alt={bookmark?.post?.title}
                       />
                     ) : (
                       <Image
@@ -93,12 +97,13 @@ export default function SideSection({ showSidebar, toggleSidebar }) {
                         width={200}
                         height={200}
                         className="aspect-video max-h-28 w-auto"
+                        alt={bookmark?.post?.title}
                       />
                     )}
                   </div>
                   <div className="flex w-3/5 flex-col space-y-2">
                     <div className=" line-clamp-3 font-semibold decoration-gray-300 decoration-2 group-hover:underline ">
-                      {bookmark.post.title}
+                      {bookmark.post?.title}
                     </div>
                     {/* <div className="text-sm line-clamp-2">
                       {bookmark.post.description}

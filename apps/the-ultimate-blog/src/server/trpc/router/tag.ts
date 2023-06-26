@@ -117,4 +117,32 @@ export const tagRouter = router({
   getProductTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
     return await prisma.productTag.findMany();
   }),
+
+  createLinkTag: protectedProcedure
+    .input(tagCreateSchema)
+    .mutation(async ({ ctx: { prisma }, input }) => {
+      const tag = await prisma.linkTag.findUnique({
+        where: {
+          name: input.name,
+        },
+      });
+
+      if (tag) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'tag already exists!',
+        });
+      }
+
+      await prisma.linkTag.create({
+        data: {
+          ...input,
+          slug: slugify(input.name),
+        },
+      });
+    }),
+
+  getLinkTags: protectedProcedure.query(async ({ ctx: { prisma } }) => {
+    return await prisma.linkTag.findMany();
+  }),
 });

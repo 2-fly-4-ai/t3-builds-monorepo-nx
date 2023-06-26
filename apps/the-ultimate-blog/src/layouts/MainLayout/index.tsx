@@ -6,7 +6,7 @@ import Providers from '../../components/Providers/providers';
 
 export default function MainLayout({ children }: React.PropsWithChildren) {
   return (
-    <div className="h-content flex w-full flex-col  font-mono">
+    <div className="flex w-full flex-col  ">
       <Head>
         <title>My page title</title>
       </Head>

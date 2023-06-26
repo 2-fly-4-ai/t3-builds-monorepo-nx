@@ -23,28 +23,30 @@ export function BookmarkTech({ post }: BookMarkTechProps) {
   }, [id, toggleBookmark]);
 
   const postRoute = trpc.useContext().post;
-  const bookmarkPost = trpc.post.bookmarkTech.useMutation({
+  const bookmarkPost = trpc.post.bookmarkItem.useMutation({
     onSuccess: () => {
       toast.success('Bookmark Added');
-      postRoute.getTechReadingList.invalidate();
+      postRoute.getReadingList.invalidate();
     },
   });
 
-  const removeBookmark = trpc.post.removeBookmarkTech.useMutation({
+  const removeBookmark = trpc.post.removeBookmark.useMutation({
     onSuccess: () => {
       toast.success('Bookmark Removed');
-      postRoute.getTechReadingList.invalidate();
+      postRoute.getReadingList.invalidate();
     },
   });
 
   const handleSwitchChange = () => {
     if (isBookmarked) {
       removeBookmark.mutate({
-        techId: id,
+        itemId: id,
+        itemType: 'tech',
       });
     } else {
       bookmarkPost.mutate({
-        techId: id,
+        itemId: id,
+        itemType: 'tech',
       });
     }
     handleBookmarkToggle();

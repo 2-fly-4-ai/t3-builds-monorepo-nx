@@ -46,6 +46,17 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js';
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js';
 import WordCount from '@ckeditor/ckeditor5-word-count/src/wordcount.js';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar.js';
+import {
+  Emoji,
+  EmojiActivity,
+  EmojiFlags,
+  EmojiFood,
+  EmojiNature,
+  EmojiObjects,
+  EmojiPeople,
+  EmojiPlaces,
+  EmojiSymbols,
+} from '@phudak/ckeditor5-emoji/src';
 
 class Editor extends InlineEditor {}
 
@@ -95,6 +106,15 @@ Editor.builtinPlugins = [
   Underline,
   WordCount,
   AutoLink,
+  Emoji,
+  EmojiPeople,
+  EmojiNature,
+  EmojiPlaces,
+  EmojiFood,
+  EmojiActivity,
+  EmojiObjects,
+  EmojiSymbols,
+  EmojiFlags,
 ];
 
 // Editor configuration.
@@ -112,6 +132,7 @@ Editor.defaultConfig = {
       'numberedList',
       'code',
       'codeBlock',
+      'emoji',
       '|',
       'outdent',
       'indent',

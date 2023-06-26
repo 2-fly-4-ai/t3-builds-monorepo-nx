@@ -67,7 +67,9 @@ const TechStackPage = (
 
   return (
     <MainLayout>
-      {slug && data && posts[data.id] && <TechModal post={data} />}
+      <section className="h-screen">
+        {slug && data && posts[data.id] && <TechModal post={data} />}
+      </section>
     </MainLayout>
   );
 };

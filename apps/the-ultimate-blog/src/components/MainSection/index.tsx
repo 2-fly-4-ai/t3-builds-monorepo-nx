@@ -10,50 +10,58 @@ import { RouterOutputs } from '../../utils/trpc';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
-import TechModal from '../DiscusModal';
+import PreviewModal from '../PreviewModal';
 import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
 
 export default function MainSection({
   showNavSidebar,
   showSidebar,
   toggleSidebar,
+  getPosts,
 }) {
   //EffectHandlers
   const [showListView, setListView] = useState(false);
-  const handleListViewToggle = () => setListView((prev) => !prev);
-  const [gridClass, setGridClass] = useState('');
   const [animationSwitch, setAnimationSwitch] = useState(false);
-  useEffect(() => {
-    setAnimationSwitch(true);
-  }, [showListView, showNavSidebar, showSidebar]);
-  //Trpc
-  const getPosts = trpc.post.getPosts.useQuery();
   const { posts } = useGlobalContextTechModalStore();
 
-  // useEffect(() => {
-  //   const delay = setTimeout(() => {
-  //     setGridClass(
+  useEffect(() => {
+    setAnimationSwitch(true);
 
-  //   }, 100); // Delay of 1000 milliseconds (1 second)
+    const timer = setTimeout(() => {
+      setAnimationSwitch(false);
+    }, 1500); // Adjust the delay duration (in milliseconds) as needed
 
-  //   return () => clearTimeout(delay);
-  // }, [showNavSidebar, showSidebar]);
+    // No clearTimeout call in the cleanup function
+  }, [showListView, showNavSidebar, showSidebar]);
+  const postRoute = trpc.useContext().post;
 
-  const [changeCounter, setChangeCounter] = useState(0);
+  const bookmarkPost = trpc.post.bookmarkItem.useMutation({
+    onSuccess: () => {
+      toast.success('Bookmark Added');
+      postRoute.getReadingList.invalidate();
+    },
+  });
+
+  const removeBookmark = trpc.post.removeBookmark.useMutation({
+    onSuccess: () => {
+      toast.success('Bookmark Removed');
+      postRoute.getReadingList.invalidate();
+    },
+  });
 
   return (
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      } border-gray min-h-screen  w-full border-r border-gray-200   px-8 transition-all  duration-500  ease-in-out xl:px-8 ${
-        showNavSidebar || showSidebar ? '2xl:px-10 ' : '2xl:px-10 '
+      } border-gray min-h-screen  w-full border-r border-gray-200 bg-gray-200    dark:bg-inherit  ${
+        showNavSidebar || showSidebar ? ' ' : ''
       } `}
     >
-      <div className="mb-4 flex flex-col items-center border-b-2  py-4">
-        <div className="flex w-full items-center justify-between space-x-4  py-2 ">
+      <div className=" mb-4 flex flex-col items-center border-b-2 border-gray-300 bg-gray-200 px-6 py-4 dark:bg-inherit 2xl:px-10">
+        <div className="flex w-full items-center justify-between space-x-4   py-2 ">
           <label
             htmlFor="search"
-            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-300 bg-opacity-90  p-1 px-2 font-medium dark:bg-black  "
+            className="group flex w-96 items-center justify-center rounded-full border-2 border-gray-400 bg-white p-1  px-2 font-medium dark:bg-black  "
           >
             <AiOutlineSearch />
             <input
@@ -69,43 +77,76 @@ export default function MainSection({
             <div>
               <ul className=" flex items-center justify-center space-x-2 text-sm">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <li
+                  <button
                     key={i}
-                    className="flex cursor-pointer items-center space-x-2  rounded-md border-2 border-gray-300 p-2 px-3 py-1  font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 hover:border-black hover:bg-gray-200 hover:shadow-black  dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60"
+                    className="flex cursor-pointer items-center space-x-2  rounded-md  border-2 border-gray-400 bg-white p-2 px-3 py-1  font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 hover:border-gray-500  hover:shadow-gray-500 dark:bg-opacity-10 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60"
                   >
                     Design
-                  </li>
+                  </button>
                 ))}
               </ul>
             </div>
           </div>
         </div>
         <div className="flex w-full items-center justify-between py-2">
-          <div className="text-2xl font-bold">Articles</div>
+          <div className="flex items-center gap-2 rounded-lg border-2 border-white bg-gray-400  px-4 py-1 pb-1.5 text-xl font-bold text-white backdrop-blur">
+            Posts{' '}
+            <svg
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              height="1em"
+              width="1em"
+              className="mt-1"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+          </div>
           <div className="flex gap-2">
-            <button className="flex items-center space-x-2 rounded-full border-2  border-gray-300 px-3 py-1 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 hover:border-black hover:bg-gray-200 hover:shadow-black dark:border-white dark:hover:bg-white  dark:hover:bg-opacity-60 dark:hover:text-white">
+            <button className="flex cursor-pointer items-center space-x-2  rounded-md  border-2 border-gray-400 bg-white p-2 px-3 py-1  font-medium shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 hover:border-gray-500  hover:shadow-gray-500 dark:bg-opacity-10 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60">
               <div className="text-sm font-semibold ">Following</div>
               <div>
                 <BsChevronDown />
               </div>
             </button>
-            <div className=" flex justify-center gap-2 px-1">
+
+            {!showSidebar ? (
+              <button
+                className="flex min-w-[32px]  cursor-pointer items-center space-x-2  rounded-md  border-gray-400 bg-white p-2 px-3 py-1  font-medium   hover:border-gray-500  hover:shadow-gray-500 dark:bg-opacity-10 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60"
+                onClick={toggleSidebar}
+              >
+                {showSidebar ? '-' : '+'}
+              </button>
+            ) : (
+              <button
+                className="flex min-w-[36px] cursor-pointer items-center justify-center space-x-2  rounded-md  border-gray-400 bg-white p-2 px-3 py-1  font-medium   hover:border-gray-500  hover:shadow-gray-500 dark:bg-opacity-10 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60"
+                onClick={toggleSidebar}
+              >
+                {showSidebar ? '-' : '+'}
+              </button>
+            )}
+            <div className="flex flex-shrink-0 justify-center gap-2 px-1">
               {!showListView ? (
                 <button onClick={() => setListView(true)}>
                   {/* I need this button to set List view true when clicked */}
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 20 20"
                     height="2em"
                     width="2em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </button>
@@ -115,7 +156,7 @@ export default function MainSection({
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 20 20"
                     height="2em"
                     width="2em"
@@ -126,56 +167,52 @@ export default function MainSection({
                 </button>
               )}
             </div>
-            {!showSidebar ? (
-              <button
-                className=" right-72 top-60 mr-2 h-8 w-8 border-2 border-gray-400 text-lg  font-bold hover:animate-pulse hover:bg-gray-200 dark:border-white dark:hover:bg-white  dark:hover:bg-opacity-60"
-                onClick={toggleSidebar}
-              >
-                {showSidebar ? '-' : '+'}
-              </button>
-            ) : (
-              <button
-                className=" right-72 top-60 mr-2 h-8 w-8 border-2 border-gray-400 text-lg  font-bold hover:animate-pulse hover:bg-gray-200 dark:border-white dark:hover:bg-white  dark:hover:bg-opacity-60"
-                onClick={toggleSidebar}
-              >
-                {showSidebar ? '-' : '+'}
-              </button>
-            )}
           </div>
         </div>
       </div>
       <div
-        className={`mx-auto my-8 grid max-w-max gap-6 ${
-          showListView
-            ? 'grid-cols-1 2xl:grid-cols-1'
-            : showNavSidebar && showSidebar
-            ? 'custom-animation-switch 2xl:grid-cols-3'
-            : showNavSidebar || showSidebar
-            ? 'xl:grid-cols-2 2xl:grid-cols-4'
-            : 'custom-animation-switch grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3'
-        } justify-center gap-4 ${
-          showListView
-            ? '2xl:grid-cols-1'
-            : showNavSidebar || showSidebar
-            ? ' grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-2 2xl:grid-cols-3'
-            : 'custom-animation-switch  xl:grid-cols-3 2xl:grid-cols-5'
-        } `}
+        className={`
+    ${animationSwitch ? 'custom-animation-switch' : ''}
+    mx-auto my-8 grid  ${showListView ? '' : 'w-max'} gap-6 px-6 2xl:px-10
+    ${
+      showListView
+        ? 'grid-cols-1 2xl:grid-cols-1'
+        : showNavSidebar && showSidebar
+        ? '2xl:grid-cols-3'
+        : showNavSidebar || showSidebar
+        ? 'xl:grid-cols-2 2xl:grid-cols-4'
+        : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3'
+    }
+    justify-center gap-4
+    ${
+      showListView
+        ? '2xl:grid-cols-1'
+        : showNavSidebar || showSidebar
+        ? 'grid-cols-2 place-items-center items-center justify-center gap-4 xl:grid-cols-2 2xl:grid-cols-3'
+        : 'xl:grid-cols-3 2xl:grid-cols-5'
+    }
+  `}
       >
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
-            console.warn(post);
             return (
-              <>
-                <div key={post.id} className=" h-full">
-                  {showListView ? (
-                    <PostCardList post={post} />
-                  ) : (
-                    <PostCard post={post} />
-                  )}
-                  {posts[post.id] && <TechModal post={post} />}
-                </div>
-              </>
+              <div key={post.id} className=" h-full">
+                {showListView ? (
+                  <PostCardList
+                    post={post}
+                    bookmarkPost={bookmarkPost}
+                    removeBookmark={removeBookmark}
+                  />
+                ) : (
+                  <PostCard
+                    post={post}
+                    bookmarkPost={bookmarkPost}
+                    removeBookmark={removeBookmark}
+                  />
+                )}
+                {posts[post.id] && <PreviewModal post={post} />}
+              </div>
             );
           })}
       </div>

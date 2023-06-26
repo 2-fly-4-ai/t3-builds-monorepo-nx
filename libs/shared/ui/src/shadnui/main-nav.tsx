@@ -38,7 +38,7 @@ export function MainNav({ items, children, segment }: MainNavProps) {
                 item.disabled && 'cursor-not-allowed opacity-80'
               )}
             >
-              <div className="text-lg">{item.title}</div>
+              <div className="text-md">{item.title}</div>
             </Link>
           ))}
         </nav>

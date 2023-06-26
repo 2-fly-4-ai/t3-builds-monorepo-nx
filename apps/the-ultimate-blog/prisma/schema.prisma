@@ -64,6 +64,7 @@ model User {
   LinkedInUrl        String?
   tech          Tech[]
   course         Course[]
+  link            Link[]
   product         Product[]
   accounts      Account[]
   sessions      Session[]
@@ -72,9 +73,10 @@ model User {
   posts         Post[]
   comments      Comment[]
   likes         Like[]
-  bookmarks     BookMark[]
+  postBookmarks     PostBookMark[]
   techBookmarks TechBookMark[]
   courseBookMark CourseBookMark[]
+  linkBookmark   LinkBookMark[]
   productBookMark ProductBookMark[]
   followedBy    User[]     @relation("UserFollows")
   followings    User[]     @relation("UserFollows")
@@ -88,8 +90,10 @@ model Notification {
   id         String   @id @default(cuid())
   postId     String?
   techId     String?
+  linkId     String?
   courseId   String?
   productId  String?
+  link       Link?        @relation(fields: [linkId], references: [id], onDelete: Cascade)
   product    Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
   course     Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -130,7 +134,26 @@ model Post {
   comments      Comment[]
   tags          Tag[]
   likes         Like[]
-  bookmarks     BookMark[]
+  bookmarks     PostBookMark[]
+  notifications Notification[]
+   @@index([authorId])
+}
+
+model Link {
+  id            String    @id @default(cuid())
+  title         String    @unique
+  description   String
+  slug          String    @unique
+  featuredImage String?
+  link        String?   @db.Text
+  authorId      String?
+  author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  comments      Comment[]
+  tags          linkTag[]
+  likes         Like[]
+  bookmarks     LinkBookMark[]
   notifications Notification[]
    @@index([authorId])
 }
@@ -204,12 +227,14 @@ model Comment {
   userId    String
   postId    String?
   text      String
-  techId    String?  
+  techId    String?
+  linkId    String?   
   courseId  String? 
   productId  String?
   product   Product[]
   user      User      @relation(fields: [userId], references: [id],onDelete: Cascade) 
   post      Post?      @relation(fields: [postId], references: [id],onDelete: Cascade)
+  link      Link?      @relation(fields: [linkId], references: [id],onDelete: Cascade)
   tech      Tech?      @relation(fields: [techId], references: [id],onDelete: Cascade) 
   course     Course?      @relation(fields: [courseId], references: [id],onDelete: Cascade) 
   createdAt DateTime  @default(now())
@@ -252,6 +277,14 @@ model productTag {
   product       Product[]
 }
 
+model linkTag {
+  id           String @id  @default(cuid())
+  name         String @unique
+  description  String?
+  slug         String
+  link       Link[]
+}
+
 model Like {
   id        String     @id @default(cuid())
   userId    String
@@ -259,9 +292,11 @@ model Like {
   productId String?
   commentId String?
   techId    String?
+  linkId    String?
   courseId  String?
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   tech      Tech?      @relation(fields: [techId], references: [id], onDelete: Cascade)
+  link      Link?      @relation(fields: [linkId], references: [id], onDelete: Cascade)
   course      Course?      @relation(fields: [courseId], references: [id], onDelete: Cascade)
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   post      Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -274,7 +309,7 @@ model Like {
   @@index([postId])
 }
 
-model BookMark {
+model PostBookMark {
   id        String     @id @default(cuid())
   userId    String
   postId    String
@@ -282,6 +317,17 @@ model BookMark {
   post      Post       @relation(fields: [postId], references: [id] , onDelete: Cascade )
   @@unique([userId, postId])
   @@index([postId])
+  createdAt DateTime  @default(now())
+}
+
+model LinkBookMark {
+  id        String     @id @default(cuid())
+  userId    String
+  linkId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link      Link      @relation(fields: [linkId], references: [id] , onDelete: Cascade )
+  @@unique([userId, linkId])
+  @@index([linkId])
   createdAt DateTime  @default(now())
 }
 

@@ -42,13 +42,16 @@ import {
   TabsTrigger,
 } from 'libs/shared/ui/src/shadnui/ui/tabs';
 import {
+  BiBook,
   BiBookBookmark,
   BiCloset,
   BiComment,
+  BiLink,
   BiShare,
   BiUpvote,
 } from 'react-icons/bi';
 import { CgClose } from 'react-icons/cg';
+import { FcReading } from 'react-icons/fc';
 
 const Editor = dynamic(() => import('../../components/Ckeditor'), {
   ssr: false,
@@ -91,7 +94,6 @@ export const WriteFormSchema = z.object({
 });
 
 export default function TechModal({ post }: TechFormModalProps) {
-  console.warn('TEST1 TECHMODAL', post);
   const router = useRouter();
   const [shouldReload, setShouldReload] = useState(false);
   // generateMetadata({ post });
@@ -152,8 +154,8 @@ export default function TechModal({ post }: TechFormModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEditor, setShowEditor] = useState<boolean>(false);
 
-  const postsByTag = trpc.post.getTechPostsByTag.useQuery({
-    tags: post?.tags.map((tag) => tag.name),
+  const postsByTag = trpc.post?.getTechPostsByTag.useQuery({
+    tags: post?.tags?.map((tag) => tag.name),
   });
 
   const handleEditPost = trpc.post.editTechpost.useMutation({
@@ -254,11 +256,11 @@ export default function TechModal({ post }: TechFormModalProps) {
       ) : null}
       <div
         // onSubmit={handleSubmit(onSubmit)}
-        className="relative flex min-h-[90vh] flex-col  space-y-5 "
+        className="relative flex min-h-[90vh] flex-col  space-y-5   p-1"
       >
         {' '}
-        <div className="grid  w-full grid-cols-12 border">
-          <div className="col-span-8 min-h-[90vh] ">
+        <div className="grid  w-full grid-cols-12 rounded-xl border bg-white dark:bg-inherit">
+          <div className="col-span-8 min-h-[90vh] p-6">
             <Tabs
               defaultValue="Description"
               value={value ?? 'Description'}
@@ -267,12 +269,12 @@ export default function TechModal({ post }: TechFormModalProps) {
             >
               <TabsList className="gap-2">
                 <TabsTrigger value="Description">Description</TabsTrigger>
-                <TabsTrigger value="Article">Article</TabsTrigger>
-                <TabsTrigger value="Comments">Comments</TabsTrigger>
+
+                <TabsTrigger value="Comments">Put Something here</TabsTrigger>
               </TabsList>
               <TabsContent value="Description">
-                <div className="relative">
-                  <div className="flex w-full flex-col gap-8 px-8 py-4">
+                <div className="relative ">
+                  <div className="flex w-full flex-col gap-8 ">
                     {test ? (
                       <button
                         className={`${
@@ -294,7 +296,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                       </button>
                     ) : null}
                     {!isTitleEditorOpen ? (
-                      <h3 className="text-4xl">{title}</h3>
+                      <h3 className="line-clamp-2 text-4xl">{title}</h3>
                     ) : (
                       <div className="h-auto">
                         <TextareaAutosize
@@ -328,10 +330,10 @@ export default function TechModal({ post }: TechFormModalProps) {
                         )}
                       </div>
                     )}
-                    <div className="prose max-w-none border">
+                    <div className="prose h-40 max-w-none border">
                       <blockquote
                         className={`${
-                          isReadMoreOpen ? '' : 'line-clamp-5'
+                          isReadMoreOpen ? '' : 'line-clamp-3'
                         }  min-h  relative  overflow-hidden  text-base dark:text-gray-200`}
                       >
                         {!isDescriptionEditorOpen ? (
@@ -622,9 +624,23 @@ export default function TechModal({ post }: TechFormModalProps) {
             </Tabs>{' '}
             {/* <Image src={featuredImage} fill /> */}
           </div>
-          <div className="col-span-4 border-l p-2 px-4">
+          <div className="col-span-4 border-l p-6">
             <div className="flex flex-col gap-6 p-2">
-              <div className="col-span-2 flex flex-col gap-4 space-y-2  ">
+              <div className="col-span-2 flex flex-col gap-4 space-y-2 ">
+                <button className="flex items-center gap-2 rounded-lg border px-4 py-2">
+                  <svg
+                    stroke="currentColor"
+                    fill="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 512 512"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"></path>
+                  </svg>
+                  Read Post
+                </button>
                 <BookmarkTech post={post} />
                 {/* <<div className="flex items-center gap-2 space-x-2 font-mono text-xl">
                   <Switch id="airplane-mode" />
@@ -737,7 +753,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                       </div>
                     </div>
                   ) : (
-                    <>
+                    <div className="rounded-lg border px-4 py-2">
                       <h3 className="font-mono text-xl font-bold">
                         Resources:
                       </h3>
@@ -835,16 +851,16 @@ export default function TechModal({ post }: TechFormModalProps) {
                           </li>
                         )}
                       </ul>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
               <div className="flex flex-col gap-2 rounded-lg border ">
-                <h3 className="rounded-t-lg border p-2 px-4 font-mono text-xl font-bold">
+                <h3 className="rounded-t-lg border-b p-2 px-4 font-mono text-xl font-bold">
                   Related Tech
                 </h3>
                 <ul>
-                  {postsByTag?.data?.map((post) => {
+                  {postsByTag?.data?.slice(0, 7).map((post) => {
                     if (slug === post.slug) {
                       return null; // Exclude the post from mapping
                     }
@@ -887,7 +903,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                   })}
                   <li></li>
                 </ul>
-                <div className="rounded-b-lg border p-2 px-4">
+                <div className="rounded-b-lg border-t p-2 px-4">
                   See All Posts
                 </div>
               </div>

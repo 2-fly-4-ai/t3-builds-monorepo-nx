@@ -138,7 +138,7 @@ const CommentSidebar = ({
             !showCommentSidebar ? 'hidden' : ''
           }  `}
         >
-          <Dialog.Panel className="relative h-screen w-[200px] border-l shadow-md sm:w-[355px]">
+          <Dialog.Panel className="relative h-max w-[200px] border-l shadow-md sm:w-[355px]">
             <div className="z-10 flex h-full w-full flex-col overflow-y-auto bg-white px-6 dark:bg-black dark:bg-opacity-60 dark:backdrop-blur">
               <div className="mt-20  flex items-center justify-between  text-xl">
                 <h2 className=" font-medium">

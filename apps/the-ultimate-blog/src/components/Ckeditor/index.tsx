@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import DecoupledEditor from 'ckeditor5-custom-build/build/ckeditor.js';
+import InlineEditor from 'ckeditor5-custom-build/build/ckeditor.js';
 import { useEffect, useState } from 'react';
 import { useSupabase } from '../../hooks/supabase';
 import useDebounce from '../../hooks/useDebounce';
@@ -27,15 +27,6 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
     }
   }
 
-  useEffect(() => {
-    // Modify the content before setting it in the editor
-    const modifiedValue = value?.replace(
-      /<p>!<a href="(.*?)">(.*?)<\/a><\/p>/g,
-      '<img src="$1" alt="$2">'
-    );
-    onChange(modifiedValue);
-  }, [value, onChange]);
-
   const mutation = trpc.post.uploadImage.useMutation({
     onSuccess: () => {
       toast.success('Picture uploaded successfully');
@@ -51,7 +42,7 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
 
   return (
     <CKEditor
-      editor={DecoupledEditor}
+      editor={InlineEditor}
       data={value}
       // onReady={handleEditorReady}
       config={{
@@ -59,6 +50,7 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
           createMyCustomUploadAdapterPlugin(mutation, uploadImage),
         ],
         placeholder: 'Type here to get started',
+
         codeBlock: {
           languages: [
             { language: 'javascript', label: 'JavaScript' },
@@ -67,23 +59,47 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
           ],
         },
       }}
+      onReady={(editor: any) => {
+        editor.editing.view.document.on(
+          'paste',
+          (evt: any, data: any) => {
+            const dataTransfer = data.dataTransfer;
+            let pastedHTML = dataTransfer.getData('text/html');
+
+            // Remove style attributes from table, th, and td tags
+            pastedHTML = pastedHTML.replace(
+              /<(table|th|td)[^>]*>/g,
+              (match) => {
+                return match.replace(/style="[^"]*"/g, '');
+              }
+            );
+
+            // Replace p tags wrapping a tags with img tags
+            pastedHTML = pastedHTML.replace(
+              /<p>!<a href="(.*?)">(.*?)<\/a><\/p>/g,
+              '<img src="$1" alt="$2">'
+            );
+
+            const viewFragment = editor.data.processor.toView(pastedHTML);
+            const modelFragment = editor.data.toModel(viewFragment);
+
+            editor.model.insertContent(modelFragment);
+
+            evt.stop();
+          },
+          { priority: 'high' }
+        );
+      }}
       onChange={(event: any, editor: any) => {
         let data = editor.getData();
-
-        // Check if the data is a URL
-
-        // Check if the URL is an image
-        const isImageUrl = /\.(jpeg|jpg|gif|png)$/.test(data);
-
-        if (isImageUrl) {
-          console.warn('TRUE');
-          // If it's an image URL, replace the link with an image tag
-          data = `<img src="${data}" />`;
-        }
+        // data = data.replace(
+        //   /<p>!<a href="(.*?)">(.*?)<\/a><\/p>/g,
+        //   '<img src="$1" alt="$2">'
+        // );
 
         onChange(data);
-        console.warn(data);
       }}
+
       // ...
     />
   );
@@ -126,25 +142,17 @@ class MyUploadAdapter {
 
         reader.onloadend = async () => {
           try {
-            console.warn('File to be uploaded: ', file);
             const base64Data = reader.result?.toString() || '';
-            console.warn('Base64 Data: ', base64Data);
+
             const response = await this.mutation.mutateAsync({
               file: base64Data,
-              onSuccess: () => {
-                toast.success('Picture uploaded successfully');
-                resolve({ default: response });
-                // getPost.revalidate();
-              },
             });
-            console.warn('Mutation response: ', response);
 
-            // if (this.uploadImage && response) {
-            //   console.warn('TESTING12', response);
-            //   resolve({ default: response });
-            // } else {
-            //   resolve({ default: response }); //HERE!!! Ballzack // Activate investiagtion
-            // }
+            if (this.uploadImage && response) {
+              resolve({ default: response });
+            } else {
+              resolve({ default: response }); //HERE!!! Ballzack // Activate investiagtion
+            }
           } catch (error) {
             console.error('File upload failed', error);
             reject(error);

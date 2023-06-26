@@ -38,7 +38,7 @@ const UserProfilePage = () => {
   const [showListView, setListView] = useState(false);
   const [isToggledPost, setIsToggledPost] = useState('');
   const { togglePosts } = useGlobalContextTechModalStore();
-  console.warn('FUCCCKKKK', router.query.username);
+
   const readingList = trpc.post.getReadingList.useQuery();
   const techReadingList = trpc.post.getTechReadingList.useQuery();
   const userProfile = trpc.user.getUserProfile.useQuery(

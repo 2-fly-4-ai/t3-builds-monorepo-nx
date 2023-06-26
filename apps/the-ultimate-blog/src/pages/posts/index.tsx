@@ -12,6 +12,10 @@ import { useNavStore } from '@front-end-nx/shared/ui';
 function HomePage() {
   const [showSidebar, setShowSidebar] = useState(false);
   const { showNavSidebar, setShowNavSidebar } = useNavStore();
+  const readingList = trpc.post.getReadingList.useQuery({
+    itemType: 'post',
+  });
+  const getPosts = trpc.post.getPosts.useQuery();
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -32,6 +36,7 @@ function HomePage() {
           {/* This is the main section */}
 
           <MainSection
+            getPosts={getPosts}
             showSidebar={showSidebar}
             toggleSidebar={toggleSidebar}
             showNavSidebar={showNavSidebar}
@@ -40,10 +45,14 @@ function HomePage() {
 
           {/* This is the button to toggle the sidebar */}
         </section>
-        <SideSection showSidebar={showSidebar} toggleSidebar={toggleSidebar} />
+        <SideSection
+          readingList={readingList}
+          showSidebar={showSidebar}
+          toggleSidebar={toggleSidebar}
+        />
 
         <WriteFormModal />
-        <WriteFormModalTech />
+        {/* <WriteFormModalTech /> */}
       </section>
     </MainLayout>
   );

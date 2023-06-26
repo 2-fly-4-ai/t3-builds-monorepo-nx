@@ -198,20 +198,11 @@ export default SigninPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  // const { email } = context.req.body;
-  // console.warn(context);
-  // const isEMailIuser = await trpc.user.isUserEmailRegistered.useQuery({
-  //   email,
-  // });
 
   if (!session)
     if (session) {
-      // If the user is already logged in, redirect.
       return { redirect: { destination: '/' } };
     }
-
-  // Could return the providers as an array if we wanted.
-  // const providers = await getProviders();
 
   return {
     props: {},

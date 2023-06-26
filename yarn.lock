@@ -3528,6 +3528,11 @@
   dependencies:
     esquery "^1.0.1"
 
+"@phudak/ckeditor5-emoji@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@phudak/ckeditor5-emoji/-/ckeditor5-emoji-1.1.1.tgz#c81374f26ebcb4c99cfa3a3b528c5ed9a1075516"
+  integrity sha512-J+rWspA6HXru8o25051N9bio/w3841g57VCzRsCExw5sarsvOowZeVTorJd1ioI85h7HSBLVs1d2VO/kvpbaUg==
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -20481,6 +20486,11 @@ react-icons@^4.8.0:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.8.0.tgz#621e900caa23b912f737e41be57f27f6b2bff445"
   integrity sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==
+
+react-ink@^6.5.4:
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/react-ink/-/react-ink-6.5.4.tgz#85235bc1a4df1bdb612cf42fa1b88b5460dcc6cd"
+  integrity sha512-PgpILtizPPyl2/ahyWfSduEbHBHCwx8aMe1CEGx+idihsH6Oz2Wo2IN+HatwpPEo2zBJi2hVTtJ8qM9yHiarNA==
 
 react-inspector@^5.1.0:
   version "5.1.1"

@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
 import MainSection from '../../components/MainSectionCourse';
-import SideSection from '../../components/SideSectionCourse';
+import SideSection from '../../components/SideSection';
 import WriteFormModal from '../../components/WriteformCourse';
 
 import Sidebar from '../../components/SidebarNav/side-bar';
 import { useNavStore } from '@front-end-nx/shared/ui';
 
 function CoursesIndex() {
+  const getPosts = trpc.post.getCoursePosts.useQuery();
+  const readingList = trpc.post.getReadingList.useQuery({ itemType: 'course' });
   const [showSidebar, setShowSidebar] = useState(false);
   const { showNavSidebar, setShowNavSidebar } = useNavStore();
 
@@ -31,6 +33,7 @@ function CoursesIndex() {
           {/* This is the main section */}
 
           <MainSection
+            getPosts={getPosts}
             showSidebar={showSidebar}
             toggleSidebar={toggleSidebar}
             showNavSidebar={showNavSidebar}
@@ -39,7 +42,11 @@ function CoursesIndex() {
 
           {/* This is the button to toggle the sidebar */}
         </section>
-        <SideSection showSidebar={showSidebar} toggleSidebar={toggleSidebar} />
+        <SideSection
+          readingList={readingList}
+          showSidebar={showSidebar}
+          toggleSidebar={toggleSidebar}
+        />
 
         <WriteFormModal />
       </section>

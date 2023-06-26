@@ -95,12 +95,10 @@ export default function PostPage(
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
-  // console.warn(getPost.data);
+
   const postsByTag = trpc.post.getPostsWithTag.useQuery({
     tags: getPost?.data?.tags.map((tag) => tag.name),
   });
-
-  console.warn('POOPI', postsByTag?.data);
 
   // props?.tags?.[0]?.name,
   interface Item {

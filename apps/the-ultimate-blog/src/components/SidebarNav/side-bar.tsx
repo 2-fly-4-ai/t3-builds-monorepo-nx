@@ -11,6 +11,7 @@ import { CgProfile } from 'react-icons/cg';
 import { useRouter } from 'next/router';
 import { useNavStore } from '@front-end-nx/shared/ui';
 import { useEffect } from 'react';
+import { Label } from '@radix-ui/react-label';
 // import HamburgerButton from './HamburgerMenuButton/HamburgerButton';
 
 const Sidebar = () => {
@@ -20,6 +21,15 @@ const Sidebar = () => {
   const location = router.pathname;
 
   const Menus = [
+    { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
+    { title: 'Course', path: '/course', src: <SiFuturelearn /> },
+    { title: 'Profile', path: '/profile', src: <CgProfile /> },
+    { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
+    { title: 'Course', path: '/course', src: <SiFuturelearn /> },
+    { title: 'Profile', path: '/profile', src: <CgProfile /> },
+    { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
+    { title: 'Course', path: '/course', src: <SiFuturelearn /> },
+    { title: 'Profile', path: '/profile', src: <CgProfile /> },
     { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
     { title: 'Course', path: '/course', src: <SiFuturelearn /> },
     { title: 'Profile', path: '/profile', src: <CgProfile /> },
@@ -34,8 +44,8 @@ const Sidebar = () => {
     <>
       <div
         className={`${
-          showNavSidebar ? 'w-80' : 'w-20'
-        } transition-width dark:bg-inheritq sticky top-0  h-screen border-r border-gray-200 bg-gray-100 p-5 duration-300   dark:bg-inherit sm:block`}
+          showNavSidebar ? 'w-60' : 'w-[75px]'
+        } transition-width sticky top-0 h-screen  flex-shrink-0 border-r border-gray-300 bg-gray-100 p-5 duration-300   dark:bg-inherit sm:block`}
       >
         <BsArrowLeftCircle
           className={`${
@@ -48,22 +58,21 @@ const Sidebar = () => {
             className={`flex ${showNavSidebar ? 'gap-x-4' : ''} items-center`}
           >
             {/* <img src={Logo} alt="" className="pl-2" /> */}
-            {showNavSidebar && (
-              <span className="overflow-hidden whitespace-nowrap text-xl font-medium dark:text-white">
-                Goal Quest
-              </span>
-            )}
           </div>
         </Link>
-
-        <ul className="pt-6">
+        {/* <Label
+          className={`${showNavSidebar ? '' : 'opacity-0'} border-b text-xl`}
+        >
+          Menu
+        </Label> */}
+        <ul className="">
           {Menus.map((menu, index) => (
             <Link href={menu.path} key={index}>
               <li
-                className={`flex cursor-pointer items-center gap-x-6 rounded border p-1 text-base font-normal hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700
+                className={`dark:bg-gray-899 flex w-full  cursor-pointer items-center  gap-x-6 rounded-lg border bg-gray-500  p-1 text-base font-normal text-white hover:bg-gray-800  dark:bg-white dark:bg-opacity-10 dark:text-white dark:hover:bg-gray-800
                         ${menu.gap ? 'mt-9' : 'mt-2'} ${
                   location.pathname === menu.path &&
-                  'bg-gray-200 dark:bg-gray-700'
+                  'bg-gray-300 dark:bg-gray-700'
                 }`}
               >
                 <span className="text-2xl">{menu.src}</span>

@@ -95,7 +95,6 @@ export default function PostPage(
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getCoursePost.useQuery({ slug: slug.toString() });
-  console.warn('courseContent', getPost.data);
   // const postsByTag = trpc.post.getCoursePostsWithTag.useQuery({
   //   tags: getPost?.data?.tags.map((tag) => tag.name),
   // });
@@ -143,7 +142,6 @@ export default function PostPage(
       invalidateCurrentPostPage(postRoute, router);
       router.replace(router.asPath, undefined, { scroll: false });
       // Return the result explicitly
-      return _result;
 
       // Do something else after the post is updated successfully, e.g. redirect to the updated post page
     } catch (error) {
@@ -587,8 +585,6 @@ export async function getStaticProps(
     ...post,
     createdAt: post.createdAt.toISOString(),
   }));
-
-  // console.warn(postsByTag);
 
   return {
     props: {

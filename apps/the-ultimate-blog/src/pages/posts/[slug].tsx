@@ -5,7 +5,8 @@ import { trpc } from '../../utils/trpc';
 
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
-import CommentSidebar from '../../components/CommentSidebar';
+// import CommentSidebar from '../../components/CommentSidebar';
+import CommentSidebar from '../../components/CommentsDiscuss';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -112,7 +113,6 @@ export default function PostPage(
   }
 
   function invalidateCurrentPostPage(postRoute, router) {
-    const { slug } = router.query;
     postRoute.getPost.invalidate({ slug: slug });
   }
 
@@ -137,7 +137,7 @@ export default function PostPage(
 
       // Invalidate the getPost query so that it is re-fetched with the latest data
       invalidateCurrentPostPage(postRoute, router);
-      router.replace(router.asPath, undefined, { scroll: false });
+      router.replace(`/posts/${slug}`, undefined, { scroll: false });
       // Return the result explicitly
       return _result;
 
@@ -159,7 +159,7 @@ export default function PostPage(
 
   return (
     <MainLayout>
-      <section className="flex justify-center">
+      <section className="mx-auto flex max-w-[1100px] gap-8   px-8">
         <section>
           {getPost.isSuccess && getPost.data && (
             <UnsplashGallery
@@ -168,23 +168,6 @@ export default function PostPage(
               postId={getPost.data?.id}
               slug={getPost.data?.slug}
             />
-          )}
-
-          {getPost.isLoading && <LoadingSpinner />}
-          {getPost.data?.id && (
-            <Transition.Root show={showCommentSidebar} as={Fragment}>
-              <Dialog
-                as="div"
-                onClose={() => setShowCommentSidebar(false)}
-                static
-              >
-                <CommentSidebar
-                  showCommentSidebar={showCommentSidebar}
-                  setShowCommentSidebar={setShowCommentSidebar}
-                  postId={getPost.data?.id}
-                />
-              </Dialog>
-            </Transition.Root>
           )}
 
           {getPost.isSuccess && (
@@ -197,11 +180,11 @@ export default function PostPage(
           )}
 
           {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
-            <div className=" sticky z-10 mx-auto mt-5 flex max-w-5xl items-center justify-center rounded-lg   text-2xl">
-              <p className=" rounded-l-lg border bg-gray-400 px-4">
+            <div className=" sticky top-10 z-10 mx-auto mt-5 flex max-w-5xl items-center justify-center rounded-lg text-2xl   ">
+              <p className=" rounded-l-lg border bg-gray-400 px-4 dark:bg-black">
                 MASTER EDITOR
               </p>
-              <div className=" flex ">
+              <div className="flex backdrop-blur">
                 <button
                   onClick={handleSubmit((formData) => {
                     setIsSubmitting(true);
@@ -230,9 +213,9 @@ export default function PostPage(
           ) : null}
 
           <div>
-            <div className="relative  flex w-full items-center justify-center ">
-              <div className="mt-10 w-full max-w-screen-md space-y-8">
-                <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg bg-gray-300  shadow-lg dark:bg-black">
+            <div className="relative  flex w-full items-center justify-center  ">
+              <div className="mt-10 w-full max-w-screen-lg space-y-8">
+                <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg border-2 bg-gray-300  shadow-lg dark:bg-black">
                   {getPost.data?.featuredImage && (
                     <Image
                       src={getPost.data?.featuredImage ?? 'null'}
@@ -268,7 +251,7 @@ export default function PostPage(
 
                   {/* this is the featured image */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative mx-10 w-full rounded-xl bg-gray-500 bg-opacity-50 px-4  pb-6 pt-4  font-medium text-gray-50 dark:bg-black dark:bg-opacity-80 ">
+                    <div className="relative mx-10 w-full rounded-xl bg-gray-200 bg-opacity-90 px-4 pb-6  pt-4 font-medium    dark:bg-black dark:bg-opacity-80 ">
                       {getPost.data?.authorId ===
                       currentUser?.data?.user?.id ? (
                         <button
@@ -333,7 +316,7 @@ export default function PostPage(
                   </div>
                 </div>
 
-                <div className="prose relative max-w-none break-words rounded-lg border-2 border-gray-800 bg-gray-100 px-4 py-4 pl-6 font-mono  text-lg dark:border-none dark:border-white dark:bg-black dark:bg-opacity-90 dark:text-white">
+                <div className="prose relative max-w-none break-words rounded-lg border-2  bg-gray-100 px-4 py-4 pl-6  text-lg  dark:border-white  dark:bg-white dark:bg-opacity-10  dark:text-white">
                   {!isDescriptionEditorOpen ? (
                     getPost.data?.description
                   ) : (
@@ -401,7 +384,7 @@ export default function PostPage(
                         name="html"
                         control={control}
                         render={({ field }) => (
-                          <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
+                          <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black  prose-table:shadow-lg prose-th:borderborder-gray-600  prose-th:border-gray-600 prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 dark:prose-table:bg-black dark:prose-table:rounded-lg  prose-mark:bg-inherit max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
                             <Editor
                               {...field}
                               onChange={(data: string) =>
@@ -437,7 +420,7 @@ export default function PostPage(
                   </div>
                 ) : (
                   <div className="relative">
-                    <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
+                    <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black   prose-th:border prose-td:border-gray-400 prose-th:border-gray-400 prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border  prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white  dark:prose-table:bg-black prose-table:border  prose-table:font-sans max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
                       {/* <Interweave
                   content={
                     html.replaceAll(
@@ -481,24 +464,43 @@ export default function PostPage(
           </div>
 
           <div>
-            <div className="my-6 mb-10 flex items-center justify-start gap-4 rounded-lg bg-black p-4">
+            <div className="my-6 flex items-center justify-start gap-4 rounded-lg bg-black p-4">
               {getPost?.data?.tags.map((tag) => (
                 <div className="flex flex-col gap-2 py-2">
                   <Link href="">
-                    <button class="whitespace-no-wrap flex items-center justify-center rounded-full border-2 bg-opacity-90 px-4 py-2 text-base font-medium leading-6 text-gray-500 shadow-sm hover:border-white  hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none dark:bg-black">
+                    <button className="whitespace-no-wrap flex items-center justify-center rounded-full border-2 bg-opacity-90 px-4 py-2 text-base font-medium leading-6 text-gray-500 shadow-sm hover:border-white  hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none dark:bg-black">
                       {tag?.name}
                     </button>
                   </Link>
                 </div>
               ))}
             </div>
+
+            <div className="mb-10 ">
+              {getPost.isLoading && <LoadingSpinner />}
+              {getPost.data?.id && (
+                // <Transition.Root show={showCommentSidebar} as={Fragment}>
+                //   <Dialog
+                //     as="div"
+                //     onClose={() => setShowCommentSidebar(false)}
+                //     static
+                //   >
+                <CommentSidebar
+                  showCommentSidebar={showCommentSidebar}
+                  setShowCommentSidebar={setShowCommentSidebar}
+                  postId={getPost.data?.id}
+                />
+                //   </Dialog>
+                // </Transition.Root>
+              )}
+            </div>
           </div>
         </section>
 
         {/* SideSection */}
-        <div className="sticky top-0 my-10  w-96 px-6 ">
+        <div className="sticky top-0 my-10  w-96 ">
           {/* Author Box */}
-          <div className="flex  h-max max-w-[300px] items-center justify-start gap-4 rounded-lg bg-black  p-6  py-3 ">
+          <div className="flex  h-max max-w-[300px] items-center justify-start gap-4 rounded-lg border-2 bg-gray-100 p-6   py-3  dark:bg-white dark:bg-opacity-10  ">
             <div className="flex aspect-square h-16 w-16  ">
               <Image
                 src={getPost?.data?.author?.image}
@@ -520,23 +522,23 @@ export default function PostPage(
 
           {/* TOC */}
           <div className="sticky top-6 ">
-            <div className="mt-6 h-min  max-w-[300px]  rounded-lg  bg-black p-6">
+            <div className="mt-6 h-min  max-w-[300px]  rounded-lg  border-2 bg-gray-100 p-6 dark:bg-white dark:bg-opacity-10">
               <DashboardTableOfContents toc={tableOfContentsResult.toc} />
             </div>
 
             {/* Newsletter Subscribe */}
-            <div className=" mt-6 h-min max-w-[300px] rounded-lg   bg-black p-6 py-4   ">
+            <div className=" mt-6 h-min max-w-[300px] rounded-lg   border-2 bg-gray-100 p-6 py-4 dark:bg-white dark:bg-opacity-10   ">
               <NewsletterSubscribe />
             </div>
 
             {/* Related Posts */}
-            <div className="sticky top-0 mt-6 flex  h-min max-w-[300px] flex-col gap-4 rounded-lg bg-black p-6    ">
-              <span className="text-lg font-bold">Related Posts</span>
+            <div className="sticky top-0 mt-6 flex  h-min max-w-[300px] flex-col gap-4 rounded-lg border-2 bg-gray-100 p-6 dark:bg-white dark:bg-opacity-10    ">
+              <span className="text-lg font-medium">Related Posts</span>
               <div className="flex flex-col gap-4">
                 {postsByTag.map((post) => (
                   <div className="flex flex-col gap-2 border-b py-2">
                     <Link href="test flex flex-col">
-                      <span className="font-bold">{post?.title}</span>
+                      <span className="font-medium">{post?.title}</span>
                     </Link>
                     {/* <span className="text-sm">{post?.description}</span> */}
                     <Link href={`/post/${post?.slug}`}>

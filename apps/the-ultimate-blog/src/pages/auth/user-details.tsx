@@ -129,7 +129,6 @@ function UserDetails() {
 
   const onSubmit = async (data) => {
     try {
-      console.warn('testers', data);
       await updateUserProfile.mutateAsync({
         userId: currentUser?.data?.user?.id,
         ...data,

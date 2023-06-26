@@ -21,36 +21,50 @@ export async function getTableOfContentsHTML(
   const $ = cheerio.load(content);
   const headings = $('h1, h2, h3, h4, h5, h6');
   const toc: Items = { items: [] };
+  const usedIds: Set<string> = new Set();
 
-  let headingCount = 1;
+  // Clear all IDs before starting.
+  headings.each((index, element) => {
+    const $element = $(element);
+    const existingId = $element.attr('id');
+    if (existingId) {
+      usedIds.add(existingId);
+    }
+    $element.removeAttr('id');
+  });
 
   headings.each((index, element) => {
     const level = parseInt(element.tagName.slice(1), 10);
+    const headingName = $(element).text().trim();
+    let headingId = headingName.replace(/\s+/g, '-');
+
+    if (usedIds.has(headingId)) {
+      // Append a counter to the ID if it already exists
+      let counter = 1;
+      let uniqueId = `${headingId}-${counter}`;
+      while (usedIds.has(uniqueId)) {
+        counter++;
+        uniqueId = `${headingId}-${counter}`;
+      }
+      headingId = uniqueId;
+    }
+
     const currentItem: Item = {
-      title: $(element).text().trim() || '',
-      url: `#heading-${headingCount}`,
+      title: headingName || '',
+      url: `#${headingId}`,
     };
 
-    $(element).attr('id', `heading-${headingCount}`);
-    headingCount++;
+    $(element).attr('id', headingId);
+    usedIds.add(headingId);
 
     if (level === 1) {
       toc.items?.push(currentItem);
     } else {
-      let parentItems = toc?.items;
-      for (let i = 2; i < level; i++) {
-        const lastItem = parentItems?.[parentItems.length - 1];
-        if (lastItem && !lastItem.items) {
-          lastItem.items = [];
-        }
-        parentItems = lastItem?.items;
+      let parentItems = toc.items;
+      for (let i = level - 1; i > 1; i--) {
+        parentItems = parentItems[parentItems.length - 1]?.items || [];
       }
-      if (parentItems) {
-        parentItems.push(currentItem);
-      } else {
-        // Initialize parentItems if it's undefined
-        toc.items = [currentItem];
-      }
+      parentItems.push(currentItem);
     }
   });
 

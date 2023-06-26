@@ -108,7 +108,7 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
   };
 
   return (
-    <div className=" relative  w-full border-l shadow-md">
+    <div className=" relative w-full  rounded-lg border py-6">
       <div className=" z-10 flex h-full w-full flex-col  px-6">
         <div className="  flex items-center justify-between  text-xl">
           <h2 className=" font-medium">

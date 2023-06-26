@@ -54,7 +54,6 @@ export default function GuidePage({ guide, toc }) {
 }
 
 export async function getStaticProps({ params }) {
-  console.warn('SHIZZZNIZZZ', params.slug);
   let slug = '/guides';
   if (params?.slug) {
     slug += `/${params.slug}`;
@@ -62,11 +61,7 @@ export async function getStaticProps({ params }) {
 
   const joinedSlug = slug.replaceAll(',', '/');
   const guide = allGuides.find((guide) => guide.slug === joinedSlug);
-  allGuides.map((post) => {
-    console.warn('TEEHHEHEHEE', post.slug);
-  });
-
-  console.warn('TESTIPOO', guide);
+  allGuides.map((post) => {});
 
   // if (!doc) {
   //   return { notFound: true };

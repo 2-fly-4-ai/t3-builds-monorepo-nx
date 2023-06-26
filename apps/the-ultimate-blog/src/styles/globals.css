@@ -66,8 +66,34 @@ h6 {
 }
 
 .custom-animation-switch {
-  animation: delayAnimation 1.5s ease-in-out;
+  animation: delayAnimation 1.5s;
   /* Change the animation duration and timing function as desired */
+}
+.marker-blue {
+  background-color: rgb(114, 204, 253);
+  color: white;
+}
+
+.marker-green {
+  background-color: rgb(25, 156, 25);
+  color: white;
+}
+.marker-yellow {
+  background-color: #cac407;
+  color: white;
+}
+.marker-pink {
+  background-color: hsl(343, 82%, 58%);
+  color: white;
+}
+.pen-green {
+  color: rgb(18, 138, 0);
+  background-color: inherit;
+}
+
+.pen-red {
+  color: rgb(231, 19, 19);
+  background-color: inherit;
 }
 /* .ck.ck-editor__editable_inline {
   visibility: hidden;

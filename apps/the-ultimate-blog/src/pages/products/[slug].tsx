@@ -95,12 +95,7 @@ export default function PostPage(
 
   const getPost = trpc.post.getProductPost.useQuery({ slug: slug.toString() });
   const postRoute = trpc.useContext().post;
-  // console.warn(getPost.data);
-  // const postsByTag = trpc.post.getCoursePostsWithTag.useQuery({
-  //   tags: getPost?.data?.tags.map((tag) => tag.name),
-  // });
 
-  // props?.tags?.[0]?.name,
   interface Item {
     title: string;
     url: string;
@@ -589,8 +584,6 @@ export async function getStaticProps(
     ...post,
     createdAt: post.createdAt.toISOString(),
   }));
-
-  // console.warn(postsByTag);
 
   return {
     props: {
