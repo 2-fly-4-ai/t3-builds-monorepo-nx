@@ -5,12 +5,13 @@ export * from './lib/like-post/like-post';
 export * from './lib/blog-page-prose/blog-page-prose';
 export * from './lib/topic-button/topic-button';
 export * from './lib/tech-card/tech-card';
+export * from './../../ui/src/shadnui/components/theme-toggle/theme-toggle';
 
 export * from './lib/product-card/post-card';
 export * from './lib/product-card/post-card-list';
 export * from './lib/course-card/post-list';
 export * from './lib/course-card/post-card';
-export * from './lib/bookmark-post/bookmark-techpost';
+// export * from './lib/bookmark-post/bookmark-techpost';
 export * from './lib/bookmark-post/bookmark-post';
 export * from './lib/tech-card/tech-card-list';
 export * from './../../ui/src/shadnui/ui/switch';

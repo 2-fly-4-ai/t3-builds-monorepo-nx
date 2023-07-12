@@ -15,7 +15,6 @@ const dayjs = require('dayjs');
 
 /* eslint-disable-next-line */
 export interface PostCardProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -32,20 +31,14 @@ export interface PostCardProps {
     likes: string;
     featuredImage: string;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 
 export function PostCardList(props: PostCardProps) {
   const { data: sessionData, status } = useSession();
   const { togglePosts } = useGlobalContextTechModalStore();
-  const { bookmarkPost, removeBookMark, post } = props;
+  const { bookmarkPost, removeBookmark, post } = props;
 
   const {
     author,
@@ -185,7 +178,7 @@ export function PostCardList(props: PostCardProps) {
             {isBookmarked ? (
               <BiBookmarkMinus
                 onClick={() => {
-                  removeBookMark.mutate({
+                  removeBookmark.mutate({
                     itemId: id,
                     itemType: 'product',
                   });

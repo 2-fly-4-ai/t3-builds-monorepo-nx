@@ -8,12 +8,12 @@ import { useSession } from 'next-auth/react';
 import { useCommentStore } from 'libs/shared/ui/src/zustand/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 import Image from 'next/image';
+dayjs.extend(relativeTime);
 
 //Typings
 type CommentSidebarProps = {
-  techId: string;
+  postId: string;
 };
 type CommentFormType = { text: string };
 
@@ -23,7 +23,7 @@ export const commentFormSchema = z.object({
 });
 
 //Functional Component
-const CommentSidebar = ({ techId }: CommentSidebarProps) => {
+export default function CommentSidebar({ postId }: CommentSidebarProps) {
   //Form
   const {
     register,
@@ -43,13 +43,13 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
 
   //Trpc
   const getComments = trpc.post.getComments.useQuery({
-    techId,
+    postId,
   });
   const submitComment = trpc.post.submitComment.useMutation({
     onSuccess: () => {
       toast.success('🥳');
       postRoute.getComments.invalidate({
-        techId,
+        postId,
       });
       reset();
     },
@@ -132,7 +132,7 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
               handleSubmit((data) => {
                 submitComment.mutate({
                   ...data,
-                  techId,
+                  postId,
                 });
               })();
             }}
@@ -227,4 +227,4 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
   );
 };
 
-export default CommentSidebar;
+

@@ -166,7 +166,7 @@ export default function PreviewModal({ post }: TechFormModalProps) {
       postRoute.getTechPosts.invalidate();
     },
     onError: () => {
-      toast.error('You done fucked up');
+      toast.error('error, post creation failed');
     },
   });
 
@@ -188,8 +188,11 @@ export default function PreviewModal({ post }: TechFormModalProps) {
   };
 
   const handleClose = () => {
+    if (router.pathname.includes('/discussions')) {
+      router.push('/discussions', undefined, { shallow: true });
+    }
     resetIsPostModalOpen();
-    setValue();
+    setValue;
   };
 
   useEffect(() => {

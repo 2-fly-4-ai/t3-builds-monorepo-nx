@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'next-themes';
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider enableSystem={true} attribute="class" defaultTheme="system">
       {children}
@@ -8,4 +8,4 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default Providers;
+

@@ -2,17 +2,11 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
-
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
-// import CommentSidebar from '../../components/CommentSidebar';
 import CommentSidebar from '../../components/CommentsDiscuss';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog } from '@headlessui/react';
-import { Fragment } from 'react';
-import Modal from '../../components/Modal';
 import UnsplashGallery from '../../components/UnsplashGallery';
 import toast, { Toaster } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
@@ -20,14 +14,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useEffect } from 'react';
 import Image from 'next/image';
-import { Interweave } from 'interweave';
 import { useSession } from 'next-auth/react';
 import { prisma } from '../../utils/prisma';
-import { useLikeStore } from '@front-end-nx/shared/ui';
 import { getTableOfContentsHTML } from '@front-end-nx/shared/ui';
-import { DashboardTableOfContents } from '@front-end-nx/shared/ui';
-import NewsletterSubscribe from '../../components/NewsLetter/NewsletterSubscribe';
 import Link from 'next/link';
+import BlogPostSideBar from '../../components/BlogPost/blog-post-side';
 
 import {
   GetStaticPaths,
@@ -53,9 +44,27 @@ type WriteFormModalProps = {
   text: string;
   html: string;
   postId: string;
-  slug: string;
+  slug: string[];
   createdAt: Date;
 };
+
+interface TableOfContentsItem {
+  title: string;
+  url: string;
+}
+
+interface TableOfContentsResult {
+  toc: {
+    items: TableOfContentsItem[];
+  };
+  html: string;
+}
+
+interface DefaultValues {
+  title?: string;
+  description?: string;
+  html?: string;
+}
 
 //Zod Schema
 export const WriteFormSchema = z.object({
@@ -84,33 +93,16 @@ export default function PostPage(
   const currentUser = useSession();
 
   //state Management
-  const { likedPosts, addLikedPost, removeLikedPost } = useLikeStore();
+
   const [showCommentSidebar, setShowCommentSidebar] = useState(false);
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
   const [isTitleEditorOpen, setTitleEditorOpen] = useState(false);
   const [isDescriptionEditorOpen, setDescriptionEditorOpen] = useState(false);
   const [isHTMLEditorOpen, setHTMLEditorOpen] = useState(false);
-  const [isMASTEREditorOpen, setMASTEREditorOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const postRoute = trpc.useContext().post;
   const getPost = trpc.post.getPost.useQuery({ slug: slug.toString() });
-
-  interface Item {
-    title: string;
-    url: string;
-    items?: Item[];
-  }
-
-  interface Items {
-    items?: Item[];
-  }
-
-  interface DefaultValues {
-    title?: string;
-    description?: string;
-    html?: string;
-  }
 
   function invalidateCurrentPostPage(postRoute, router) {
     postRoute.getPost.invalidate({ slug: slug });
@@ -122,6 +114,9 @@ export default function PostPage(
       invalidateCurrentPostPage(postRoute, router);
       // getPost.revalidate();
     },
+    onError: () => {
+      toast.error('post creation failed');
+    },
   });
 
   const onSubmit = async (formData) => {
@@ -132,8 +127,6 @@ export default function PostPage(
         description: formData.description,
         html: formData.html,
       });
-
-      //remember this to get the fresh data
 
       // Invalidate the getPost query so that it is re-fetched with the latest data
       invalidateCurrentPostPage(postRoute, router);
@@ -159,7 +152,7 @@ export default function PostPage(
 
   return (
     <MainLayout>
-      <section className="mx-auto flex max-w-[1100px] gap-8   px-8">
+      <section className=" mx-auto flex max-w-[1150px] gap-10  px-8">
         <section>
           {getPost.isSuccess && getPost.data && (
             <UnsplashGallery
@@ -214,13 +207,13 @@ export default function PostPage(
 
           <div>
             <div className="relative  flex w-full items-center justify-center  ">
-              <div className="mt-10 w-full max-w-screen-lg space-y-8">
-                <div className="relative flex min-h-[60vh] w-auto items-center justify-center overflow-hidden rounded-lg border-2 bg-gray-300  shadow-lg dark:bg-black">
+              <div className="w-screen-lg mt-10 w-full space-y-8">
+                <div className="relative flex min-h-[80vh] w-auto items-center justify-center overflow-hidden rounded-lg border-2 bg-gray-300  shadow-lg dark:bg-black">
                   {getPost.data?.featuredImage && (
                     <Image
                       src={getPost.data?.featuredImage ?? 'null'}
                       alt={getPost.data?.title}
-                      priority //FUCKSAKE DONT FORGET THIS
+                      priority //VERY IMPORTANT STOPS IMAGE RESIZING
                       fill
                       className="object-cover"
                     />
@@ -316,7 +309,7 @@ export default function PostPage(
                   </div>
                 </div>
 
-                <div className="prose relative max-w-none break-words rounded-lg border-2  bg-gray-100 px-4 py-4 pl-6  text-lg  dark:border-white  dark:bg-white dark:bg-opacity-10  dark:text-white">
+                <div className="prose relative max-w-none break-words rounded-lg border-2  bg-gray-100 px-4 py-4 pl-6  text-lg  dark:border-white  dark:bg-white dark:bg-opacity-10  dark:text-gray-300">
                   {!isDescriptionEditorOpen ? (
                     getPost.data?.description
                   ) : (
@@ -324,7 +317,7 @@ export default function PostPage(
                       <TextareaAutosize
                         rows={5}
                         id="shortDescription"
-                        className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                        className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60 "
                         // defaultValue={description}
                         {...register('description')}
                       />
@@ -384,7 +377,7 @@ export default function PostPage(
                         name="html"
                         control={control}
                         render={({ field }) => (
-                          <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black  prose-table:shadow-lg prose-th:borderborder-gray-600  prose-th:border-gray-600 prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 dark:prose-table:bg-black dark:prose-table:rounded-lg  prose-mark:bg-inherit max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
+                          <div className="prose-p:font-sans prose-table:rounded-lg  dark:prose-table:bg-white dark:prose-table:bg-opacity-10 prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black   prose-th:border prose-td:border-gray-400 prose-th:border-gray-400 prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border   prose-td:p-3  prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2  dark:prose-headings:text-gray-300 prose-img:bg-inherit prose-img:py-12 dark:prose-img:bg-black  dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:rounded-lg dark:prose-strong:text-red-400 dark:prose-code:text-white    prose-table:font-sans dark:prose-table:text-gray-300 prose-table:border-white dark:prose-table:shadow-lg prose-table:overflow-hidden prose-tr:bg-gray-100 prose-table:shadow-lg prose-figure:rounded-lg dark:prose-table:border-gray-400 prose-table:border-2 dark:prose-figure:bg-inherit dark:prose-table:bg-inherit dark:prose-tr:bg-white dark:prose-tr:bg-opacity-10 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400 ">
                             <Editor
                               {...field}
                               onChange={(data: string) =>
@@ -420,7 +413,7 @@ export default function PostPage(
                   </div>
                 ) : (
                   <div className="relative">
-                    <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black   prose-th:border prose-td:border-gray-400 prose-th:border-gray-400 prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border  prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white  dark:prose-table:bg-black prose-table:border  prose-table:font-sans max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
+                    <div className="prose-p:font-sans prose-table:rounded-lg  dark:prose-table:bg-white dark:prose-table:bg-opacity-10 prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black   prose-th:border prose-td:border-gray-400 prose-th:border-gray-400 prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border   prose-td:p-3  prose-img:my-12 prose-img:max-h-custom prose-img:w-3/4 prose-img:border-2  dark:prose-headings:text-gray-300 prose-img:bg-inherit prose-img:py-12 dark:prose-img:bg-black  dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:rounded-lg dark:prose-strong:text-red-400 dark:prose-code:text-white    prose-table:font-sans dark:prose-table:text-gray-300 prose-table:border-white dark:prose-table:shadow-lg prose-table:overflow-hidden prose-tr:bg-gray-100 prose-table:shadow-lg prose-figure:rounded-lg dark:prose-table:border-gray-400 prose-table:border-2 dark:prose-figure:bg-inherit dark:prose-table:bg-inherit dark:prose-tr:bg-white dark:prose-tr:bg-opacity-10 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400 ">
                       {/* <Interweave
                   content={
                     html.replaceAll(
@@ -464,7 +457,7 @@ export default function PostPage(
           </div>
 
           <div>
-            <div className="my-6 flex items-center justify-start gap-4 rounded-lg bg-black p-4">
+            <div className="my-6 flex items-center justify-start gap-4 rounded-lg border bg-inherit p-4 dark:bg-white dark:bg-opacity-10">
               {getPost?.data?.tags.map((tag) => (
                 <div className="flex flex-col gap-2 py-2">
                   <Link href="">
@@ -478,80 +471,17 @@ export default function PostPage(
 
             <div className="mb-10 ">
               {getPost.isLoading && <LoadingSpinner />}
-              {getPost.data?.id && (
-                // <Transition.Root show={showCommentSidebar} as={Fragment}>
-                //   <Dialog
-                //     as="div"
-                //     onClose={() => setShowCommentSidebar(false)}
-                //     static
-                //   >
-                <CommentSidebar
-                  showCommentSidebar={showCommentSidebar}
-                  setShowCommentSidebar={setShowCommentSidebar}
-                  postId={getPost.data?.id}
-                />
-                //   </Dialog>
-                // </Transition.Root>
-              )}
+              {getPost.data?.id && <CommentSidebar postId={getPost.data?.id} />}
             </div>
           </div>
         </section>
 
         {/* SideSection */}
-        <div className="sticky top-0 my-10  w-96 ">
-          {/* Author Box */}
-          <div className="flex  h-max max-w-[300px] items-center justify-start gap-4 rounded-lg border-2 bg-gray-100 p-6   py-3  dark:bg-white dark:bg-opacity-10  ">
-            <div className="flex aspect-square h-16 w-16  ">
-              <Image
-                src={getPost?.data?.author?.image}
-                width={400}
-                height={400}
-                alt="test"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold">An Article By: </span>
-              <Link href={'test'} className="underline">
-                {getPost?.data?.author?.name}
-              </Link>
-              <span className="text-sm">
-                {dayjs(getPost?.data?.createdAt).format('DD/MM/YY')}
-              </span>
-            </div>
-          </div>
-
-          {/* TOC */}
-          <div className="sticky top-6 ">
-            <div className="mt-6 h-min  max-w-[300px]  rounded-lg  border-2 bg-gray-100 p-6 dark:bg-white dark:bg-opacity-10">
-              <DashboardTableOfContents toc={tableOfContentsResult.toc} />
-            </div>
-
-            {/* Newsletter Subscribe */}
-            <div className=" mt-6 h-min max-w-[300px] rounded-lg   border-2 bg-gray-100 p-6 py-4 dark:bg-white dark:bg-opacity-10   ">
-              <NewsletterSubscribe />
-            </div>
-
-            {/* Related Posts */}
-            <div className="sticky top-0 mt-6 flex  h-min max-w-[300px] flex-col gap-4 rounded-lg border-2 bg-gray-100 p-6 dark:bg-white dark:bg-opacity-10    ">
-              <span className="text-lg font-medium">Related Posts</span>
-              <div className="flex flex-col gap-4">
-                {postsByTag.map((post) => (
-                  <div className="flex flex-col gap-2 border-b py-2">
-                    <Link href="test flex flex-col">
-                      <span className="font-medium">{post?.title}</span>
-                    </Link>
-                    {/* <span className="text-sm">{post?.description}</span> */}
-                    <Link href={`/post/${post?.slug}`}>
-                      <button className="border-l-4  border-red-500 px-2 ">
-                        Read More
-                      </button>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <BlogPostSideBar
+          getPost={getPost}
+          tableOfContentsResult={tableOfContentsResult}
+          postsByTag={postsByTag}
+        />
       </section>
     </MainLayout>
   );
@@ -575,10 +505,18 @@ export async function getStaticProps(
   });
 
   // Check if the post has HTML content, if so generate the table of contents
-  let tableOfContentsResult: TableOfContentsHTML | null = null;
+  let tableOfContentsResult: TableOfContentsResult | null = null;
+
   if (postData.html) {
-    tableOfContentsResult = await getTableOfContentsHTML(postData.html);
+    const tocData = await getTableOfContentsHTML(postData.html);
+    const items: TableOfContentsItem[] = tocData.toc.items.map((item: any) => ({
+      title: item.title,
+      url: item.url,
+    }));
+    tableOfContentsResult = { toc: { items }, html: tocData.html };
   }
+
+  console.warn(tableOfContentsResult.toc);
 
   const postsByTag = tagData.map((post) => ({
     ...post,

@@ -145,7 +145,7 @@ model Link {
   description   String
   slug          String    @unique
   featuredImage String?
-  link        String?   @db.Text
+  link          String?   @db.Text
   authorId      String?
   author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   createdAt     DateTime  @default(now())

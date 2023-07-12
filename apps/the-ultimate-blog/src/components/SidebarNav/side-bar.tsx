@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
-// import { useLocation } from 'next-router';
 import Link from 'next/link';
-
+// import Logo from '../assets/images/logo.svg';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { AiFillPieChart } from 'react-icons/ai';
 import { SiFuturelearn } from 'react-icons/si';
 import { SiOpenaccess } from 'react-icons/si';
 import { CgProfile } from 'react-icons/cg';
-// import Logo from '../assets/images/logo.svg';
 import { useRouter } from 'next/router';
 import { useNavStore } from '@front-end-nx/shared/ui';
-import { useEffect } from 'react';
-import { Label } from '@radix-ui/react-label';
-// import HamburgerButton from './HamburgerMenuButton/HamburgerButton';
 
-const Sidebar = () => {
+interface SidebarMenu {
+  title: string;
+  path: string;
+  src: JSX.Element;
+  gap?: boolean;
+}
+
+interface SidebarProps {
+  // Define your props here
+}
+
+export default function Sidebar() {
   const { showNavSidebar, setShowNavSidebar } = useNavStore();
-  const [mobileMenu, setMobileMenu] = useState(false);
   const router = useRouter();
-  const location = router.pathname;
 
   const Menus = [
     { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
@@ -28,7 +32,6 @@ const Sidebar = () => {
     { title: 'Course', path: '/course', src: <SiFuturelearn /> },
     { title: 'Profile', path: '/profile', src: <CgProfile /> },
     { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
-    { title: 'Course', path: '/course', src: <SiFuturelearn /> },
     { title: 'Profile', path: '/profile', src: <CgProfile /> },
     { title: 'Dashboard', path: '/dashboard', src: <AiFillPieChart /> },
     { title: 'Course', path: '/course', src: <SiFuturelearn /> },
@@ -36,16 +39,12 @@ const Sidebar = () => {
     { title: 'Signin', path: '/login', src: <SiOpenaccess />, gap: 'true' },
   ];
 
-  useEffect(() => {
-    // do something when showNavSidebar changes
-  }, [showNavSidebar]);
-
   return (
-    <>
+    <aside className=" border-r border-gray-300 bg-gray-100 dark:bg-inherit">
       <div
         className={`${
           showNavSidebar ? 'w-60' : 'w-[75px]'
-        } transition-width sticky top-0 h-screen  flex-shrink-0 border-r border-gray-300 bg-gray-100 p-5 duration-300   dark:bg-inherit sm:block`}
+        } transition-width sticky top-0 h-[93.4vh] flex-shrink-0  p-5 duration-1000   dark:bg-inherit sm:block`}
       >
         <BsArrowLeftCircle
           className={`${
@@ -56,22 +55,15 @@ const Sidebar = () => {
         <Link href="/">
           <div
             className={`flex ${showNavSidebar ? 'gap-x-4' : ''} items-center`}
-          >
-            {/* <img src={Logo} alt="" className="pl-2" /> */}
-          </div>
+          ></div>
         </Link>
-        {/* <Label
-          className={`${showNavSidebar ? '' : 'opacity-0'} border-b text-xl`}
-        >
-          Menu
-        </Label> */}
         <ul className="">
           {Menus.map((menu, index) => (
             <Link href={menu.path} key={index}>
               <li
                 className={`dark:bg-gray-899 flex w-full  cursor-pointer items-center  gap-x-6 rounded-lg border bg-gray-500  p-1 text-base font-normal text-white hover:bg-gray-800  dark:bg-white dark:bg-opacity-10 dark:text-white dark:hover:bg-gray-800
                         ${menu.gap ? 'mt-9' : 'mt-2'} ${
-                  location.pathname === menu.path &&
+                  router.pathname === menu.path &&
                   'bg-gray-300 dark:bg-gray-700'
                 }`}
               >
@@ -118,9 +110,7 @@ const Sidebar = () => {
             </Link>
           ))}
         </div>
-      </div> */}
-    </>
+      </div>  */}
+    </aside>
   );
-};
-
-export default Sidebar;
+}

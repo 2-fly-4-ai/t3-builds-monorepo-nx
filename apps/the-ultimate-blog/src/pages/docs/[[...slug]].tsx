@@ -1,4 +1,4 @@
-import { allDocs, Doc } from '../../../../../.contentlayer/generated';
+import { allDocs, Doc } from '../../../.contentlayer/generated';
 import { useLiveReload } from 'next-contentlayer/hooks';
 import { getTableOfContents } from '@front-end-nx/shared/ui';
 import { Mdx } from '@front-end-nx/shared/ui';

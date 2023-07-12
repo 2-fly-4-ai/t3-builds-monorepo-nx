@@ -14,6 +14,9 @@ module.exports = {
     ...rootMain.addons,
     '@nrwl/react/plugins/storybook',
     'storybook-addon-theme-changer',
+    'storybook-addon-module-mock',
+    // '@storybook/addon-essentials',
+    // '@storybook/addon-interactions',
   ],
   webpackFinal: async (config, { configType }) => {
     // apply any global webpack configs that might have been specified in .storybook/main.js

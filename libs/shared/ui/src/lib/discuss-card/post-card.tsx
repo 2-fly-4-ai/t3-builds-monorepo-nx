@@ -32,14 +32,8 @@ export interface DiscussCardProps {
     likes: string;
     githubUrl: string;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 
 export default function PostCard({
@@ -77,7 +71,7 @@ export default function PostCard({
   };
 
   return (
-    <div className="group grid max-w-[330px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10   ">
+    <div className="group grid w-[340px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10   ">
       <div className="relative col-span-full  rounded-none">
         <Link
           href={`/discussions`}

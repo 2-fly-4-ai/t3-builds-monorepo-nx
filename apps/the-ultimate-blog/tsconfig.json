@@ -11,6 +11,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
+    "target": "es2021",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["jest", "node"]
   },
   "include": [

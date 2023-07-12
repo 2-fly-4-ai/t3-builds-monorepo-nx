@@ -6,8 +6,6 @@ import { trpc } from '../../utils/trpc';
 import { BiEdit } from 'react-icons/bi';
 import { SlShareAlt } from 'react-icons/sl';
 import { toast } from 'react-hot-toast';
-import PostCard from 'libs/shared/ui/src/lib/post-card/post-card';
-import PostCardList from 'libs/shared/ui/src/lib/post-card/post-card-list';
 import PostCardListUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-userprofile-list';
 import PostCardUserProfile from 'libs/shared/ui/src/lib/post-card/post-card-userprofile';
 import { useSession } from 'next-auth/react';
@@ -17,6 +15,7 @@ import Link from 'next/link';
 import dayjs from 'dayjs';
 import { useCallback } from 'react';
 import { useBookmarkStore } from 'libs/shared/ui/src/zustand/store';
+
 import {
   Tabs,
   TabsContent,
@@ -39,8 +38,13 @@ const UserProfilePage = () => {
   const [isToggledPost, setIsToggledPost] = useState('');
   const { togglePosts } = useGlobalContextTechModalStore();
 
-  const readingList = trpc.post.getReadingList.useQuery();
-  const techReadingList = trpc.post.getTechReadingList.useQuery();
+  const readingList = trpc.post.getReadingList.useQuery({
+    itemType: 'post',
+  });
+  const techReadingList = trpc.post.getReadingList.useQuery({
+    itemType: 'tech',
+  });
+
   const userProfile = trpc.user.getUserProfile.useQuery(
     {
       username: router.query.username as string,
@@ -70,6 +74,7 @@ const UserProfilePage = () => {
       }
     },
   });
+
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && userProfile.data?.username) {
       const file = e.target.files[0]; //select only one image
@@ -140,6 +145,7 @@ const UserProfilePage = () => {
     },
   });
   const { bookmarks, toggleBookmark } = useBookmarkStore();
+
   const handleBookmarkToggle = useCallback(
     (postId: string) => {
       toggleBookmark(postId);
@@ -217,7 +223,7 @@ const UserProfilePage = () => {
         <div className="my-10 flex h-full w-full flex-col items-center justify-center lg:max-w-screen-md xl:max-w-screen-lg">
           {/* Top section hero */}
           <div className="flex w-full flex-col rounded-md shadow-md dark:bg-black dark:bg-opacity-60">
-            <div className="relative h-44 w-full rounded-md bg-gradient-to-r from-rose-100 to-teal-100 dark:bg-gradient-to-b dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-600">
+            <div className="relative h-44 w-full rounded-md bg-gradient-to-r from-rose-100 to-teal-100  dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-600">
               <div className="absolute -bottom-10 left-12">
                 <div className="group relative h-28 w-28 rounded-full border-2 border-white bg-gray-100">
                   {currentUser.data?.user?.id === userProfile.data?.id && (
@@ -298,7 +304,7 @@ const UserProfilePage = () => {
                       navigator.clipboard.writeText(window.location.href);
                       toast.success('URL copied to clipboard 🥳');
                     }}
-                    className=" flex transform items-center space-x-3 rounded rounded-lg border border-2 border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
+                    className=" flex transform items-center space-x-3  rounded-lg  border-2 border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 active:scale-95 "
                   >
                     <div>Share</div>
                     <div>
@@ -410,12 +416,14 @@ const UserProfilePage = () => {
                                       }
                                       width={350}
                                       height={350}
+                                      alt={bookmark?.post?.title}
                                     />
                                   ) : (
                                     <Image
                                       src={`https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg`}
                                       width={350}
                                       height={350}
+                                      alt={bookmark?.post?.title}
                                     />
                                   )}
                                 </Link>
@@ -459,7 +467,8 @@ const UserProfilePage = () => {
                                   <button
                                     onClick={() => {
                                       removeBookmark.mutate({
-                                        postId: bookmark.post.id,
+                                        itemId: bookmark.post.id,
+                                        itemType: 'post',
                                       });
                                       // use the toggleBookmark function from the store and pass the post id
                                       handleBookmarkToggle(bookmark.post.id);
@@ -493,12 +502,14 @@ const UserProfilePage = () => {
                                       width={350}
                                       height={350}
                                       className="h-full w-auto"
+                                      alt={bookmark?.tech?.title}
                                     />
                                   ) : (
                                     <Image
                                       src={`https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg`}
                                       width={350}
                                       height={350}
+                                      alt={bookmark?.tech?.title}
                                       className="w-auto"
                                     />
                                   )}
@@ -657,7 +668,8 @@ const UserProfilePage = () => {
                                   <button
                                     onClick={() => {
                                       removeBookmark.mutate({
-                                        postId: bookmark.tech.id,
+                                        itemId: bookmark.tech.id,
+                                        itemId: 'tech',
                                       });
                                       // use the toggleBookmark function from the store and pass the post id
                                       handleBookmarkToggle(bookmark.tech.id);
@@ -682,7 +694,7 @@ const UserProfilePage = () => {
                                 ) : (
                                   <button
                                     onClick={() => setIsToggledPost('')}
-                                    className=" items-center justify-center rounded-lg  bg-gray-200 px-2 py-2 font-bold transition duration-200 hover:text-white dark:bg-gray-400 dark:bg-orange-400 dark:hover:bg-red-400"
+                                    className=" items-center justify-center rounded-lg  bg-gray-200 px-2 py-2 font-bold transition duration-200 hover:text-white dark:bg-gray-400  dark:hover:bg-red-400"
                                   >
                                     {' '}
                                     Resources

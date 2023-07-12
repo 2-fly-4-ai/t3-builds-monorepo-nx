@@ -1017,19 +1017,21 @@ export const postRouter = router({
 
   editLinkPost: protectedProcedure
     .input(
-      z.object({
-        id: z.string(),
-        title: z.string().optional(),
-        description: z.string().optional(),
-        link: z.string().optional(),
-        tagsIds: z
-          .array(
-            z.object({
-              id: z.string(),
-            })
-          )
-          .optional(),
-      })
+      WriteFormSchemaLink.and(
+        z.object({
+          id: z.string(),
+          title: z.string().optional(),
+          description: z.string().optional(),
+          link: z.string().optional(),
+          tagsIds: z
+            .array(
+              z.object({
+                id: z.string(),
+              })
+            )
+            .optional(),
+        })
+      )
     )
     .mutation(
       async ({
@@ -1045,7 +1047,7 @@ export const postRouter = router({
         // check if slug is already set for the post
         const slug = post.slug || slugify(title);
 
-        const updatedPost = await prisma.post.update({
+        const updatedPost = await prisma.link.update({
           where: {
             id,
           },

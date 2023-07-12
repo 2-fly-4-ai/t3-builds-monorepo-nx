@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import InlineEditor from 'ckeditor5-custom-build/build/ckeditor.js';
 import { useEffect, useState } from 'react';
@@ -13,19 +12,19 @@ interface CKeditorProps {
   value: string;
 }
 
-const Editor = ({ onChange, value }: CKeditorProps) => {
+export default function Editor({ onChange, value }: CKeditorProps) {
   const { supabase, error } = useSupabase();
   const debouncedValue = useDebounce(value, 500);
   const [uploadImage, setUploadImage] = useState(false);
 
-  if (typeof window !== 'undefined') {
-    const balloonPanel = document.querySelector('.ck-balloon-panel');
-    if (balloonPanel) {
-      setTimeout(() => {
-        balloonPanel.style.visibility = 'visible';
-      }, 1000);
-    }
-  }
+  // if (typeof window !== 'undefined') {
+  //   const balloonPanel = document.querySelector('.ck-balloon-panel');
+  //   if (balloonPanel) {
+  //     setTimeout(() => {
+  //       balloonPanel.style.visibility = 'visible';
+  //     }, 1000);
+  //   }
+  // }
 
   const mutation = trpc.post.uploadImage.useMutation({
     onSuccess: () => {
@@ -103,7 +102,7 @@ const Editor = ({ onChange, value }: CKeditorProps) => {
       // ...
     />
   );
-};
+}
 
 // Custom image upload adapter
 function createMyCustomUploadAdapterPlugin(
@@ -167,5 +166,3 @@ class MyUploadAdapter {
     });
   }
 }
-
-export default Editor;

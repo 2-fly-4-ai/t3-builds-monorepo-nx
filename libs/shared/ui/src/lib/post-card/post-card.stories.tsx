@@ -1,29 +1,58 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-
-import PostCard from './post-card';
+import React from 'react';
+import { Story, Meta } from '@storybook/react';
+import { PostCard, PostCardProps } from './post-card';
+import { useSession } from 'next-auth/react';
+import { createMock, getMock } from 'storybook-addon-module-mock';
 
 export default {
   title: 'PostCard',
   component: PostCard,
-  argTypes: {},
-} as ComponentMeta<typeof PostCard>;
+  parameters: {
+    moduleMock: {
+      mock: () => {
+        const mock = createMock(useSession, 'useSession');
+        mock.mockReturnValue([
+          {
+            user: { name: 'John Doe', email: 'johndoe@example.com' },
+            expires: '1',
+          },
+          false,
+        ]);
+        return [mock];
+      },
+    },
+  },
+} as Meta;
 
-const Template: ComponentStory<typeof PostCard> = (args) => (
-  <PostCard {...args} />
-);
+// Create a Template function that renders the PostCard component
+const Template: Story<PostCardProps> = (args) => <PostCard {...args} />;
 
+// Export a Default story that uses the Template function with some default props
 export const Default = Template.bind({});
 Default.args = {
+  countlikes: 10,
   post: {
     author: {
-      image:
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+      image: 'https://example.com/user-image.jpg',
       name: 'John Doe',
+      username: 'john',
     },
-    createdAt: '2021-12-15T12:34:56Z',
-    slug: 'how-to-code-a-react-app',
-    title: 'How to code a React app',
-    description:
-      'In this tutorial, I will show you how to create a simple React app using TypeScript and Next.js.',
+    createdAt: new Date(),
+    bookmarks: 'example-bookmark',
+    slug: 'example-slug',
+    title: 'Example title',
+    description: 'Example description',
+    id: 'example-id',
+    likes: 20,
+    featuredImage: 'https://example.com/featured-image.jpg',
+    tags: ['tag1', 'tag2', 'tag3'],
+  },
+  bookmarkPost: {
+    mutate: () => {},
+  },
+  removeBookmark: {
+    mutate: () => {},
   },
 };
+
+// You can export more stories here if you want to show different variations of your component

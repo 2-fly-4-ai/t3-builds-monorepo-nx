@@ -29,7 +29,7 @@ import LikePost from 'libs/shared/ui/src/lib/like-post/like-post-tech';
 import { useTabStore } from '@front-end-nx/shared/ui';
 import { Switch } from '@front-end-nx/shared/ui';
 import { Label } from '@radix-ui/react-label';
-import { BookmarkTech } from '@front-end-nx/shared/ui';
+import { Bookmarkpost } from '@front-end-nx/shared/ui';
 import { useSession } from 'next-auth/react';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -66,23 +66,22 @@ type ModalProps = {
 };
 
 type TechFormModalProps = {
-  post: {
-    id: string;
-    title: string;
-    shortDescription: string;
-    description: string;
-    text: string;
-    html: string;
-    slug: string;
-    featuredImage: any;
-    tags: any;
-    docsUrl: string;
-    githubUrl: string;
-    webUrl: string;
-    pricingUrl: string;
-    tagsIds?: { id?: string }[];
-    likes: string;
-  };
+  id: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  tile: string;
+  text: string;
+  html: string;
+  slug: string;
+  featuredImage: any;
+  tags: any;
+  docsUrl: string;
+  githubUrl: string;
+  webUrl: string;
+  pricingUrl: string;
+  tagsIds?: { id?: string }[];
+  likes: string;
 };
 
 export const WriteFormSchema = z.object({
@@ -165,7 +164,7 @@ export default function TechModal({ post }: TechFormModalProps) {
       postRoute.getTechPosts.invalidate();
     },
     onError: () => {
-      toast.error('You done fucked up');
+      toast.error('post creation failed');
     },
   });
 
@@ -191,7 +190,7 @@ export default function TechModal({ post }: TechFormModalProps) {
       router.push('/techstack', undefined, { shallow: true });
     }
     resetIsPostModalOpen();
-    setValue();
+    setValue;
   };
 
   useEffect(() => {
@@ -223,7 +222,7 @@ export default function TechModal({ post }: TechFormModalProps) {
   }, []);
 
   return (
-    <Modal id={id} isOpen={isPostModalOpen} onClose={handleClose}>
+    <Modal isOpen={isPostModalOpen} onClose={handleClose}>
       {isTitleEditorOpen || isDescriptionEditorOpen || isHTMLEditorOpen ? (
         <div className="z-10 mx-auto my-2 flex max-w-5xl items-center justify-center rounded-lg    text-2xl">
           <p className=" rounded-l-lg bg-gray-400 px-4">MASTER EDITOR</p>
@@ -495,19 +494,6 @@ export default function TechModal({ post }: TechFormModalProps) {
                         </button>
                       </div>
                     </div>
-                    {/* <div>
-                      <LikePost
-                        post={post}
-
-                        // setShowSidebar={() => setShowCommentSidebar(true)}
-                        // showSidebar={showCommentSidebar}
-
-                        // you can replace this with your own logic for commenting
-                      />
-                    </div> */}
-                    {/* <div className="border bg-red-500">
-                    {post?.tags[0]?.name ?? 'NOT SHOWING'}
-                  </div> */}
                   </div>
                   <div className={`${isOpenComments ? '' : 'hidden'} relative`}>
                     <button
@@ -607,22 +593,10 @@ export default function TechModal({ post }: TechFormModalProps) {
                       ) : null}
                     </div>
                   )}
-
-                  {/* <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose prose-lg  prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 prose-img:px-52 prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                    <Interweave
-                      content={
-                        html?.replaceAll(
-                          'href=',
-                          'target="_blank" rel="nofollow noreferrer" href='
-                        ) ?? ''
-                      }
-                    />
-                  </div> */}
                 </div>
               </TabsContent>
               <TabsContent value="Comments"></TabsContent>
             </Tabs>{' '}
-            {/* <Image src={featuredImage} fill /> */}
           </div>
           <div className="col-span-4 border-l p-6">
             <div className="flex flex-col gap-6 p-2">
@@ -641,7 +615,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                   </svg>
                   Read Post
                 </button>
-                <BookmarkTech post={post} />
+                <Bookmarkpost post={post} />
                 {/* <<div className="flex items-center gap-2 space-x-2 font-mono text-xl">
                   <Switch id="airplane-mode" />
                   <Label htmlFor="airplane-mode">Add to Stack</Label>
@@ -860,7 +834,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                   Related Tech
                 </h3>
                 <ul>
-                  {postsByTag?.data?.slice(0, 7).map((post) => {
+                  {postsByTag?.data?.slice(0, 6).map((post) => {
                     if (slug === post.slug) {
                       return null; // Exclude the post from mapping
                     }

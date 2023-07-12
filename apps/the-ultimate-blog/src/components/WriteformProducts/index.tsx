@@ -68,7 +68,7 @@ export default function WriteFormModal() {
       reset();
       setIsWriteModalOpen(false);
       postRoute.getProductPosts.invalidate();
-      //Beautiful implementation of Toast
+
     },
     onError: () => {
       toast.error('You done fucked up');

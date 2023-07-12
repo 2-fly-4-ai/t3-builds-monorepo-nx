@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Footer() {
+export default function Footer() {
   return (
     <footer className=" border-t-2 border-t-gray-600 bg-black text-gray-400">
       <div
@@ -189,7 +189,7 @@ function Footer() {
                     Legal
                   </h4>
                   <ul>
-                    <li className="py-1 hover:text-white hover:text-white">
+                    <li className="py-1 hover:text-white">
                       <a href="#">Privacy Policy</a>
                     </li>
                     <li className="py-1 hover:text-white">
@@ -224,4 +224,3 @@ function Footer() {
   );
 }
 
-export default Footer;

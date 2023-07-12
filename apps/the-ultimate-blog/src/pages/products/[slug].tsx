@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { trpc } from '../../utils/trpc';
-import { serialize } from 'next-mdx-remote/serialize';
-
 import LikePost from 'libs/shared/ui/src/lib/like-post/like-post';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
 import CommentSidebar from '../../components/CommentSidebar';

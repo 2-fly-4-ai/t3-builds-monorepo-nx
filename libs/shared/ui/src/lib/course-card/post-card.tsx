@@ -32,8 +32,8 @@ export interface PostCardProps {
     likes: string;
     featuredImage: string;
   };
-  bookmarkPost: UseMutationResult<{ itemId: string; itemType: string }>;
-  removeBookmark: UseMutationResult<{ itemId: string; itemType: string }>;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 export function PostCard(props: PostCardProps) {
   const { bookmarkPost, removeBookmark, post } = props;
@@ -64,8 +64,8 @@ export function PostCard(props: PostCardProps) {
   };
 
   return (
-    <div className="group grid h-full max-w-[390px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white  transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10   ">
-      <button
+    <div className="group grid h-full w-[340px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white  transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10   ">
+      <div
         className="col-span-full mx-auto w-full "
         onClick={handlePostsModalToggle}
       >
@@ -114,7 +114,7 @@ export function PostCard(props: PostCardProps) {
             />
           </div>
         </div>
-      </button>
+      </div>
 
       {/* Title/Description Component */}
       <div className="col-span-full grid  h-60  p-4 pt-0">

@@ -1,16 +1,11 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { allGuides, Guide } from '../../../../../.contentlayer/generated';
-
+import { allGuides, Guide } from '../../../.contentlayer/generated';
 import { getTableOfContents } from '@front-end-nx/shared/ui';
 import { Icons } from '@front-end-nx/shared/ui';
 import { Mdx } from '@front-end-nx/shared/ui';
 import { DocsPageHeader } from '@front-end-nx/shared/ui';
 import { DashboardTableOfContents } from '@front-end-nx/shared/ui';
-import DocsLayout from '../../utils/layout/layout';
 import MainLayout from '../../layouts/MainLayout';
-// import "@/styles/mdx.css"
-// import { Metadata } from "next"
 
 import {
   GetStaticPaths,

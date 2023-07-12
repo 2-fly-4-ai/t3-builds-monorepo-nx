@@ -5,20 +5,17 @@ import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 
-//TagSchema
-export const tagCreateSchema = z.object({
-  name: z.string().min(3),
-  description: z.string().min(10),
-});
-
-//Props
 type TagFormProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+export const tagCreateSchema = z.object({
+  name: z.string().min(3),
+  description: z.string().min(10),
+});
+
 export default function TagForm({ isOpen, onClose }: TagFormProps) {
-  //formLogic
   const {
     register,
     handleSubmit,
@@ -31,7 +28,6 @@ export default function TagForm({ isOpen, onClose }: TagFormProps) {
     resolver: zodResolver(tagCreateSchema),
   });
 
-  //Trpc Routes
   const tagRouter = trpc.useContext().tag;
 
   const createTag = trpc.tag.createTag.useMutation({

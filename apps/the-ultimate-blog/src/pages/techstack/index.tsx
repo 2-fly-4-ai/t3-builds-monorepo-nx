@@ -3,22 +3,16 @@ import MainLayout from '../../layouts/MainLayout';
 import WriteFormModalTech from '../../components/WriteformTech';
 import MainSection from '../../components/MainSectionTech';
 import SideSection from '../../components/SideSection';
-import { Metadata } from 'next';
 import Sidebar from '../../components/SidebarNav/side-bar';
 import { useNavStore } from '@front-end-nx/shared/ui';
 import { trpc } from '../../utils/trpc';
 
-export default function techStackPage() {
-  const [showSidebar, setShowSidebar] = useState(false);
-  const { showNavSidebar, setShowNavSidebar } = useNavStore();
+export default function TechStackPage() {
+  const { showNavSidebar } = useNavStore();
   const getPosts = trpc.post.getTechPosts.useQuery();
   const readingList = trpc.post.getReadingList.useQuery({
     itemType: 'tech',
   });
-
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
-  };
 
   return (
     <MainLayout>
@@ -27,24 +21,10 @@ export default function techStackPage() {
       >
         <Sidebar />
         <section className="grid h-full w-full grid-cols-12  ">
-          {/* This is the main section */}
-          <MainSection
-            showSidebar={showSidebar}
-            toggleSidebar={toggleSidebar}
-            showNavSidebar={showNavSidebar}
-            getPosts={getPosts}
-          />
-          {/* This is the sidebar */}
-
-          {/* This is the button to toggle the sidebar */}
+          <MainSection getPosts={getPosts} />
         </section>
-        <SideSection
-          readingList={readingList}
-          showSidebar={showSidebar}
-          toggleSidebar={toggleSidebar}
-        />
+        <SideSection readingList={readingList} />
       </section>
-
       <WriteFormModalTech />
     </MainLayout>
   );

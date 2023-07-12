@@ -2,3 +2,6 @@
 
 /dist
 /coverage
+/tools
+/node_modules
+/libs/shared/ui/src/tools

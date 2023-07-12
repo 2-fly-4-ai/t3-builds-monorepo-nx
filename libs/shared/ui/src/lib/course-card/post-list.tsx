@@ -30,14 +30,8 @@ export interface PostCardProps {
     tags: any;
     featuredImage: string;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 
 export function PostCardList(props: PostCardProps) {

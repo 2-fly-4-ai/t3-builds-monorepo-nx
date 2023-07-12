@@ -15,7 +15,6 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 
 /* eslint-disable-next-line */
 export interface PostCardProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -31,18 +30,12 @@ export interface PostCardProps {
     likes: string;
     featuredImage: string;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 export function PostCard(props: PostCardProps) {
   const { data: sessionData, status } = useSession();
-  const { bookmarkPost, removeBookMark } = props;
+  const { bookmarkPost, removeBookmark } = props;
 
   const { togglePosts } = useGlobalContextTechModalStore();
   //use the zustand store and get the bookmark status for the current post
@@ -61,9 +54,9 @@ export function PostCard(props: PostCardProps) {
   const dayjs = require('dayjs');
 
   return (
-    <div className="group grid max-w-[330px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10 ">
+    <div className="group grid w-[340px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10 ">
       <div className="relative col-span-full  rounded-none">
-        <button onClick={handlePostsModalToggle}>
+        <div onClick={handlePostsModalToggle}>
           <div className="group absolute flex h-60 w-full transition duration-200 group-hover:bg-black  group-hover:bg-opacity-20">
             <Link
               href={`/posts/${props.post?.slug}`}
@@ -79,7 +72,7 @@ export function PostCard(props: PostCardProps) {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 512 512"
                   height="1em"
                   width="1em"
@@ -106,7 +99,7 @@ export function PostCard(props: PostCardProps) {
               alt={'' ?? ''}
             />
           </div>
-        </button>
+        </div>
       </div>
 
       <div className="col-span-full grid p-4 pt-0">
@@ -128,7 +121,7 @@ export function PostCard(props: PostCardProps) {
               {isBookmarked ? (
                 <BiBookmarkMinus
                   onClick={() => {
-                    removeBookMark.mutate({
+                    removeBookmark.mutate({
                       itemId: props.post.id,
                       itemType: 'course',
                     });

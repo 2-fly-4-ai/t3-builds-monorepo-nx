@@ -1,16 +1,10 @@
 import Link from 'next/link';
-import { allGuides, Guide } from '../../../../../.contentlayer/generated';
+import { allGuides, Guide } from '../../../.contentlayer/generated';
 import { compareDesc } from 'date-fns';
-import { formatDate } from '../../../../../libs/shared/next13-ui/src/utils/utils';
+import { formatDate } from 'libs/shared/ui/src/utils/utils';
 import { DocsPageHeader } from '../../../../../libs/shared/ui/src';
-
 import MainLayout from '../../layouts/MainLayout';
 
-// export const metadata = {
-//   title: 'Guides',
-//   description:
-//     'This section includes end-to-end guides for developing Next.js 13 apps.',
-// };
 
 export default function GuidesPage() {
   const guides = allGuides

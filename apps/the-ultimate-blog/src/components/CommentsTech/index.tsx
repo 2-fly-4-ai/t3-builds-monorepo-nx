@@ -23,7 +23,7 @@ export const commentFormSchema = z.object({
 });
 
 //Functional Component
-const CommentSidebar = ({ techId }: CommentSidebarProps) => {
+export default function CommentSidebar({ techId }: CommentSidebarProps) {
   //Form
   const {
     register,
@@ -227,4 +227,4 @@ const CommentSidebar = ({ techId }: CommentSidebarProps) => {
   );
 };
 
-export default CommentSidebar;
+

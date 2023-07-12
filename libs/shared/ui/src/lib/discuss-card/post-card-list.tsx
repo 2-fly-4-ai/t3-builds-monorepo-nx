@@ -15,7 +15,6 @@ import { UseMutationResult } from 'react-query';
 
 /* eslint-disable-next-line */
 export interface DiscussCardListProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -36,14 +35,8 @@ export interface DiscussCardListProps {
     id: string;
     tags: any;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 
 export default function PostCardList(props: DiscussCardListProps) {

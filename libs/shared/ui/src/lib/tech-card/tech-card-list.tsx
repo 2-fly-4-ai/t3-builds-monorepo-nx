@@ -18,7 +18,6 @@ const dayjs = require('dayjs');
 
 /* eslint-disable-next-line */
 export interface TechCardListProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -39,14 +38,8 @@ export interface TechCardListProps {
     id: string;
     tags: any;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 
 export function TechCardList(props: TechCardListProps) {

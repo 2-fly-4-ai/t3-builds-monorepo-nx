@@ -1,6 +1,5 @@
 import Modal from '../../components/Modal';
-
-import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
+import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
@@ -52,8 +51,9 @@ export const WriteTechFormSchema = z.object({
 
 export default function WriteFormModalTech() {
   // State and context hooks
-  const { isWriteTechModalOpen, setIsWriteTechModalOpen } =
-    useGlobalContextTechStore();
+
+  const { isWriteModalOpen, setIsWriteModalOpen } = useGlobalContextStore();
+
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
@@ -78,7 +78,7 @@ export default function WriteFormModalTech() {
     onSuccess: () => {
       toast.success('Post created successfully');
       reset();
-      setIsWriteTechModalOpen(false);
+      setIsWriteModalOpen(false);
       postRoute.getTechPosts.invalidate();
       // Beautiful implementation of Toast
     },
@@ -102,9 +102,9 @@ export default function WriteFormModalTech() {
 
   return (
     <Modal
-      isOpen={isWriteTechModalOpen}
+      isOpen={isWriteModalOpen}
       onClose={() => {
-        setIsWriteTechModalOpen(false);
+        setIsWriteModalOpen(false);
         setIsTagCreateModalOpen(false);
       }}
     >

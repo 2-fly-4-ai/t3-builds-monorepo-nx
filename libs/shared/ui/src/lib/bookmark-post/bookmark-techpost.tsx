@@ -2,7 +2,7 @@ import { Switch } from '../../shadnui/ui/switch';
 import { Label } from '@radix-ui/react-label';
 import { trpc } from '../../utils/trpc';
 import { Toast, toast } from 'react-hot-toast';
-import { useBookmarkTechStore } from '../../zustand/store';
+import { useBookmarkStore } from '../../zustand/store';
 import { useCallback } from 'react';
 
 export interface BookMarkTechProps {
@@ -14,7 +14,7 @@ export interface BookMarkTechProps {
 export function BookmarkTech({ post }: BookMarkTechProps) {
   const { id } = post;
 
-  const { bookmarks, toggleBookmark } = useBookmarkTechStore();
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
 
   const isBookmarked = bookmarks?.includes(id);
 

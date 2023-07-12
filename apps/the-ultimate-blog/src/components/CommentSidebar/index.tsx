@@ -7,13 +7,12 @@ import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
 import { useCommentStore } from 'libs/shared/ui/src/zustand/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import Image from 'next/image';
-// import { useCounterStore } from 'libs/shared/ui/src/zustand/store';
+
 
 type CommentSidebarProps = {
   showCommentSidebar: boolean;
@@ -27,11 +26,11 @@ export const commentFormSchema = z.object({
   text: z.string().min(3),
 });
 
-const CommentSidebar = ({
+export default function CommentSidebar ({
   showCommentSidebar,
   setShowCommentSidebar,
   postId,
-}: CommentSidebarProps) => {
+}: CommentSidebarProps) {
   const {
     register,
     handleSubmit,
@@ -76,7 +75,7 @@ const CommentSidebar = ({
   const getComments = trpc.post.getComments.useQuery({
     postId,
   });
-  // /////////////////////////////////////////////
+
   const likeComment = trpc.post.likeComment.useMutation({
     onSuccess: () => {
       toast.success('post created successfully');
@@ -118,8 +117,6 @@ const CommentSidebar = ({
       console.error(error);
     }
   };
-
-  ///////////////////////////////////////////////
 
   return (
     <Transition.Root
@@ -171,7 +168,7 @@ const CommentSidebar = ({
                 {isValid && (
                   <button
                     type="submit"
-                    className="flex items-center space-x-3 rounded border border-2 border-gray-300 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+                    className="flex items-center space-x-3 rounded  border border-gray-300 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
                   >
                     Comment
                   </button>
@@ -266,4 +263,3 @@ const CommentSidebar = ({
   );
 };
 
-export default CommentSidebar;

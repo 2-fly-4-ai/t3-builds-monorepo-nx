@@ -2,14 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState, useEffect } from 'react';
 import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
 import { useGlobalContextStore } from '@front-end-nx/shared/ui';
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@front-end-nx/shared/ui';
+
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;

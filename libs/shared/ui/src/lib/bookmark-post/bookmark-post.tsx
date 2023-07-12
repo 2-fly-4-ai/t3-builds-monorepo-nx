@@ -2,8 +2,9 @@ import { Switch } from '../../shadnui/ui/switch';
 import { Label } from '@radix-ui/react-label';
 import { trpc } from '../../utils/trpc';
 import { Toast, toast } from 'react-hot-toast';
-import { useBookmarkTechStore } from '../../zustand/store';
+import { useBookmarkStore } from '../../zustand/store';
 import { useCallback } from 'react';
+import Router from 'next/router';
 
 export interface BookMarkTechProps {
   post: {
@@ -13,8 +14,10 @@ export interface BookMarkTechProps {
 
 export function Bookmarkpost({ post }: BookMarkTechProps) {
   const { id } = post;
+  const pathName = Router.pathname.slice(1, -1);
+  console.warn(pathName);
 
-  const { bookmarks, toggleBookmark } = useBookmarkTechStore();
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
 
   const isBookmarked = bookmarks?.includes(id);
 
@@ -41,12 +44,12 @@ export function Bookmarkpost({ post }: BookMarkTechProps) {
     if (isBookmarked) {
       removeBookmark.mutate({
         itemId: id,
-        itemType: 'post',
+        itemType: pathName,
       });
     } else {
       bookmarkPost.mutate({
         itemId: id,
-        itemType: 'post',
+        itemType: pathName,
       });
     }
     handleBookmarkToggle();
@@ -60,7 +63,7 @@ export function Bookmarkpost({ post }: BookMarkTechProps) {
           checked={isBookmarked}
           onCheckedChange={handleSwitchChange}
         />
-        <Label htmlFor="airplane-mode">Add to Stack</Label>
+        <Label htmlFor="airplane-mode">BookMark Post</Label>
       </div>
     </div>
   );

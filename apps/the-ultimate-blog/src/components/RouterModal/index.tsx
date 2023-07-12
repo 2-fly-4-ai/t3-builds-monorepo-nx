@@ -33,30 +33,13 @@ export default function Modal({
           onClose={onClose}
           initialFocus={modalRef}
         >
-          <Transition.Child
-            as={Fragment}
-            ref={modalRef}
-            // enter="ease-out duration-0"
-            // enterFrom="opacity-0"
-            // enterTo="opacity-100"
-            // leave="ease-in duration-200"
-            // leaveFrom="opacity-100"
-            // leaveTo="opacity-0"
-          >
+          <Transition.Child as={Fragment}>
             <div className=" fixed inset-0  bg-[#363636] bg-opacity-70" />
           </Transition.Child>
 
           <div className=" fixed inset-0 overflow-y-auto">
             <div className="my-5 flex  items-center justify-center p-1 text-center">
-              <Transition.Child
-                as={Fragment}
-                // enter="ease-out duration-300"
-                // enterFrom="opacity-0"
-                // enterTo="opacity-100"
-                // leave="ease-in duration-200"
-                // // leaveFrom="opacity-100 "
-                // leaveTo="opacity-0 "
-              >
+              <Transition.Child as={Fragment}>
                 <Dialog.Panel className="h-full w-full max-w-5xl transform  overflow-hidden rounded-2xl bg-white  text-left align-middle shadow-xl backdrop-blur transition-all dark:border-2 dark:border-white dark:bg-black dark:bg-opacity-80 2xl:max-w-6xl ">
                   <Dialog.Title
                     as="h3"

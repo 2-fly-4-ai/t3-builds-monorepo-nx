@@ -10,8 +10,7 @@ import { useSession } from 'next-auth/react';
 import { useGlobalContextStore } from '@front-end-nx/shared/ui';
 import { useGlobalContextCourseStore } from '@front-end-nx/shared/ui';
 import { useGlobalContextTechStore } from '@front-end-nx/shared/ui';
-import { ThemeToggle } from 'libs/shared/next13-ui/src/shadnui/components/theme-toggle/theme-toggle';
-
+import { ThemeToggle } from '@front-end-nx/shared/ui';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -22,16 +21,9 @@ import Link from 'next/link';
 import { trpc } from '../../utils/trpc';
 import Ink from 'react-ink';
 
-// const NavigationMenuDemo = dynamic(
-//   () => import('libs/shared/ui/src/layouts/nav-menu/nav-menu'),
-//   { ssr: false }
-// );
-
 export default function Header() {
   const router = useRouter();
   const path = usePathname();
-
-  //why is this undefined
 
   const { data: sessionData, status } = useSession();
 
@@ -57,17 +49,6 @@ export default function Header() {
   let items;
   if (path === '/docs') {
     items = [
-      // {
-      //   title: 'Home',
-      //   href: '/',
-      //   segment: 'home',
-      // },
-      // {
-      //   title: 'Discussion',
-      //   href: '/contact',
-      //   disabled: true,
-      //   segment: 'contact',
-      // },
       {
         title: 'Docs',
         href: '/docs',
@@ -94,12 +75,12 @@ export default function Header() {
         href: '/techstack',
         segment: 'blog',
       },
-      {
-        title: 'News',
-        href: '/news',
-        disabled: false,
-        segment: 'news',
-      },
+      // {
+      //   title: 'News',
+      //   href: '/news',
+      //   disabled: false,
+      //   segment: 'news',
+      // },
       {
         title: 'Posts',
         href: '/posts',
@@ -177,7 +158,7 @@ export default function Header() {
             <div>
               <button
                 onClick={() => setIsWriteModalOpen(true)}
-                className="dark flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+                className="dark flex items-center justify-center gap-1 whitespace-nowrap rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
               >
                 <AiOutlineEdit />
                 Write
@@ -187,7 +168,7 @@ export default function Header() {
             <div>
               <button
                 onClick={() => setIsWriteModalOpen(true)}
-                className="dark flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+                className="dark flex items-center justify-center gap-1 whitespace-nowrap rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
               >
                 <AiOutlineEdit />
                 Add Tech
@@ -197,7 +178,7 @@ export default function Header() {
             <div>
               <button
                 onClick={() => setIsWriteModalOpen(true)}
-                className="dark flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+                className="dark flex items-center justify-center gap-1 whitespace-nowrap rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
               >
                 <AiOutlineEdit />
                 Write Course
@@ -207,7 +188,7 @@ export default function Header() {
             <div>
               <button
                 onClick={() => setIsWriteModalOpen(true)}
-                className="dark flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+                className="dark flex items-center justify-center gap-1 whitespace-nowrap rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-black hover:bg-gray-200 hover:text-gray-700 hover:shadow-black dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
               >
                 <AiOutlineEdit />
                 Write Product
@@ -217,7 +198,7 @@ export default function Header() {
             <div>
               <button
                 onClick={() => setIsWriteModalOpen(true)}
-                className="flex items-center justify-center gap-1 rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-gray-500 hover:bg-gray-200 hover:text-gray-700 hover:shadow-gray-500 dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+                className="flex items-center justify-center gap-1 whitespace-nowrap rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-gray-500 hover:bg-gray-200 hover:text-gray-700 hover:shadow-gray-500 dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
               >
                 <AiOutlineEdit />
                 Post Link
@@ -227,7 +208,7 @@ export default function Header() {
 
           <button
             onClick={() => signOut()}
-            className="relative flex items-center justify-center gap-1 overflow-hidden rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-gray-500 hover:bg-gray-200 hover:text-gray-700 hover:shadow-gray-500 dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
+            className="relative flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-lg border-2 border-gray-300 bg-white p-2 px-3 shadow-[1.0px_1.0px_0px_0px_rgba(109,40,217)] shadow-gray-300 transition hover:border-gray-500 hover:bg-gray-200 hover:text-gray-700 hover:shadow-gray-500 dark:bg-inherit dark:hover:border-white dark:hover:bg-white dark:hover:bg-opacity-60 dark:hover:text-white"
           >
             <FiLogOut />
             Logout
@@ -236,12 +217,6 @@ export default function Header() {
         </div>
       ) : (
         <div className="col-span-4 ml-auto flex items-center justify-center gap-4">
-          {/* <div>
-          <AiOutlineBell />
-        </div>
-        <div>
-          <div className="h-6 w-6 rounded-full bg-gray-600"></div>
-        </div> */}
           <div className="flex gap-2">
             <ThemeToggle />
             <button

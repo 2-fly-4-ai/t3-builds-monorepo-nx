@@ -8,13 +8,12 @@ import { useSession } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
 import toast, { Toaster } from 'react-hot-toast';
 //lets use our zustand import here
-import { useBookmarkTechStore } from '../../zustand/store';
+import { useBookmarkStore } from '../../zustand/store';
 import { useGlobalContextTechModalStore } from '../../zustand/store';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 
 /* eslint-disable-next-line */
 export interface TechCardProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -28,8 +27,6 @@ export interface TechCardProps {
     shortDescription: string;
     techDescription: string;
     featuredImage: any;
-    s;
-
     webUrl: string;
     techUrl: string;
     docsUrl: string;
@@ -38,6 +35,8 @@ export interface TechCardProps {
     likes: string;
     githubUrl: string;
   };
+  bookmarkPost: UseMutationResult;
+  removeBookmark: UseMutationResult;
 }
 
 export function TechCard({ post }: TechCardProps) {
@@ -62,7 +61,7 @@ export function TechCard({ post }: TechCardProps) {
   const postRoute = trpc.useContext().post;
 
   //state Handlers
-  const { bookmarks, toggleBookmark } = useBookmarkTechStore();
+  const { bookmarks, toggleBookmark } = useBookmarkStore();
   const { togglePosts } = useGlobalContextTechModalStore();
   const isBookmarked = bookmarks?.includes(id);
 
@@ -89,9 +88,9 @@ export function TechCard({ post }: TechCardProps) {
   };
 
   return (
-    <div className="group grid max-w-[330px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10    ">
+    <div className="group grid w-[340px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10    ">
       <div className="relative col-span-full flex items-center rounded-none  ">
-        <button onClick={handlePostsModalToggle}>
+        <div onClick={handlePostsModalToggle}>
           <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black  group-hover:bg-opacity-20">
             <Link
               href={`/techstack/articleURL`}
@@ -135,7 +134,7 @@ export function TechCard({ post }: TechCardProps) {
             />
           </div>
           {/* </Link> */}
-        </button>
+        </div>
       </div>
       <div className="col-span-full grid p-4 pt-0">
         <div className="col-span-full   h-24">

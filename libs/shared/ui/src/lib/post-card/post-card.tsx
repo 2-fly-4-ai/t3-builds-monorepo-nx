@@ -4,10 +4,7 @@ import BiBookmarkPlus from '../../icons/BiBookMark';
 import BiBookmarkMinus from '../../icons/BiBookmarkMinus';
 import BiUpvote from '../../icons/BiUpvote';
 import { useCallback, useState } from 'react';
-import { UseMutationResult } from 'react-query';
 import { useSession } from 'next-auth/react';
-import { trpc } from '../../utils/trpc';
-import toast, { Toaster } from 'react-hot-toast';
 //lets use our zustand import here
 import { useBookmarkStore } from '../../zustand/store';
 import { useGlobalContextTechModalStore } from '../../zustand/store';
@@ -16,7 +13,6 @@ const dayjs = require('dayjs');
 
 /* eslint-disable-next-line */
 export interface PostCardProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -24,7 +20,6 @@ export interface PostCardProps {
       username: string;
     };
     createdAt: Date;
-    bookmarks: string;
     slug: string;
     title: string;
     description: string;
@@ -33,14 +28,8 @@ export interface PostCardProps {
     featuredImage: string;
     tags: any;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: any;
+  removeBookmark: any;
 }
 export function PostCard(props: PostCardProps) {
   const { data: sessionData, status } = useSession();
@@ -62,6 +51,7 @@ export function PostCard(props: PostCardProps) {
   // Use Zustand to manage the state of the bookmark button
   const { bookmarks, toggleBookmark } = useBookmarkStore();
   const isBookmarked = bookmarks.includes(props.post.id);
+
   const { togglePosts } = useGlobalContextTechModalStore();
 
   const handleBookmarkToggle = useCallback(() => {
@@ -73,9 +63,9 @@ export function PostCard(props: PostCardProps) {
   };
 
   return (
-    <div className=" group grid w-full max-w-[330px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10">
+    <div className=" group grid w-[340px]  grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10">
       <div className="relative col-span-full flex items-center rounded-none  ">
-        <button onClick={handlePostsModalToggle}>
+        <div onClick={handlePostsModalToggle}>
           {/* View Article Button */}
           <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black  group-hover:bg-opacity-20">
             <Link href={`/posts/${slug}`} className="mx-auto mt-4 flex h-min">
@@ -117,7 +107,7 @@ export function PostCard(props: PostCardProps) {
               alt={title}
             />
           </div>
-        </button>
+        </div>
       </div>
 
       <div className="col-span-full grid p-4 pt-0">

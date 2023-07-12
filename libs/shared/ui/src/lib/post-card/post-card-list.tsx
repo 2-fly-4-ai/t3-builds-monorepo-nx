@@ -1,5 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { type inferReactQueryMutationOptions } from '@trpc/react-query';
+import { type UseTRPCMutationResult } from '@trpc/react-query/shared';
+import { type TRPCClientErrorLike } from '@trpc/react-query';
 import BiBookmarkPlus from '../../icons/BiBookMark';
 import BiBookmarkMinus from '../../icons/BiBookmarkMinus';
 import BiUpvote from '../../icons/BiUpvote';
@@ -14,7 +17,6 @@ import { UseMutationResult } from 'react-query';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 /* eslint-disable-next-line */
 export interface PostCardProps {
-  countlikes: React.ReactNode;
   post: {
     author: {
       image: string;
@@ -31,14 +33,8 @@ export interface PostCardProps {
     featuredImage: string;
     tags: any;
   };
-  bookmarkPost: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
-  removeBookmark: UseMutationResult<
-    { itemId: string; itemType: string },
-    unknown
-  >;
+  bookmarkPost: any;
+  removeBookmark: any;
 }
 
 export function PostCardList(props: PostCardProps) {
@@ -137,7 +133,7 @@ export function PostCardList(props: PostCardProps) {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 512 512"
                   height="1em"
                   width="1em"
