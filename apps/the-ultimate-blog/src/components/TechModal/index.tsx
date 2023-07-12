@@ -67,12 +67,9 @@ type ModalProps = {
 
 type TechFormModalProps = {
   id: string;
-  title: string;
   shortDescription: string;
-  description: string;
   tile: string;
   text: string;
-  html: string;
   slug: string;
   featuredImage: any;
   tags: any;
@@ -82,7 +79,7 @@ type TechFormModalProps = {
   pricingUrl: string;
   tagsIds?: { id?: string }[];
   likes: string;
-};
+} & ModalProps;
 
 export const WriteFormSchema = z.object({
   title: z.string().min(1),
@@ -186,9 +183,9 @@ export default function TechModal({ post }: TechFormModalProps) {
   };
 
   const handleClose = () => {
-    if (router.pathname.includes('/techstack')) {
-      router.push('/techstack', undefined, { shallow: true });
-    }
+    // if (router.pathname.includes('/techstack')) {
+    //   router.push('/techstack', undefined, { shallow: true });
+    // }
     resetIsPostModalOpen();
     setValue;
   };
@@ -255,31 +252,117 @@ export default function TechModal({ post }: TechFormModalProps) {
       ) : null}
       <div
         // onSubmit={handleSubmit(onSubmit)}
-        className="relative flex min-h-[90vh] flex-col  space-y-5   p-1"
+        className="relative flex  flex-col  space-y-5   p-1"
       >
         {' '}
         <div className="grid  w-full grid-cols-12 rounded-xl border bg-white dark:bg-inherit">
-          <div className="col-span-8 min-h-[90vh] p-6">
-            <Tabs
-              defaultValue="Description"
-              value={value ?? 'Description'}
-              onValueChange={setValue}
-              className="w-full"
-            >
-              <TabsList className="gap-2">
-                <TabsTrigger value="Description">Description</TabsTrigger>
+          <div className="col-span-8  p-6">
+            <div className="relative ">
+              <div className="flex w-full flex-col gap-6 ">
+                {test ? (
+                  <button
+                    className={`${
+                      isTitleEditorOpen ? 'hidden' : 'absolute'
+                    }  right-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
+                    onClick={() => setTitleEditorOpen(true)}
+                  >
+                    <svg
+                      stroke="currentColor"
+                      fill="currentColor"
+                      strokeWidth="0"
+                      viewBox="0 0 1024 1024"
+                      height="1.5em"
+                      width="1.5em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
+                    </svg>
+                  </button>
+                ) : null}
+                {!isTitleEditorOpen ? (
+                  <h3 className=" py-1 text-4xl">{title}</h3>
+                ) : (
+                  <div className="h-auto">
+                    <TextareaAutosize
+                      id="title"
+                      rows={5}
+                      className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                      {...register('title', { required: true })}
+                    />
+                    {errors.title && (
+                      <p className="text-red-500">Title is required</p>
+                    )}
+                    {!isSubmitting && (
+                      <div className="flex gap-2 py-2">
+                        <button
+                          onClick={handleSubmit((formData) => {
+                            setIsSubmitting(true);
+                            setTitleEditorOpen(false);
+                            onSubmit(formData);
+                          })}
+                          className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+                        >
+                          Publish
+                        </button>
+                        <button
+                          onClick={() => setTitleEditorOpen(false)}
+                          className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="prose max-w-none ">
+                  <blockquote
+                    className={`${
+                      isReadMoreOpen ? '' : 'line-clamp-3'
+                    }   relative overflow-hidden  py-1 text-base transition-all  duration-500 dark:text-gray-200`}
+                  >
+                    {!isDescriptionEditorOpen ? (
+                      description
+                    ) : (
+                      <div>
+                        <TextareaAutosize
+                          rows={8}
+                          id="description"
+                          className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
+                          // defaultValue={description}
+                          {...register('description')}
+                        />
+                        {!isSubmitting && (
+                          <div className="flex gap-2 py-2">
+                            <button
+                              onClick={handleSubmit((formData) => {
+                                setIsSubmitting(true);
+                                setDescriptionEditorOpen(false);
+                                onSubmit(formData);
+                              })}
+                              className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
+                            >
+                              Publish
+                            </button>
+                            <button
+                              onClick={() => setDescriptionEditorOpen(false)}
+                              className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        )}
+                        {errors.description && (
+                          <p>{errors.description.message}</p>
+                        )}
+                      </div>
+                    )}
 
-                <TabsTrigger value="Comments">Put Something here</TabsTrigger>
-              </TabsList>
-              <TabsContent value="Description">
-                <div className="relative ">
-                  <div className="flex w-full flex-col gap-8 ">
                     {test ? (
                       <button
                         className={`${
-                          isTitleEditorOpen ? 'hidden' : 'absolute'
-                        }  right-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
-                        onClick={() => setTitleEditorOpen(true)}
+                          isDescriptionEditorOpen ? 'hidden' : 'absolute'
+                        }  right-4 top-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
+                        onClick={() => setDescriptionEditorOpen(true)}
                       >
                         <svg
                           stroke="currentColor"
@@ -294,309 +377,117 @@ export default function TechModal({ post }: TechFormModalProps) {
                         </svg>
                       </button>
                     ) : null}
-                    {!isTitleEditorOpen ? (
-                      <h3 className="line-clamp-2 text-4xl">{title}</h3>
-                    ) : (
-                      <div className="h-auto">
-                        <TextareaAutosize
-                          id="title"
-                          rows={5}
-                          className="min-h-full w-full resize-none overflow-visible  border-gray-300  text-4xl outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
-                          {...register('title', { required: true })}
-                        />
-                        {errors.title && (
-                          <p className="text-red-500">Title is required</p>
-                        )}
-                        {!isSubmitting && (
-                          <div className="flex gap-2 py-2">
-                            <button
-                              onClick={handleSubmit((formData) => {
-                                setIsSubmitting(true);
-                                setTitleEditorOpen(false);
-                                onSubmit(formData);
-                              })}
-                              className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
-                            >
-                              Publish
-                            </button>
-                            <button
-                              onClick={() => setTitleEditorOpen(false)}
-                              className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                    <div className="prose h-40 max-w-none border">
-                      <blockquote
-                        className={`${
-                          isReadMoreOpen ? '' : 'line-clamp-3'
-                        }  min-h  relative  overflow-hidden  text-base dark:text-gray-200`}
-                      >
-                        {!isDescriptionEditorOpen ? (
-                          description
-                        ) : (
-                          <div>
-                            <TextareaAutosize
-                              rows={8}
-                              id="description"
-                              className="h-full w-full  border-gray-300 outline-none focus:border-gray-600 dark:bg-black dark:bg-opacity-60"
-                              // defaultValue={description}
-                              {...register('description')}
-                            />
-                            {!isSubmitting && (
-                              <div className="flex gap-2 py-2">
-                                <button
-                                  onClick={handleSubmit((formData) => {
-                                    setIsSubmitting(true);
-                                    setDescriptionEditorOpen(false);
-                                    onSubmit(formData);
-                                  })}
-                                  className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
-                                >
-                                  Publish
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    setDescriptionEditorOpen(false)
-                                  }
-                                  className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:bg-red-400 hover:text-gray-700 dark:hover:border-white"
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                            )}
-                            {errors.description && (
-                              <p>{errors.description.message}</p>
-                            )}
-                          </div>
-                        )}
+                  </blockquote>
 
-                        {test ? (
-                          <button
-                            className={`${
-                              isDescriptionEditorOpen ? 'hidden' : 'absolute'
-                            }  right-4 top-4 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
-                            onClick={() => setDescriptionEditorOpen(true)}
-                          >
-                            <svg
-                              stroke="currentColor"
-                              fill="currentColor"
-                              strokeWidth="0"
-                              viewBox="0 0 1024 1024"
-                              height="1.5em"
-                              width="1.5em"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
-                            </svg>
-                          </button>
-                        ) : null}
-                      </blockquote>
-
-                      {!isReadMoreOpen ? (
-                        <button
-                          onClick={() => setIsReadMoreOpen(true)}
-                          className="group relative  inline-flex items-center justify-start overflow-hidden rounded-full border px-5 py-1 font-bold"
-                        >
-                          <span className="absolute left-0 top-0 h-32 w-32 -translate-y-2 translate-x-12 rotate-45 bg-white opacity-[3%]"></span>
-                          <span className="absolute left-0 top-0 -mt-1 h-48 w-48 -translate-x-56 -translate-y-24 rotate-45 bg-white opacity-100 transition-all duration-500 ease-in-out group-hover:-translate-x-8"></span>
-                          <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">
-                            Read More
-                          </span>
-                          <span className="absolute inset-0 rounded-full border-2 border-white"></span>
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setIsReadMoreOpen(false)}
-                          className="group relative inline-flex items-center justify-start overflow-hidden rounded-full px-5 py-1 font-bold"
-                        >
-                          <span className="absolute left-0 top-0 h-32 w-32 -translate-y-2 translate-x-12 rotate-45 bg-white opacity-[3%]"></span>
-                          <span className="absolute left-0 top-0 -mt-1 h-48 w-48 -translate-x-56 -translate-y-24 rotate-45 bg-white opacity-100 transition-all duration-500 ease-in-out group-hover:-translate-x-8"></span>
-                          <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">
-                            Read Less
-                          </span>
-                          <span className="absolute inset-0 rounded-full border-2 border-white"></span>
-                        </button>
-                      )}
-                    </div>
-                    <div className="border">
-                      <ul className="flex list-outside gap-2  p-0 px-4">
-                        {tags?.map((tag) => {
-                          return (
-                            <li className="m-0 list-outside list-none ">
-                              #{tag.name}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                    <div className="relative flex   justify-start ">
-                      <Image
-                        src={featuredImage ?? ''}
-                        width={400}
-                        height={400}
-                        alt="test"
-                        className="max-h-72 w-3/4 overflow-hidden bg-white object-contain "
-                      />
-                      <div className="border">
-                        {' '}
-                        <UnsplashGallery
-                          isUnsplashModalOpen={isUnsplashModalOpen}
-                          setIsUnsplashModalOpen={setIsUnsplashModalOpen}
-                          postId={id}
-                          slug={slug}
-                        />
-                      </div>
-                      <button
-                        id="this button isn't clickable"
-                        onClick={() => setIsUnsplashModalOpen(true)}
-                        className="absolute right-5 top-5 z-10  cursor-pointer rounded-lg bg-gray-400 p-1 transition duration-200 hover:bg-gray-50 "
-                      >
-                        <svg
-                          stroke="currentColor"
-                          fill="currentColor"
-                          strokeWidth={0}
-                          viewBox="0 0 24 24"
-                          height="1.5em"
-                          width="1.5em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
-                          <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
-                          <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="w-full  rounded-xl border p-8 ">
-                      <div className="flex w-full justify-between">
-                        <button className=" flex items-center  gap-2 text-lg font-medium">
-                          <BiUpvote />
-                          Upvote
-                        </button>
-
-                        <button
-                          onClick={() => setIsOpenComments(true)}
-                          className="flex items-center  gap-2 text-lg font-medium"
-                        >
-                          <BiComment />
-                          Comment
-                        </button>
-                        <button className="flex items-center  gap-2 text-lg font-medium">
-                          <BiBookBookmark />
-                          BookMark
-                        </button>
-                        <button className="flex items-center  gap-2 text-lg font-medium">
-                          <BiShare />
-                          Share
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={`${isOpenComments ? '' : 'hidden'} relative`}>
+                  {!isReadMoreOpen ? (
                     <button
-                      onClick={() => setIsOpenComments(false)}
-                      className="absolute right-5 top-5 z-10 border p-2"
+                      onClick={() => setIsReadMoreOpen(true)}
+                      className="group relative  inline-flex items-center justify-start overflow-hidden rounded-full border px-5 py-1 font-bold"
                     >
-                      <CgClose />
+                      <span className="absolute left-0 top-0 h-32 w-32 -translate-y-2 translate-x-12 rotate-45 bg-white opacity-[3%]"></span>
+                      <span className="absolute left-0 top-0 -mt-1 h-48 w-48 -translate-x-56 -translate-y-24 rotate-45 bg-white opacity-100 transition-all duration-500 ease-in-out group-hover:-translate-x-8"></span>
+                      <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">
+                        Read More
+                      </span>
+                      <span className="absolute inset-0 rounded-full border-2 border-white"></span>
                     </button>
-                    <CommentSidebar techId={id} />{' '}
-                  </div>
-                </div>
-              </TabsContent>
-              <TabsContent value="Article">
-                <div className="py- px-8">
-                  {isHTMLEditorOpen ? (
-                    <div className="modal-container">
-                      <div className="modal-container">
-                        <Controller
-                          name="html"
-                          control={control}
-                          render={({ field }) => (
-                            <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                              {showEditor && (
-                                <Editor
-                                  {...field}
-                                  onChange={(data: string) =>
-                                    field && field.onChange(data)
-                                  }
-                                  value={html}
-                                />
-                              )}
-                            </div>
-                          )}
-                        />
-                      </div>
-                      {!isSubmitting && (
-                        <div className="flex gap-2 py-2">
-                          <button
-                            onClick={handleSubmit((formData) => {
-                              setIsSubmitting(true);
-                              setHTMLEditorOpen(false);
-                              onSubmit(formData);
-                            })}
-                            className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
-                          >
-                            Publish
-                          </button>
-                          <button
-                            onClick={() => setHTMLEditorOpen(false)}
-                            className="flex items-center justify-center gap-1 rounded-lg border-2 p-1 px-3 transition hover:border-gray-700 hover:text-gray-700 dark:hover:border-white dark:hover:bg-gray-200"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      )}
-                      {errors.description && (
-                        <p>{errors.description.message}</p>
-                      )}
-                    </div>
                   ) : (
-                    <div className="relative">
-                      <div className="prose-p:font-sans prose-li:list-style dark:prose-pre:bg-black prose-pre:bg-black dark:prose-pre:border-2 prose-pre:border-2 prose-pre:border-t-[30px] dark:prose-pre:border-t-[30px] prose  prose-lg prose-a:font-bold prose-li:text-black prose-table:border-2 prose-table:shadow-lg prose-th:border prose-th:bg-gray-300 dark:prose-th:bg-opacity-0 prose-th:p-3 prose-td:border prose-td:p-3 prose-img:mx-auto prose-img:my-12 prose-img:max-h-custom prose-img:w-auto prose-img:border-2 dark:prose-headings:text-gray-300 prose-img:border-black prose-img:py-12 dark:prose-img:bg-black prose-img:shadow-[5px_5px_0px_0px_rgba(109,40,217)] dark:prose-p:text-gray-400 prose-li:font-sans dark:prose-li:text-gray-400 prose-img:shadow-black dark:prose-strong:text-red-400 dark:prose-code:text-white prose-table:text-gray-400 max-w-none pb-8 marker:text-black dark:text-gray-400 dark:text-opacity-80 dark:marker:text-gray-400">
-                        <Interweave
-                          content={
-                            html?.replaceAll(
-                              'href=',
-                              'target="_blank" rel="nofollow noreferrer" href='
-                            ) ?? null
-                          }
-                        />
-                        {/* <div
-                          dangerouslySetInnerHTML={{
-                            __html: html,
-                          }}
-                        ></div> */}
-                      </div>
-
-                      {test ? (
-                        <button
-                          className={`${
-                            isHTMLEditorOpen ? 'hidden' : 'absolute'
-                          }  right-4 top-5 rounded-lg bg-gray-500 p-1 hover:bg-gray-400`}
-                          onClick={() => setHTMLEditorOpen(true)}
-                        >
-                          <svg
-                            stroke="currentColor"
-                            fill="currentColor"
-                            strokeWidth="0"
-                            viewBox="0 0 1024 1024"
-                            height="1.5em"
-                            width="1.5em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
-                          </svg>
-                        </button>
-                      ) : null}
-                    </div>
+                    <button
+                      onClick={() => setIsReadMoreOpen(false)}
+                      className="group relative inline-flex items-center justify-start overflow-hidden rounded-full px-5 py-1 font-bold"
+                    >
+                      <span className="absolute left-0 top-0 h-32 w-32 -translate-y-2 translate-x-12 rotate-45 bg-white opacity-[3%]"></span>
+                      <span className="absolute left-0 top-0 -mt-1 h-48 w-48 -translate-x-56 -translate-y-24 rotate-45 bg-white opacity-100 transition-all duration-500 ease-in-out group-hover:-translate-x-8"></span>
+                      <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">
+                        Read Less
+                      </span>
+                      <span className="absolute inset-0 rounded-full border-2 border-white"></span>
+                    </button>
                   )}
                 </div>
-              </TabsContent>
-              <TabsContent value="Comments"></TabsContent>
-            </Tabs>{' '}
+                <div className="">
+                  <ul className="flex list-outside gap-2  p-0 px-4">
+                    {tags?.map((tag) => {
+                      return (
+                        <li className="m-0 list-outside list-none ">
+                          #{tag.name}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+                <div className="relative flex   justify-start ">
+                  <Image
+                    src={featuredImage ?? ''}
+                    width={400}
+                    height={400}
+                    alt="test"
+                    className="max-h-80 w-3/4 overflow-hidden bg-white object-contain "
+                  />
+                  <div className="border">
+                    {' '}
+                    <UnsplashGallery
+                      isUnsplashModalOpen={isUnsplashModalOpen}
+                      setIsUnsplashModalOpen={setIsUnsplashModalOpen}
+                      postId={id}
+                      slug={slug}
+                    />
+                  </div>
+                  <button
+                    id="this button isn't clickable"
+                    onClick={() => setIsUnsplashModalOpen(true)}
+                    className="absolute right-5 top-5 z-10  cursor-pointer rounded-lg bg-gray-400 p-1 transition duration-200 hover:bg-gray-50 "
+                  >
+                    <svg
+                      stroke="currentColor"
+                      fill="currentColor"
+                      strokeWidth={0}
+                      viewBox="0 0 24 24"
+                      height="1.5em"
+                      width="1.5em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M4,5h13v7h2V5c0-1.103-0.897-2-2-2H4C2.897,3,2,3.897,2,5v12c0,1.103,0.897,2,2,2h8v-2H4V5z"></path>
+                      <path d="M8 11L5 15 16 15 12 9 9 13z"></path>
+                      <path d="M19 14L17 14 17 17 14 17 14 19 17 19 17 22 19 22 19 19 22 19 22 17 19 17z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div className="mb-4 w-full rounded-xl border p-8 ">
+                  <div className="flex w-full justify-between">
+                    <button className=" flex items-center  gap-2 text-lg font-medium">
+                      <BiUpvote />
+                      Upvote
+                    </button>
+
+                    <button
+                      onClick={() => setIsOpenComments(true)}
+                      className="flex items-center  gap-2 text-lg font-medium"
+                    >
+                      <BiComment />
+                      Comment
+                    </button>
+                    <button className="flex items-center  gap-2 text-lg font-medium">
+                      <BiBookBookmark />
+                      BookMark
+                    </button>
+                    <button className="flex items-center  gap-2 text-lg font-medium">
+                      <BiShare />
+                      Share
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className={`${isOpenComments ? '' : 'hidden'} relative`}>
+                <button
+                  onClick={() => setIsOpenComments(false)}
+                  className="absolute right-5 top-5 z-10 border bg-red-400 p-2"
+                >
+                  <CgClose />
+                </button>
+                <CommentSidebar techId={id} />{' '}
+              </div>
+            </div>
           </div>
           <div className="col-span-4 border-l p-6">
             <div className="flex flex-col gap-6 p-2">
@@ -834,7 +725,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                   Related Tech
                 </h3>
                 <ul>
-                  {postsByTag?.data?.slice(0, 6).map((post) => {
+                  {postsByTag?.data?.slice(0, 5).map((post) => {
                     if (slug === post.slug) {
                       return null; // Exclude the post from mapping
                     }
@@ -849,7 +740,7 @@ export default function TechModal({ post }: TechFormModalProps) {
                         }}
                       >
                         <div className="group flex items-center space-x-5 px-4  py-2  hover:bg-gray-100 dark:hover:bg-white dark:hover:bg-opacity-10">
-                          <div className="flex  aspect-video w-20  justify-center bg-gray-300 dark:bg-white  ">
+                          <div className="flex  aspect-video w-[88px]  justify-center bg-gray-300 dark:bg-white  ">
                             {post?.featuredImage ? (
                               <Image
                                 src={post?.featuredImage}

@@ -75,7 +75,7 @@ export default function SideSection({ readingList }) {
                         src={bookmark?.post?.featuredImage ?? null}
                         width={220}
                         height={220}
-                        className=" aspect-video max-h-28 w-auto"
+                        className=" aspect-video max-h-28 object-cover"
                         alt={bookmark?.post?.title}
                       />
                     ) : (
@@ -83,7 +83,7 @@ export default function SideSection({ readingList }) {
                         src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
                         width={200}
                         height={200}
-                        className="aspect-video max-h-28 w-auto"
+                        className="aspect-video max-h-28  object-cover"
                         alt={bookmark?.post?.title}
                       />
                     )}

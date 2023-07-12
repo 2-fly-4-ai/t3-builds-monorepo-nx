@@ -108,7 +108,7 @@ export default function CommentSidebar({ postId }: CommentSidebarProps) {
   };
 
   return (
-    <div className=" relative w-full  rounded-lg border py-6">
+    <div className=" relative w-full  rounded-lg border-2 py-6">
       <div className=" z-10 flex h-full w-full flex-col  px-6">
         <div className="  flex items-center justify-between  text-xl">
           <h2 className=" font-medium">

@@ -65,7 +65,7 @@ export default function Editor({ onChange, value }: CKeditorProps) {
             const dataTransfer = data.dataTransfer;
             let pastedHTML = dataTransfer.getData('text/html');
 
-            // Remove style attributes from table, th, and td tags
+            //Remove style attributes from table, th, and td tags
             pastedHTML = pastedHTML.replace(
               /<(table|th|td)[^>]*>/g,
               (match) => {
@@ -73,7 +73,7 @@ export default function Editor({ onChange, value }: CKeditorProps) {
               }
             );
 
-            // Replace p tags wrapping a tags with img tags
+            //Replace p tags wrapping a tags with img tags
             pastedHTML = pastedHTML.replace(
               /<p>!<a href="(.*?)">(.*?)<\/a><\/p>/g,
               '<img src="$1" alt="$2">'

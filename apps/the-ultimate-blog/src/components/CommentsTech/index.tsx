@@ -108,8 +108,8 @@ export default function CommentSidebar({ techId }: CommentSidebarProps) {
   };
 
   return (
-    <div className=" relative  w-full border-l shadow-md">
-      <div className=" z-10 flex h-full w-full flex-col  border p-8">
+    <div className=" relative  w-full shadow-md">
+      <div className=" z-10 flex h-full w-full flex-col  rounded-lg border p-8">
         <div className="  flex items-center justify-between  text-xl">
           <h2 className=" font-medium">
             Responses ({getComments.data?.length})
