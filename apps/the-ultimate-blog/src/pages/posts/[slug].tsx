@@ -208,7 +208,7 @@ export default function PostPage(
           <div>
             <div className="relative  flex w-full items-center justify-center  ">
               <div className="w-screen-lg mt-10 w-full space-y-8">
-                <div className="relative flex min-h-[80vh] w-auto items-center justify-center overflow-hidden rounded-lg border-2 bg-gray-300  shadow-lg dark:bg-black">
+                <div className="relative flex aspect-video  w-auto items-center justify-center overflow-hidden rounded-lg border-2 bg-gray-300  shadow-lg dark:bg-black">
                   {getPost.data?.featuredImage && (
                     <Image
                       src={getPost.data?.featuredImage ?? 'null'}
