@@ -13,6 +13,16 @@ export interface IBookmarkStore {
   toggleBookmark: (id: string) => void;
 }
 
+interface TitleEditorState {
+  isTitleEditorOpen: boolean;
+  setTitleEditorOpen: (isOpen: boolean) => void;
+}
+
+interface SubmittingState {
+  isSubmitting: boolean;
+  setIsSubmitting: (isSubmitting: boolean) => void;
+}
+
 interface SidebarStore {
   showSidebar: boolean;
   setShowSidebar: (value: boolean) => void;
@@ -65,6 +75,11 @@ interface CommentStoreActions {
   toggleLikeComment: (commentId: string) => void;
 }
 
+interface UnsplashState {
+  isUnsplashModalOpen: boolean;
+  setIsUnsplashModalOpen: (isOpen: boolean) => void;
+}
+
 interface LikeStoreActions {
   addLikedPost: (postId: string) => void;
   removeLikedPost: (postId: string) => void;
@@ -108,8 +123,8 @@ interface GlobalContextTechModalStoreActions {
 }
 
 interface BookmarkTechState {
-  bookmarks: string[]
-  toggleBookmark: (id: string) => void
+  bookmarks: string[];
+  toggleBookmark: (id: string) => void;
 }
 
 export const useTabStore = create<TabStore>((set) => ({
@@ -190,7 +205,9 @@ export const useGlobalContextTechModalStore = create<
   )
 );
 
-export const useGlobalContextStore = create<GlobalContextStoreState & GlobalContextStoreActions>()(
+export const useGlobalContextStore = create<
+  GlobalContextStoreState & GlobalContextStoreActions
+>()(
   persist(
     (set) => ({
       isWriteModalOpen: false,
@@ -206,7 +223,9 @@ export const useGlobalContextStore = create<GlobalContextStoreState & GlobalCont
   )
 );
 
-export const useCommentStore = create<CommentStoreState & CommentStoreActions>()(
+export const useCommentStore = create<
+  CommentStoreState & CommentStoreActions
+>()(
   persist(
     (set) => ({
       commentLikes: {},
@@ -270,7 +289,42 @@ export const useBookmarkStore = create<BookmarkTechState>()(
   )
 );
 
+export const useUnsplashState = create<UnsplashState>((set) => ({
+  isUnsplashModalOpen: false,
+  setIsUnsplashModalOpen: (isOpen: boolean) =>
+    set({ isUnsplashModalOpen: isOpen }),
+}));
 
+export const useTitleEditorState = create<TitleEditorState>((set) => ({
+  isTitleEditorOpen: false,
+  setTitleEditorOpen: (isOpen: boolean) => set({ isTitleEditorOpen: isOpen }),
+}));
 
+export const useSubmittingState = create<SubmittingState>((set) => ({
+  isSubmitting: false,
+  setIsSubmitting: (isSubmitting: boolean) => set({ isSubmitting }),
+}));
 
+interface HTMLEditorState {
+  isHTMLEditorOpen: boolean;
+  setHTMLEditorOpen: (isOpen: boolean) => void;
+}
+
+interface DescriptionEditorState {
+  isDescriptionEditorOpen: boolean;
+  setDescriptionEditorOpen: (isOpen: boolean) => void;
+}
+
+export const useHTMLEditorState = create<HTMLEditorState>((set) => ({
+  isHTMLEditorOpen: false,
+  setHTMLEditorOpen: (isOpen: boolean) => set({ isHTMLEditorOpen: isOpen }),
+}));
+
+export const useDescriptionEditorState = create<DescriptionEditorState>(
+  (set) => ({
+    isDescriptionEditorOpen: false,
+    setDescriptionEditorOpen: (isOpen: boolean) =>
+      set({ isDescriptionEditorOpen: isOpen }),
+  })
+);
 //NOTE REMEMBER YOU HAVE TO USE THE CURRIED VERSION WHEN YOU USE PERSIST ()(  <- This is curry

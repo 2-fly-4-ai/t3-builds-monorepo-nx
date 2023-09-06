@@ -675,7 +675,7 @@ export const postRouter = router({
           githubUrl: true,
           pricingUrl: true,
           title: true,
-
+          tags: true,
           html: true,
           authorId: true,
           slug: true,
@@ -1080,6 +1080,7 @@ export const postRouter = router({
         title: true,
         description: true,
         createdAt: true,
+        link: true,
         featuredImage: true,
         author: {
           select: {
@@ -1529,26 +1530,28 @@ export const postRouter = router({
           postId: z.string().optional(),
           techId: z.string().optional(),
           courseId: z.string().optional(),
+          linkId: z.string().optional(), // 1. Add linkId as optional input
         })
         .refine(
           (input) => {
-            const { postId, techId, courseId } = input;
+            const { postId, techId, courseId, linkId } = input;
             return (
-              (postId && !techId && !courseId) ||
-              (!postId && techId && !courseId) ||
-              (!postId && !techId && courseId)
+              (postId && !techId && !courseId && !linkId) ||
+              (!postId && techId && !courseId && !linkId) ||
+              (!postId && !techId && courseId && !linkId) ||
+              (!postId && !techId && !courseId && linkId) // 2. Update the refinement logic
             );
           },
           {
             message:
-              "Either 'postId', 'techId', or 'courseId' must be provided, but not multiple at the same time.",
+              "Only one out of 'postId', 'techId', 'courseId', or 'linkId' must be provided.",
           }
         )
     )
     .mutation(
       async ({
         ctx: { prisma, session },
-        input: { text, postId, techId, courseId },
+        input: { text, postId, techId, courseId, linkId }, // Add linkId
       }) => {
         const data = {
           text,
@@ -1560,6 +1563,7 @@ export const postRouter = router({
           ...(postId && { post: { connect: { id: postId } } }),
           ...(techId && { tech: { connect: { id: techId } } }),
           ...(courseId && { course: { connect: { id: courseId } } }),
+          ...(linkId && { link: { connect: { id: linkId } } }), // 3. Update mutation for linkId
         };
 
         await prisma.comment.create({
@@ -1594,19 +1598,33 @@ export const postRouter = router({
         .object({
           postId: z.string().optional(),
           techId: z.string().optional(),
+          courseId: z.string().optional(),
+          linkId: z.string().optional(),
         })
         .refine((input) => {
-          if (!input.postId && !input.techId) {
+          const { postId, techId, courseId, linkId } = input;
+          const count = [postId, techId, courseId, linkId].filter(
+            Boolean
+          ).length;
+
+          if (count !== 1) {
             throw new Error(
-              "Either 'postId' or 'techId' must be provided, but not both."
+              "Only one of 'postId', 'techId', 'courseId', or 'linkId' must be provided."
             );
           }
+
           return true;
         })
     )
     .query(async ({ ctx: { prisma }, input }) => {
-      const { postId, techId } = input;
-      const where = postId ? { postId } : techId ? { techId } : undefined;
+      const { postId, techId, courseId, linkId } = input;
+
+      let where;
+
+      if (postId) where = { postId };
+      else if (techId) where = { techId };
+      else if (courseId) where = { courseId };
+      else if (linkId) where = { linkId };
 
       const comments = await prisma.comment.findMany({
         where,
@@ -1614,6 +1632,9 @@ export const postRouter = router({
           text: true,
           userId: true,
           postId: true,
+          techId: true, // Added for completeness
+          courseId: true, // Added for completeness
+          linkId: true, // Added for completeness
           post: true,
           id: true,
           likes: true,

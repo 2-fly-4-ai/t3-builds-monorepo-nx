@@ -146,7 +146,7 @@ export default function TechModal({ post }: TechFormModalProps) {
   const [isDescriptionEditorOpen, setDescriptionEditorOpen] = useState(false);
   const [isHTMLEditorOpen, setHTMLEditorOpen] = useState(false);
   const [isUrlBoxEditorOpen, setIsUrlBoxEditorOpen] = useState(false);
-  const [isMASTEREditorOpen, setMASTEREditorOpen] = useState(false);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEditor, setShowEditor] = useState<boolean>(false);
 
@@ -183,9 +183,12 @@ export default function TechModal({ post }: TechFormModalProps) {
   };
 
   const handleClose = () => {
-    // if (router.pathname.includes('/techstack')) {
-    //   router.push('/techstack', undefined, { shallow: true });
-    // }
+    if (router.pathname.includes('/techstack')) {
+      router.push('/techstack', undefined, { shallow: true });
+    }
+    if (router.pathname.includes('/discussions')) {
+      router.push('/discussions', undefined, { shallow: true });
+    }
     resetIsPostModalOpen();
     setValue;
   };
@@ -255,7 +258,7 @@ export default function TechModal({ post }: TechFormModalProps) {
         className="relative flex  flex-col  space-y-5   p-1"
       >
         {' '}
-        <div className="grid  w-full grid-cols-12 rounded-xl border bg-white dark:bg-inherit">
+        <div className="grid  w-full grid-cols-12 rounded-lg border bg-white dark:bg-inherit">
           <div className="col-span-8  p-6">
             <div className="relative ">
               <div className="flex w-full flex-col gap-6 ">

@@ -14,23 +14,23 @@ export default function MainSectionLayout({ children }) {
       className={`
 ${animationSwitch ? 'custom-animation-switch' : ''}
 mx-auto my-8 grid   ${
-        showListView ? '' : 'w-full'
+        showListView ? '' : 'w-max'
       } overflow-none gap-8   px-6 2xl:px-10
 ${
   showListView
     ? 'grid-cols-1 2xl:grid-cols-1'
     : showNavSidebar && showSidebar
-    ? '2xl:grid-cols-3'
+    ? ' 2xl:grid-cols-3'
     : showNavSidebar || showSidebar
     ? 'xl:grid-cols-2 2xl:grid-cols-4'
-    : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3'
+    : 'grid-cols-1 overflow-x-hidden md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3'
 }
 gap-4
 ${
   showListView
     ? '2xl:grid-cols-1'
     : showNavSidebar || showSidebar
-    ? 'shrink-0 grid-cols-2  gap-4 xl:grid-cols-2 2xl:grid-cols-3'
+    ? 'shrink-0 grid-cols-2  gap-4  xl:grid-cols-2 2xl:grid-cols-3'
     : 'xl:grid-cols-3 2xl:grid-cols-5'
 }
 `}

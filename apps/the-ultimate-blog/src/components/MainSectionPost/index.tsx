@@ -4,7 +4,7 @@ import PostCard from 'libs/shared/ui/src/lib/post-card/post-card';
 import PostCardList from 'libs/shared/ui/src/lib/post-card/post-card-list';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
 import toast, { Toaster } from 'react-hot-toast';
-import PreviewModal from '../PreviewModal';
+import PreviewModal from '../PostModal';
 import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
 import { useListStore } from '@front-end-nx/shared/ui';
 import MainTopTagSearch from '../MainTopTagSearch/MainTopTagSearch';
@@ -40,7 +40,7 @@ export default function MainSection({ getPosts }) {
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      } border-gray  w-full  bg-gray-200    dark:bg-inherit  ${
+      } border-gray  w-full     dark:bg-inherit  ${
         showNavSidebar || showSidebar ? 'w-full' : ''
       } `}
     >

@@ -114,18 +114,15 @@ export default function PreviewModal({ post }: PreviewModalProps) {
   // State Initializers
 
   const [isOpenComments, setIsOpenComments] = useState(false);
-
   const [isUnsplashModalOpen, setIsUnsplashModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedTags, setSelectedTags] = useState<TAG[]>([]);
   const [isTagCreateModalOpen, setIsTagCreateModalOpen] = useState(false);
-
   const [isReadMoreOpen, setIsReadMoreOpen] = useState(false);
   const { togglePosts, posts, resetIsPostModalOpen } =
     useGlobalContextTechModalStore();
   const postRoute = trpc.useContext().post;
   const isPostModalOpen = posts[id];
-
   const [isTitleEditorOpen, setTitleEditorOpen] = useState(false);
   const [isDescriptionEditorOpen, setDescriptionEditorOpen] = useState(false);
   const [isHTMLEditorOpen, setHTMLEditorOpen] = useState(false);
@@ -469,7 +466,7 @@ export default function PreviewModal({ post }: PreviewModalProps) {
                 >
                   <CgClose />
                 </button>
-                <CommentSidebar techId={id} />{' '}
+                <CommentSidebar postId={id} />{' '}
               </div>
             </div>
 
@@ -520,7 +517,7 @@ export default function PreviewModal({ post }: PreviewModalProps) {
                                 src={post?.featuredImage}
                                 width={220}
                                 height={220}
-                                className=" object-cover"
+                                className="object-cover"
                                 alt={title}
                               />
                             ) : (
@@ -528,6 +525,8 @@ export default function PreviewModal({ post }: PreviewModalProps) {
                                 src="https://thurrott.s3.amazonaws.com/wp-content/uploads/sites/2/2023/01/GitHub.jpeg"
                                 width={200}
                                 height={200}
+                                className="object-cover"
+                                alt={title}
                               />
                             )}
                           </div>

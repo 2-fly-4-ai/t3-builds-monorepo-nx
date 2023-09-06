@@ -41,8 +41,7 @@ export default function PostPage(
   const { tableOfContentsResult, slug, postsByTag } = props;
   const [showCommentSidebar, setShowCommentSidebar] = useState(false);
   const { isUnsplashModalOpen, setIsUnsplashModalOpen } = useUnsplashState();
-
-  const getPost = trpc.post.getCoursePost.useQuery({ slug: slug.toString() });
+  const getPost = trpc.post.getTechPost.useQuery({ slug: slug.toString() });
 
   return (
     <MainLayout>
@@ -97,7 +96,7 @@ export async function getStaticProps(
 
   const slug = context.params?.slug; // Access the first element of the slug array
 
-  const postData = await helpers.post.getCoursePost.fetch({ slug });
+  const postData = await helpers.post.getTechPost.fetch({ slug });
 
   const tagData = await helpers.post.getPostsWithTag.fetch({
     tags: postData?.tags.map((tag) => tag.name),

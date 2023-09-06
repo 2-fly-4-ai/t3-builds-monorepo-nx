@@ -15,8 +15,8 @@ export default function SideSection({ readingList }) {
   return (
     <aside
       className={`${mainClass} ${
-        showSidebar ? 'w-80 ' : '    w-0'
-      }  space-between  transition-width overflow-none relative flex flex-col space-y-4 border-l border-gray-300 bg-gray-200  py-6   duration-1000 dark:bg-inherit `}
+        showSidebar ? ' w-80' : '    w-0'
+      }  space-between  transition-width  overflow-none  flex flex-col space-y-4 border-l border-gray-300 bg-gray-200  py-6   duration-500 dark:bg-[#1C1B22] `}
     >
       <div className={`${showSidebar ? 'w-max' : 'w-0'}   overflow-hidden`}>
         <div className="flex flex-col ">

@@ -3,7 +3,7 @@ import { trpc } from '../../utils/trpc';
 import PostCard from 'libs/shared/ui/src/lib/course-card/post-card';
 import PostCardList from 'libs/shared/ui/src/lib/course-card/post-list';
 import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinner';
-import PreviewModal from '../PreviewModal';
+import PreviewModal from '../PostModal';
 import toast, { Toaster } from 'react-hot-toast';
 import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
 import { useListStore } from '@front-end-nx/shared/ui';
@@ -41,7 +41,7 @@ export default function MainSection({ getPosts }) {
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      } border-gray  w-full  border-gray-200 bg-gray-200   transition-all duration-500  ease-in-out  dark:bg-inherit ${
+      } border-gray  w-full   bg-gray-200   transition-all duration-500  ease-in-out  dark:bg-inherit ${
         showNavSidebar || showSidebar ? 'w-full' : ' '
       } `}
     >

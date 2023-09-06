@@ -19,8 +19,8 @@ export default function MainSection({ getPosts }) {
   return (
     <main
       className={`${
-        showSidebar ? 'col-span-12' : 'col-span-12'
-      }   w-full    bg-gray-200  transition-all duration-200 ease-in-out dark:bg-inherit  ${
+        showSidebar ? 'col-span-full' : 'col-span-full'
+      }   w-full   border  transition-all duration-200 ease-in-out dark:bg-inherit  ${
         showNavSidebar || showSidebar ? 'w-full ' : ' '
       } `}
     >

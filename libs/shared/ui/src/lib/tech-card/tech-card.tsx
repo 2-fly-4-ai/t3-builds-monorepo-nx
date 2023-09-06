@@ -88,7 +88,7 @@ export function TechCard({ post }: TechCardProps) {
   };
 
   return (
-    <div className="group grid w-[340px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-opacity-10    ">
+    <div className="group grid w-[340px] grid-cols-10 gap-2 gap-x-8 overflow-hidden rounded-xl border-2 border-gray-300 bg-white    transition duration-200 hover:border-gray-800  dark:border-gray-300  dark:bg-[#333239]    ">
       <div className="relative col-span-full flex items-center rounded-none  ">
         <div onClick={handlePostsModalToggle}>
           <div className="group absolute flex h-full w-full transition duration-200 group-hover:bg-black  group-hover:bg-opacity-20">

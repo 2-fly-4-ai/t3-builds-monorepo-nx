@@ -11,6 +11,7 @@ import { trpc } from '../../utils/trpc';
 export default function DiscussPage() {
   const { showNavSidebar, setShowNavSidebar } = useNavStore();
   const getPosts = trpc.post.getLinkPosts.useQuery();
+  console.warn('getPosts', getPosts.data);
   const readingList = trpc.post.getReadingList.useQuery({
     itemType: 'link',
   });

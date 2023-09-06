@@ -226,5 +226,3 @@ export default function CommentSidebar({ postId }: CommentSidebarProps) {
     </div>
   );
 };
-
-

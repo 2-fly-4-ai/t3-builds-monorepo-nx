@@ -6,7 +6,7 @@ import LoadingSpinner from 'libs/shared/ui/src/lib/loading-spinner/loading-spinn
 import toast, { Toaster } from 'react-hot-toast';
 import { useGlobalContextTechModalStore } from '@front-end-nx/shared/ui';
 import MainTopTagSearch from '../MainTopTagSearch/MainTopTagSearch';
-import PreviewModal from '../PreviewModal';
+import PreviewModal from '../PostModal';
 import { useListStore } from '@front-end-nx/shared/ui';
 import MainSectionLayout from '../../layouts/MainSectionLayout';
 import { useNavStore } from '@front-end-nx/shared/ui';
@@ -37,7 +37,7 @@ export default function MainSection({ getPosts }) {
     <main
       className={`${
         showSidebar ? 'col-span-12' : 'col-span-12'
-      }   w-full bg-gray-200   transition-all duration-500  ease-in-out  dark:bg-inherit ${
+      }   w-full  transition-all duration-500  ease-in-out  dark:bg-inherit ${
         showNavSidebar || showSidebar ? 'w-full' : ' '
       } `}
     >
@@ -46,6 +46,7 @@ export default function MainSection({ getPosts }) {
         {getPosts.isLoading && <LoadingSpinner />}
         {getPosts.isSuccess &&
           getPosts.data.map((post) => {
+            console.warn(post);
             return (
               <div key={post.id} className="w-full ">
                 {showListView ? (

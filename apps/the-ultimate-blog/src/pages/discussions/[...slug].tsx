@@ -20,7 +20,7 @@ const TechStackPage = (
 ) => {
   const { slug } = props;
 
-  const { data } = trpc.post.getTechPost.useQuery({ slug });
+  const { data } = trpc.post.getLinkPost.useQuery({ slug });
 
   // const {
   //   trpcState: {

@@ -44,7 +44,7 @@ export default function Sidebar() {
       <div
         className={`${
           showNavSidebar ? 'w-60' : 'w-[75px]'
-        } transition-width sticky top-0 h-[93.4vh] flex-shrink-0  p-5 duration-1000   dark:bg-inherit sm:block`}
+        } transition-width sticky top-0 h-[93.4vh] flex-shrink-0  p-5 duration-500  dark:bg-inherit sm:block`}
       >
         <BsArrowLeftCircle
           className={`${
